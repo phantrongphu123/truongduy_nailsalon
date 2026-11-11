@@ -1,0 +1,679 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lịch Sử Đặt Lịch & Đánh Giá – Võ Thuận Hair Salon</title>
+  <meta name="description" content="Xem lại lịch sử đặt lịch hẹn làm tóc, kiểm tra tiền cọc, xem mã check-in QR và đánh giá tay nghề Stylist tại Võ Thuận Hair Salon.">
+
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <!-- Shared & Customer CSS -->
+  <link rel="stylesheet" href="../shared/shared.css">
+  <link rel="stylesheet" href="customer.css">
+</head>
+<body>
+
+  <!-- ─── HEADER & NAVBAR ──────────────────────────────── -->
+  <header class="customer-header">
+    <div class="customer-nav">
+      <div class="brand-group">
+        <a href="../index.html" class="brand-logo">
+          VÕ THUẬN
+          <span>Hair Salon</span>
+        </a>
+        <span class="brand-badge"><i class="fas fa-history"></i> Lịch Sử Hẹn</span>
+      </div>
+
+      <ul class="customer-nav-links">
+        <li><a href="../index.html"><i class="fas fa-home"></i> Trang Chủ</a></li>
+        <li><a href="../index.html#dich-vu"><i class="fas fa-scissors"></i> Bảng Giá Dịch Vụ</a></li>
+        <li><a href="booking.html"><i class="fas fa-calendar-alt"></i> Đặt Lịch Hẹn</a></li>
+        <li><a href="history.html" class="active"><i class="fas fa-history"></i> Lịch Sử Lịch Hẹn</a></li>
+      </ul>
+
+      <div class="customer-user-menu">
+        <div class="customer-user-pill-target"></div>
+        <a href="../login.html" class="btn btn-outline" style="padding: 6px 14px; font-size: 0.8rem; border-radius: 20px; color: var(--gold); border-color: var(--gold);" title="Đổi cổng quản trị">
+          <i class="fas fa-sign-out-alt"></i> Thoát
+        </a>
+        <button class="customer-hamburger" onclick="toggleCustomerMobileMenu()" aria-label="Menu">
+          <i class="fas fa-bars"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- Mobile Drawer Menu -->
+    <div class="customer-mobile-drawer" id="customer-mobile-drawer">
+      <div class="customer-mobile-links">
+        <a href="../index.html"><i class="fas fa-home"></i> Trang Chủ</a>
+        <a href="../index.html#dich-vu"><i class="fas fa-scissors"></i> Bảng Giá Dịch Vụ</a>
+        <a href="booking.html"><i class="fas fa-calendar-alt"></i> Đặt Lịch Hẹn</a>
+        <a href="history.html" class="active"><i class="fas fa-history"></i> Lịch Sử Lịch Hẹn</a>
+        <a href="javascript:void(0)" onclick="switchCustomerModal(); toggleCustomerMobileMenu();"><i class="fas fa-user-edit"></i> Đổi Khách Hàng Trải Nghiệm</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- ─── MAIN CONTAINER ───────────────────────────────── -->
+  <main class="container" style="padding: 30px 20px 80px;">
+
+    <!-- ─── CUSTOMER PROFILE & LOYALTY BANNER ────────────── -->
+    <div class="customer-profile-banner" id="customer-loyalty-banner">
+      <div class="customer-profile-left">
+        <img src="" id="cust-profile-avatar" alt="Khách hàng" class="customer-profile-avatar">
+        <div class="customer-profile-meta">
+          <h2>
+            <span id="cust-profile-name">--</span>
+            <span class="tier-badge" id="cust-profile-tier">Hạng --</span>
+          </h2>
+          <div style="font-size: 0.85rem; color: #d1c7bd; display: flex; gap: 16px; flex-wrap: wrap;">
+            <span><i class="fas fa-phone-alt" style="color: var(--gold);"></i> <span id="cust-profile-phone">--</span></span>
+            <span><i class="fas fa-envelope" style="color: var(--gold);"></i> <span id="cust-profile-email">--</span></span>
+            <span><i class="fas fa-calendar-check" style="color: var(--gold);"></i> Khách hàng thân thiết</span>
+          </div>
+
+          <div class="customer-stats-row">
+            <div class="customer-stat-item">
+              <span class="stat-label">Điểm Tích Lũy</span>
+              <span class="stat-num" id="cust-profile-points">0 điểm</span>
+            </div>
+            <div class="customer-stat-item">
+              <span class="stat-label">Tổng Chi Tiêu</span>
+              <span class="stat-num" id="cust-profile-spent">0 đ</span>
+            </div>
+            <div class="customer-stat-item">
+              <span class="stat-label">Tổng Lịch Hẹn</span>
+              <span class="stat-num" id="cust-profile-bookings-count">0</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <a href="booking.html" class="btn btn-primary" style="box-shadow: 0 4px 15px rgba(212, 175, 55, 0.4);">
+          <i class="fas fa-calendar-plus"></i> + Đặt Lịch Hẹn Mới
+        </a>
+      </div>
+    </div>
+
+    <!-- ─── HISTORY FILTER TABS & SEARCH ─────────────────── -->
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; flex-wrap: wrap; gap: 16px;">
+      <div class="category-pills" id="history-filter-tabs">
+        <button class="category-pill active" onclick="historyManager.setFilter('all')">
+          Tất cả (<span id="count-all">0</span>)
+        </button>
+        <button class="category-pill" onclick="historyManager.setFilter('upcoming')">
+          <i class="fas fa-clock" style="color: var(--blue);"></i> Sắp tới (<span id="count-upcoming">0</span>)
+        </button>
+        <button class="category-pill" onclick="historyManager.setFilter('completed')">
+          <i class="fas fa-check-circle" style="color: var(--green);"></i> Đã hoàn thành (<span id="count-completed">0</span>)
+        </button>
+        <button class="category-pill" onclick="historyManager.setFilter('cancelled')">
+          <i class="fas fa-ban" style="color: var(--red);"></i> Đã hủy (<span id="count-cancelled">0</span>)
+        </button>
+      </div>
+
+      <div class="catalog-search" style="min-width: 240px;">
+        <i class="fas fa-search"></i>
+        <input type="text" id="history-search-input" placeholder="Tìm theo mã, stylist, dịch vụ..." oninput="historyManager.filterAppointments()">
+      </div>
+    </div>
+
+    <!-- ─── APPOINTMENTS LIST GRID ───────────────────────── -->
+    <div class="history-cards-grid" id="history-cards-container">
+      <!-- Injected by JS -->
+    </div>
+
+  </main>
+
+  <!-- ─── MODAL: STAR RATING & REVIEW ──────────────────── -->
+  <div class="modal-overlay" id="modal-rating-review">
+    <div class="modal-box" style="max-width: 520px;">
+      <div class="modal-header">
+        <h3 class="modal-title"><i class="fas fa-star" style="color: var(--gold);"></i> Đánh Giá Trải Nghiệm Stylist</h3>
+        <button class="modal-close" onclick="closeModal('modal-rating-review')">&times;</button>
+      </div>
+      <div class="modal-body" style="text-align: center;">
+        <input type="hidden" id="review-appt-id">
+
+        <div style="display: flex; align-items: center; justify-content: center; gap: 12px; margin-bottom: 8px;">
+          <img src="" id="review-stylist-avatar" style="width: 54px; height: 54px; border-radius: 50%; object-fit: cover; border: 2px solid var(--gold);">
+          <div style="text-align: left;">
+            <h4 id="review-stylist-name" style="color: var(--primary); font-size: 1rem; margin: 0;"></h4>
+            <span id="review-stylist-specialty" style="font-size: 0.8rem; color: var(--text-muted);"></span>
+          </div>
+        </div>
+
+        <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 6px;">
+          Bạn cảm thấy thế nào về kỹ thuật cắt & thái độ phục vụ?
+        </p>
+
+        <!-- Star Picker -->
+        <div class="star-rating-picker" id="star-picker-container">
+          <i class="fas fa-star" data-val="1" onmouseover="historyManager.previewStars(1)" onclick="historyManager.setRating(1)"></i>
+          <i class="fas fa-star" data-val="2" onmouseover="historyManager.previewStars(2)" onclick="historyManager.setRating(2)"></i>
+          <i class="fas fa-star" data-val="3" onmouseover="historyManager.previewStars(3)" onclick="historyManager.setRating(3)"></i>
+          <i class="fas fa-star" data-val="4" onmouseover="historyManager.previewStars(4)" onclick="historyManager.setRating(4)"></i>
+          <i class="fas fa-star" data-val="5" onmouseover="historyManager.previewStars(5)" onclick="historyManager.setRating(5)"></i>
+        </div>
+        <div id="star-rating-text" style="font-weight: 700; color: var(--primary); font-size: 0.95rem; margin-bottom: 16px;">
+          5 / 5 – Rất Xuất Sắc!
+        </div>
+
+        <!-- Quick Compliment Tags -->
+        <div style="font-size: 0.8rem; font-weight: 600; color: var(--text-body); margin-bottom: 8px;">
+          Điểm bạn thích nhất:
+        </div>
+        <div class="compliment-tags" id="compliments-container">
+          <span class="compliment-tag" onclick="this.classList.toggle('active')">✂️ Cắt đúng kiểu mẫu</span>
+          <span class="compliment-tag" onclick="this.classList.toggle('active')">🎨 Màu nhuộm chuẩn</span>
+          <span class="compliment-tag" onclick="this.classList.toggle('active')">💆 Massage cực thích</span>
+          <span class="compliment-tag" onclick="this.classList.toggle('active')">❤️ Thợ nhiệt tình & vui vẻ</span>
+          <span class="compliment-tag" onclick="this.classList.toggle('active')">⏰ Đúng giờ, không phải đợi</span>
+          <span class="compliment-tag" onclick="this.classList.toggle('active')">☕ Không gian sang trọng</span>
+        </div>
+
+        <!-- Textarea -->
+        <div style="text-align: left; margin-bottom: 18px;">
+          <label class="form-label">Chia sẻ cảm nhận chi tiết của bạn:</label>
+          <textarea id="review-comment-input" class="form-input" rows="3" placeholder="Ví dụ: Anh Khoa cắt rất tỉ mỉ, tư vấn kiểu tóc rất hợp với khuôn mặt mình..."></textarea>
+        </div>
+
+        <button class="btn btn-primary" style="width: 100%;" onclick="historyManager.submitReview()">
+          <i class="fas fa-paper-plane"></i> Gửi Đánh Giá Ngay
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── MODAL: CHECK-IN QR CODE ──────────────────────── -->
+  <div class="modal-overlay" id="modal-checkin-qr">
+    <div class="modal-box" style="max-width: 440px; text-align: center;">
+      <div class="modal-header">
+        <h3 class="modal-title"><i class="fas fa-qrcode" style="color: var(--gold);"></i> Mã Check-in Salon</h3>
+        <button class="modal-close" onclick="closeModal('modal-checkin-qr')">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div style="background: #fff; padding: 18px; border-radius: var(--radius); display: inline-block; box-shadow: var(--shadow-sm); border: 2px dashed var(--gold); margin-bottom: 14px;">
+          <div id="modal-qr-container" style="width: 180px; height: 180px; margin: 0 auto;"></div>
+        </div>
+
+        <div style="font-family: monospace; font-size: 1.1rem; font-weight: 700; color: var(--primary);" id="modal-qr-code">
+          #VT-20261111-0000
+        </div>
+        <p style="font-size: 0.85rem; color: var(--text-muted); margin: 6px 0 16px;">
+          Đưa mã này cho nhân viên lễ tân khi đến salon để nhận ưu tiên vào dịch vụ ngay.
+        </p>
+
+        <div style="background: var(--bg-cream); padding: 12px; border-radius: var(--radius-sm); border: 1px solid var(--border); text-align: left; font-size: 0.82rem; margin-bottom: 18px;">
+          <div><strong>Giờ hẹn:</strong> <span id="modal-qr-time"></span></div>
+          <div><strong>Stylist:</strong> <span id="modal-qr-stylist"></span></div>
+          <div><strong>Địa chỉ:</strong> 2/139N Lê Thị Hà, Hóc Môn, TP.HCM</div>
+        </div>
+
+        <button class="btn btn-outline" style="width: 100%;" onclick="closeModal('modal-checkin-qr')">
+          Đóng cửa sổ
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── MODAL: CANCEL APPOINTMENT ─────────────────────── -->
+  <div class="modal-overlay" id="modal-cancel-appt">
+    <div class="modal-box" style="max-width: 460px;">
+      <div class="modal-header">
+        <h3 class="modal-title" style="color: var(--red);"><i class="fas fa-exclamation-triangle"></i> Hủy Lịch Hẹn</h3>
+        <button class="modal-close" onclick="closeModal('modal-cancel-appt')">&times;</button>
+      </div>
+      <div class="modal-body">
+        <input type="hidden" id="cancel-appt-id">
+        <p style="font-size: 0.88rem; color: var(--text-body); margin-bottom: 14px;">
+          Bạn có chắc chắn muốn hủy lịch hẹn <strong id="cancel-appt-code" style="font-family: monospace;">#VT</strong> không?
+        </p>
+        <div style="background: #FEE2E2; padding: 10px 14px; border-radius: var(--radius-sm); border: 1px solid #FCA5A5; color: #991B1B; font-size: 0.8rem; margin-bottom: 14px;">
+          <i class="fas fa-info-circle"></i> Tiền cọc sẽ được hoàn lại hoặc bảo lưu sang lần đặt tiếp theo nếu quý khách thông báo trước 2 tiếng.
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Lý do hủy lịch:</label>
+          <select id="cancel-reason-select" class="form-input">
+            <option value="Bận việc gia đình / đột xuất">Bận việc gia đình / đột xuất</option>
+            <option value="Muốn dời sang ngày khác">Muốn dời sang ngày khác</option>
+            <option value="Đổi ý không làm dịch vụ này nữa">Đổi ý không làm dịch vụ này nữa</option>
+            <option value="Khác">Lý do khác</option>
+          </select>
+        </div>
+
+        <div style="display: flex; gap: 10px; margin-top: 20px;">
+          <button class="btn btn-outline" style="flex: 1;" onclick="closeModal('modal-cancel-appt')">
+            Giữ lại lịch
+          </button>
+          <button class="btn btn-primary" style="flex: 1; background: var(--red); color: #fff; border-color: var(--red);" onclick="historyManager.confirmCancelAppointment()">
+            Xác nhận hủy
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── MODAL: INVOICE DETAILS ───────────────────────── -->
+  <div class="modal-overlay" id="modal-invoice-detail">
+    <div class="modal-box" style="max-width: 540px;">
+      <div class="modal-header">
+        <h3 class="modal-title"><i class="fas fa-receipt" style="color: var(--gold);"></i> Chi Tiết Hóa Đơn & Đặt Cọc</h3>
+        <button class="modal-close" onclick="closeModal('modal-invoice-detail')">&times;</button>
+      </div>
+      <div class="modal-body" id="invoice-modal-content">
+        <!-- Rendered by JS -->
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── JAVASCRIPTS ──────────────────────────────────── -->
+  <script src="../data/mock-data.js"></script>
+  <script src="../shared/shared.js"></script>
+  <script src="customer.js"></script>
+  <script>
+    /**
+     * CUSTOMER HISTORY MANAGER
+     */
+    const historyManager = {
+      currentFilter: 'all',
+      selectedRatingValue: 5,
+
+      init() {
+        initCustomerSession();
+        this.renderCustomerProfile();
+        this.renderAppointments();
+      },
+
+      renderCustomerProfile() {
+        const user = Auth.getCurrentUser() || MOCK.users.find(u => u.id === 'U201');
+        if (!user) return;
+
+        document.getElementById('cust-profile-avatar').src = user.avatar;
+        document.getElementById('cust-profile-name').innerText = user.name;
+        document.getElementById('cust-profile-phone').innerText = user.phone;
+        document.getElementById('cust-profile-email').innerText = user.email || 'customer@salon.com';
+
+        const tierEl = document.getElementById('cust-profile-tier');
+        tierEl.innerText = `Hạng ${user.memberTier || 'Vàng'}`;
+        tierEl.className = `tier-badge ${MockDB.getMemberTierClass(user.memberTier || 'Vàng')}`;
+
+        document.getElementById('cust-profile-points').innerText = `${user.points ? user.points.toLocaleString('vi-VN') : 2450} điểm`;
+        document.getElementById('cust-profile-spent').innerText = MockDB.formatCurrency(user.totalSpent || 12500000);
+
+        const appts = this.getAllAppointmentsForCustomer(user.id);
+        document.getElementById('cust-profile-bookings-count').innerText = `${appts.length} lần`;
+
+        // Update counts in filter pills
+        document.getElementById('count-all').innerText = appts.length;
+        document.getElementById('count-upcoming').innerText = appts.filter(a => ['confirmed', 'in-progress', 'pending'].includes(a.status)).length;
+        document.getElementById('count-completed').innerText = appts.filter(a => a.status === 'completed').length;
+        document.getElementById('count-cancelled').innerText = appts.filter(a => a.status === 'cancelled').length;
+      },
+
+      getAllAppointmentsForCustomer(customerId) {
+        // Return sorted descending by date
+        return MOCK.appointments
+          .filter(a => a.customerId === customerId)
+          .sort((a, b) => (b.date + ' ' + (b.time || '')).localeCompare(a.date + ' ' + (a.time || '')));
+      },
+
+      setFilter(filter) {
+        this.currentFilter = filter;
+        document.querySelectorAll('#history-filter-tabs .category-pill').forEach(btn => btn.classList.remove('active'));
+        event.currentTarget.classList.add('active');
+        this.filterAppointments();
+      },
+
+      filterAppointments() {
+        const user = Auth.getCurrentUser() || MOCK.users.find(u => u.id === 'U201');
+        let list = this.getAllAppointmentsForCustomer(user.id);
+
+        if (this.currentFilter === 'upcoming') {
+          list = list.filter(a => ['confirmed', 'in-progress', 'pending'].includes(a.status));
+        } else if (this.currentFilter === 'completed') {
+          list = list.filter(a => a.status === 'completed');
+        } else if (this.currentFilter === 'cancelled') {
+          list = list.filter(a => a.status === 'cancelled');
+        }
+
+        const query = document.getElementById('history-search-input').value.trim().toLowerCase();
+        if (query) {
+          list = list.filter(a => {
+            const stylist = MockDB.getUser(a.stylistId);
+            const svcs = (a.serviceIds || []).map(id => MockDB.getService(id)?.name).join(' ');
+            return (
+              (a.code || a.id).toLowerCase().includes(query) ||
+              (stylist?.name || '').toLowerCase().includes(query) ||
+              svcs.toLowerCase().includes(query) ||
+              (a.notes || '').toLowerCase().includes(query)
+            );
+          });
+        }
+
+        this.renderCards(list);
+      },
+
+      renderAppointments() {
+        this.filterAppointments();
+      },
+
+      renderCards(list) {
+        const container = document.getElementById('history-cards-container');
+        if (list.length === 0) {
+          container.innerHTML = `
+            <div class="empty-state" style="background: var(--bg-card); border-radius: var(--radius); padding: 50px 20px; text-align: center; border: 1px solid var(--border);">
+              <i class="fas fa-calendar-times" style="font-size: 3rem; color: var(--border); margin-bottom: 14px;"></i>
+              <h3 style="color: var(--primary); font-size: 1.1rem; margin-bottom: 6px;">Không Tìm Thấy Lịch Hẹn Nào</h3>
+              <p style="color: var(--text-muted); font-size: 0.88rem; max-width: 450px; margin: 0 auto 20px;">
+                Quý khách chưa có lịch hẹn nào trong danh mục này hoặc không khớp với từ khóa tìm kiếm.
+              </p>
+              <a href="booking.html" class="btn btn-primary">
+                <i class="fas fa-calendar-plus"></i> Đặt Lịch Hẹn Ngay
+              </a>
+            </div>
+          `;
+          return;
+        }
+
+        container.innerHTML = list.map(a => {
+          const stylist = MockDB.getUser(a.stylistId);
+          const services = (a.serviceIds || []).map(id => MockDB.getService(id)).filter(Boolean);
+          const isUpcoming = ['confirmed', 'in-progress', 'pending'].includes(a.status);
+          const isCompleted = a.status === 'completed';
+          const isCancelled = a.status === 'cancelled';
+          const displayCode = a.code || `#${a.id}`;
+
+          // Payment label & badge
+          let paymentBadge = '';
+          if (a.paymentStatus === 'paid') {
+            paymentBadge = `<span class="badge badge-success"><i class="fas fa-check"></i> Đã thanh toán 100%</span>`;
+          } else if (a.paymentStatus === 'deposit') {
+            paymentBadge = `<span class="badge badge-warning"><i class="fas fa-shield-alt"></i> Đã cọc ${MockDB.formatCurrency(a.depositAmount || 50000)}</span>`;
+          } else {
+            paymentBadge = `<span class="badge" style="background: #F1F5F9; color: #475569;"><i class="fas fa-hourglass-half"></i> Chưa thanh toán</span>`;
+          }
+
+          // Status label & badge
+          let statusBadge = `<span class="badge ${MockDB.getStatusClass(a.status)}">${MockDB.getStatusLabel(a.status)}</span>`;
+
+          return `
+            <div class="history-card">
+              <!-- Header -->
+              <div class="history-card-header">
+                <div style="display: flex; align-items: center; gap: 12px;">
+                  <span class="history-code-tag">${displayCode}</span>
+                  <span style="font-size: 0.85rem; color: var(--text-muted);">
+                    <i class="fas fa-calendar-alt" style="color: var(--gold);"></i> ${MockDB.formatDate(a.date)} (${a.time} - ${a.endTime || 'Kết thúc'})
+                  </span>
+                </div>
+                <div style="display: flex; gap: 8px; align-items: center;">
+                  ${paymentBadge}
+                  ${statusBadge}
+                </div>
+              </div>
+
+              <!-- Body -->
+              <div class="history-card-body">
+                <!-- Stylist Info -->
+                <div class="history-stylist-box">
+                  <img src="${stylist?.avatar || 'https://i.pravatar.cc/150'}" alt="${stylist?.name}">
+                  <div>
+                    <div style="font-size: 0.72rem; text-transform: uppercase; color: var(--text-muted); font-weight: 600;">Master Stylist</div>
+                    <div style="font-size: 0.95rem; font-weight: 700; color: var(--primary);">${stylist?.name || 'Võ Thuận Team'}</div>
+                    <div style="font-size: 0.78rem; color: var(--gold);">${stylist?.specialty || 'Chuyên viên tạo kiểu'}</div>
+                  </div>
+                </div>
+
+                <!-- Services Info -->
+                <div class="history-services-box">
+                  <h5>Dịch Vụ Sử Dụng:</h5>
+                  <p>${services.map(s => s.name).join(' + ') || 'Dịch vụ tùy chọn'}</p>
+                  ${a.notes ? `<div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 4px; font-style: italic;"><i class="fas fa-sticky-note"></i> Ghi chú: ${a.notes}</div>` : ''}
+                </div>
+
+                <!-- Price & Payment Summary -->
+                <div class="history-payment-box">
+                  <div style="font-size: 0.75rem; color: var(--text-muted);">Tổng giá trị:</div>
+                  <div class="history-total-price">${MockDB.formatCurrency(a.totalAmount)}</div>
+                  ${a.depositAmount ? `<div class="history-deposit-note">Đã cọc trước: ${MockDB.formatCurrency(a.depositAmount)} (${a.paymentMethod === 'momo' ? 'Ví MoMo' : 'Chuyển khoản VietQR'})</div>` : ''}
+                </div>
+              </div>
+
+              <!-- Footer Actions / Feedback -->
+              <div class="history-card-footer">
+                <!-- Left: Review Feedback if available or button to rate -->
+                <div>
+                  ${isCompleted ? (
+                    a.rating ? `
+                      <div class="history-review-display">
+                        <div style="color: var(--gold); margin-bottom: 2px;">
+                          ${renderStars(a.rating)} <strong>${a.rating}/5</strong>
+                        </div>
+                        <div style="color: var(--text-dark);">"${a.review || 'Dịch vụ chất lượng cao, thợ chuyên nghiệp!'}"</div>
+                      </div>
+                    ` : `
+                      <button class="btn btn-primary" style="padding: 7px 16px; font-size: 0.82rem;" onclick="historyManager.openReviewModal('${a.id}')">
+                        <i class="fas fa-star"></i> Đánh giá Stylist & Dịch Vụ
+                      </button>
+                    `
+                  ) : ''}
+
+                  ${isCancelled ? `
+                    <div style="font-size: 0.8rem; color: var(--red);">
+                      <i class="fas fa-ban"></i> Lý do hủy: ${a.cancelReason || 'Khách báo bận đột xuất'}
+                    </div>
+                  ` : ''}
+                </div>
+
+                <!-- Right: Action Buttons -->
+                <div style="display: flex; gap: 8px;">
+                  ${isUpcoming ? `
+                    <button class="btn btn-outline" style="padding: 7px 14px; font-size: 0.82rem;" onclick="historyManager.openQRModal('${a.id}')">
+                      <i class="fas fa-qrcode"></i> Mã Check-in
+                    </button>
+                    <button class="btn btn-outline" style="padding: 7px 14px; font-size: 0.82rem; color: var(--red); border-color: #fca5a5;" onclick="historyManager.openCancelModal('${a.id}')">
+                      <i class="fas fa-times"></i> Hủy hẹn
+                    </button>
+                  ` : ''}
+
+                  <button class="btn btn-outline" style="padding: 7px 14px; font-size: 0.82rem;" onclick="historyManager.openInvoiceModal('${a.id}')">
+                    <i class="fas fa-file-invoice-dollar"></i> Hóa đơn
+                  </button>
+
+                  <a href="booking.html?service=${a.serviceIds?.[0] || 'S01'}" class="btn btn-outline" style="padding: 7px 14px; font-size: 0.82rem;" title="Đặt lại dịch vụ này">
+                    <i class="fas fa-redo"></i> Đặt lại
+                  </a>
+                </div>
+              </div>
+            </div>
+          `;
+        }).join('');
+      },
+
+      // ─── RATING MODAL LOGIC ───────────────────────────
+      openReviewModal(apptId) {
+        const appt = MOCK.appointments.find(a => a.id === apptId);
+        if (!appt) return;
+
+        const stylist = MockDB.getUser(appt.stylistId);
+        document.getElementById('review-appt-id').value = apptId;
+        document.getElementById('review-stylist-avatar').src = stylist?.avatar || 'https://i.pravatar.cc/150';
+        document.getElementById('review-stylist-name').innerText = stylist?.name;
+        document.getElementById('review-stylist-specialty').innerText = stylist?.specialty;
+        document.getElementById('review-comment-input').value = '';
+
+        this.setRating(5);
+        openModal('modal-rating-review');
+      },
+
+      previewStars(val) {
+        const stars = document.querySelectorAll('#star-picker-container i');
+        stars.forEach((s, idx) => {
+          s.classList.toggle('active', idx < val);
+        });
+      },
+
+      setRating(val) {
+        this.selectedRatingValue = val;
+        this.previewStars(val);
+
+        const labels = {
+          1: '1 / 5 – Cần Cải Thiện',
+          2: '2 / 5 – Tạm Được',
+          3: '3 / 5 – Khá Tốt',
+          4: '4 / 5 – Rất Hài Lòng',
+          5: '5 / 5 – Rất Xuất Sắc!'
+        };
+        document.getElementById('star-rating-text').innerText = labels[val] || `${val}/5`;
+      },
+
+      submitReview() {
+        const apptId = document.getElementById('review-appt-id').value;
+        const comment = document.getElementById('review-comment-input').value.trim();
+        const activeCompliments = Array.from(document.querySelectorAll('.compliment-tag.active')).map(el => el.innerText.trim());
+
+        let finalReview = comment;
+        if (activeCompliments.length > 0) {
+          finalReview = `${activeCompliments.join(' · ')}${comment ? ' — ' + comment : ''}`;
+        }
+        if (!finalReview) {
+          finalReview = 'Dịch vụ rất tuyệt vời, làm việc chuyên nghiệp!';
+        }
+
+        // Update in SalonStorage & MOCK
+        SalonStorage.updateAppointment(apptId, {
+          rating: this.selectedRatingValue,
+          review: finalReview
+        });
+
+        closeModal('modal-rating-review');
+        Toast.show('Cảm ơn quý khách đã gửi đánh giá! Salon đã cộng thêm 50 điểm thưởng vào tài khoản của bạn.', 'success');
+        this.renderAppointments();
+      },
+
+      // ─── CHECK-IN QR MODAL ────────────────────────────
+      openQRModal(apptId) {
+        const appt = MOCK.appointments.find(a => a.id === apptId);
+        if (!appt) return;
+
+        const stylist = MockDB.getUser(appt.stylistId);
+        const code = appt.code || `#${appt.id}`;
+        document.getElementById('modal-qr-code').innerText = code;
+        document.getElementById('modal-qr-time').innerText = `${appt.time} - ${appt.endTime || ''}, ${MockDB.formatDate(appt.date)}`;
+        document.getElementById('modal-qr-stylist').innerText = stylist?.name;
+
+        const payload = `SALON_CHECKIN|${code}|${appt.date}|${appt.time}|${appt.stylistId}`;
+        document.getElementById('modal-qr-container').innerHTML = generateQRCodeSVG(payload, 180, 'CHECKIN');
+
+        openModal('modal-checkin-qr');
+      },
+
+      // ─── CANCEL APPOINTMENT MODAL ─────────────────────
+      openCancelModal(apptId) {
+        const appt = MOCK.appointments.find(a => a.id === apptId);
+        if (!appt) return;
+
+        document.getElementById('cancel-appt-id').value = apptId;
+        document.getElementById('cancel-appt-code').innerText = appt.code || `#${appt.id}`;
+        openModal('modal-cancel-appt');
+      },
+
+      confirmCancelAppointment() {
+        const apptId = document.getElementById('cancel-appt-id').value;
+        const reason = document.getElementById('cancel-reason-select').value;
+
+        SalonStorage.updateAppointment(apptId, {
+          status: 'cancelled',
+          cancelReason: reason
+        });
+
+        closeModal('modal-cancel-appt');
+        Toast.show('Đã hủy lịch hẹn. Tiền cọc sẽ được xử lý hoàn trả/bảo lưu.', 'info');
+        this.renderCustomerProfile();
+        this.renderAppointments();
+      },
+
+      // ─── INVOICE DETAILS MODAL ────────────────────────
+      openInvoiceModal(apptId) {
+        const appt = MOCK.appointments.find(a => a.id === apptId);
+        if (!appt) return;
+
+        const user = Auth.getCurrentUser();
+        const stylist = MockDB.getUser(appt.stylistId);
+        const services = (appt.serviceIds || []).map(id => MockDB.getService(id)).filter(Boolean);
+        const total = appt.totalAmount || 0;
+        const deposit = appt.depositAmount || 0;
+        const remaining = Math.max(0, total - deposit);
+
+        const content = `
+          <div style="border-bottom: 2px dashed var(--border); padding-bottom: 14px; margin-bottom: 14px; text-align: center;">
+            <h3 style="font-family: Cinzel, serif; color: var(--primary);">VÕ THUẬN HAIR SALON</h3>
+            <p style="font-size: 0.8rem; color: var(--text-muted); margin: 0;">2/139N Lê Thị Hà, Hóc Môn, TP.HCM</p>
+            <div style="font-family: monospace; font-size: 0.95rem; font-weight: bold; color: var(--gold); margin-top: 6px;">
+              HÓA ĐƠN DỊCH VỤ ${appt.code || '#' + appt.id}
+            </div>
+          </div>
+
+          <div style="font-size: 0.85rem; line-height: 1.8; margin-bottom: 16px;">
+            <div><strong>Khách hàng:</strong> ${appt.customerName || user?.name} (${appt.customerPhone || user?.phone})</div>
+            <div><strong>Ngày thực hiện:</strong> ${MockDB.formatDate(appt.date)} (${appt.time} - ${appt.endTime || ''})</div>
+            <div><strong>Stylist phục vụ:</strong> ${stylist?.name}</div>
+            <div><strong>Trạng thái:</strong> <span class="badge ${MockDB.getStatusClass(appt.status)}">${MockDB.getStatusLabel(appt.status)}</span></div>
+          </div>
+
+          <table style="width: 100%; border-collapse: collapse; font-size: 0.85rem; margin-bottom: 16px;">
+            <thead>
+              <tr style="border-bottom: 1px solid var(--border); text-align: left;">
+                <th style="padding: 6px 0;">Dịch vụ</th>
+                <th style="padding: 6px 0; text-align: right;">Đơn giá</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${services.map(s => `
+                <tr>
+                  <td style="padding: 6px 0;">${s.name} (${s.duration}p)</td>
+                  <td style="padding: 6px 0; text-align: right;">${MockDB.formatCurrency(s.price)}</td>
+                </tr>
+              `).join('')}
+              <tr style="border-top: 1px dashed var(--border); font-weight: bold;">
+                <td style="padding: 8px 0;">Tổng giá trị</td>
+                <td style="padding: 8px 0; text-align: right; color: var(--primary);">${MockDB.formatCurrency(total)}</td>
+              </tr>
+              <tr style="color: var(--green);">
+                <td style="padding: 4px 0;">Tiền cọc đã thanh toán (${appt.paymentMethod || 'Chuyển khoản'})</td>
+                <td style="padding: 4px 0; text-align: right;">-${MockDB.formatCurrency(deposit)}</td>
+              </tr>
+              <tr style="font-weight: bold; font-size: 0.95rem; border-top: 1.5px solid var(--primary); color: var(--primary);">
+                <td style="padding: 8px 0;">Còn lại cần thanh toán</td>
+                <td style="padding: 8px 0; text-align: right;">${MockDB.formatCurrency(remaining)}</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div style="display: flex; gap: 10px;">
+            <button class="btn btn-outline" style="flex: 1;" onclick="window.print()">
+              <i class="fas fa-print"></i> In Hóa Đơn
+            </button>
+            <button class="btn btn-primary" style="flex: 1;" onclick="closeModal('modal-invoice-detail')">
+              Đóng
+            </button>
+          </div>
+        `;
+
+        document.getElementById('invoice-modal-content').innerHTML = content;
+        openModal('modal-invoice-detail');
+      }
+    };
+
+    // Initialize history on page ready
+    document.addEventListener('DOMContentLoaded', () => {
+      historyManager.init();
+    });
+  </script>
+</body>
+</html>

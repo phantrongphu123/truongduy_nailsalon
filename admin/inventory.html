@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quản Lý Kho & Thống Kê Dịch Vụ – Võ Thuận Hair Salon</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="../shared/shared.css">
+  <link rel="stylesheet" href="admin.css">
+</head>
+<body>
+  <div class="sidebar-overlay"></div>
+
+  <div class="dashboard-layout">
+    <!-- ─── SIDEBAR ─── -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <a href="dashboard.html" class="sidebar-logo">
+          VÕ THUẬN
+          <span>Hair Salon Management</span>
+        </a>
+      </div>
+
+      <nav class="sidebar-nav">
+        <div class="nav-section-title">Quản Trị Salon</div>
+        <a href="dashboard.html" data-nav="dashboard">
+          <i class="fas fa-chart-pie"></i>
+          <span>Tổng Quan</span>
+        </a>
+        <a href="scheduling.html" data-nav="scheduling">
+          <i class="fas fa-calendar-alt"></i>
+          <span>Điều Phối Lịch</span>
+          <span class="nav-badge">7 lịch</span>
+        </a>
+        <a href="crm.html" data-nav="crm">
+          <i class="fas fa-users"></i>
+          <span>Khách Hàng (CRM)</span>
+        </a>
+        <a href="attendance.html" data-nav="attendance">
+          <i class="fas fa-user-clock"></i>
+          <span>Chấm Công NV</span>
+        </a>
+        <a href="payroll.html" data-nav="payroll">
+          <i class="fas fa-file-invoice-dollar"></i>
+          <span>Lương & Hoa Hồng</span>
+        </a>
+
+        <div class="nav-section-title">Kho Vận & Tài Chính</div>
+        <a href="inventory.html" class="active" data-nav="inventory">
+          <i class="fas fa-boxes"></i>
+          <span>Kho & Dịch Vụ</span>
+          <span class="nav-badge" style="background:var(--red); color:#fff;" id="lowStockBadge">2 thiếu</span>
+        </a>
+        <a href="reports.html" data-nav="reports">
+          <i class="fas fa-file-contract"></i>
+          <span>Doanh Thu & Thuế</span>
+        </a>
+
+        <div class="nav-section-title">Hệ Thống</div>
+        <a href="../login.html" onclick="sessionStorage.clear()">
+          <i class="fas fa-sign-out-alt"></i>
+          <span>Đăng Xuất</span>
+        </a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="sidebar-user">
+          <img src="https://i.pravatar.cc/150?img=68" alt="Võ Thuận">
+          <div class="sidebar-user-info">
+            <h4>Võ Thuận</h4>
+            <p>Chủ Salon (Admin)</p>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- ─── MAIN CONTENT ─── -->
+    <main class="main-content">
+      <!-- TOP BAR -->
+      <header class="top-bar">
+        <div class="top-bar-left">
+          <button class="menu-toggle" aria-label="Mở menu"><i class="fas fa-bars"></i></button>
+          <div>
+            <h1>Kho Hóa Chất / Sản Phẩm &amp; Dịch Vụ</h1>
+            <div class="breadcrumb">Kiểm kê thuốc nhuộm, hóa chất, dầu gội &amp; bảng xếp hạng dịch vụ sinh lời nhất</div>
+          </div>
+        </div>
+
+        <div class="top-bar-right">
+          <button class="btn btn-primary btn-sm" onclick="openRestockModal()">
+            <i class="fas fa-truck-loading"></i> Nhập Kho Hàng Mới
+          </button>
+          <button class="btn btn-outline btn-sm" onclick="exportInventoryCSV()">
+            <i class="fas fa-file-excel"></i> Xuất Tồn Kho
+          </button>
+        </div>
+      </header>
+
+      <!-- PAGE CONTENT -->
+      <div class="page-content">
+
+        <!-- ─── CẢNH BÁO SẢN PHẨM SẮP HẾT (LOW-STOCK WARNING) ─── -->
+        <div class="alert-banner" id="lowStockWarningBanner" style="border-left-color: var(--red);">
+          <div class="alert-content">
+            <div class="alert-icon" style="background: var(--red-bg); color: var(--red);">
+              <i class="fas fa-exclamation-triangle"></i>
+            </div>
+            <div class="alert-text">
+              <h4 style="color:#991B1B;">Cảnh Báo Hàng Sắp Hết (2 Sản Phẩm Dưới Mức Tối Thiểu)</h4>
+              <p id="lowStockText" style="color:#B91C1C;">
+                <strong>• Tinh dầu Olaplex No.7:</strong> Còn 3 chai (Ngưỡng an toàn: 5 chai)<br>
+                <strong>• Thuốc duỗi Keratin Brazil Cacau:</strong> Còn 2 bộ (Ngưỡng an toàn: 3 bộ) — Đang có 2 lịch uốn/duỗi vào ngày mai!
+              </p>
+            </div>
+          </div>
+          <button class="btn btn-primary btn-sm" onclick="openRestockModal('INV06')">
+            <i class="fas fa-plus"></i> Đặt Nhập Hàng Gấp
+          </button>
+        </div>
+
+        <!-- ─── STATS GRID ─── -->
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-icon gold">
+              <i class="fas fa-boxes"></i>
+            </div>
+            <div class="stat-info">
+              <h3>Tổng mặt hàng tồn kho</h3>
+              <div class="stat-value">10 loại</div>
+              <div class="stat-change up">
+                <i class="fas fa-check"></i> 8 / 10 đủ số lượng
+              </div>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-icon red">
+              <i class="fas fa-exclamation-circle"></i>
+            </div>
+            <div class="stat-info">
+              <h3>Hàng cảnh báo sắp hết</h3>
+              <div class="stat-value" id="statLowStockCount">2 loại</div>
+              <div class="stat-change down">
+                <i class="fas fa-arrow-down"></i> Cần nhập trong tuần
+              </div>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-icon green">
+              <i class="fas fa-warehouse"></i>
+            </div>
+            <div class="stat-info">
+              <h3>Tổng giá trị vốn tồn kho</h3>
+              <div class="stat-value" id="statTotalStockVal">32.650.000 ₫</div>
+              <div class="stat-change up">
+                <i class="fas fa-shield-alt"></i> Giá vốn định mức an toàn
+              </div>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-icon purple">
+              <i class="fas fa-trophy"></i>
+            </div>
+            <div class="stat-info">
+              <h3>Dịch vụ sinh lời Top 1</h3>
+              <div class="stat-value" style="font-size:1.35rem;">Combo VIP</div>
+              <div class="stat-change up">
+                <i class="fas fa-star"></i> 36.1M doanh thu (38 lượt)
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ─── TABS: KHO SẢN PHẨM & TOP DỊCH VỤ ─── -->
+        <div class="tabs">
+          <button class="tab-btn active" data-tab="tab-inventory">
+            <i class="fas fa-pump-soap"></i> Danh Mục Vật Tư &amp; Sản Phẩm Tồn Kho
+          </button>
+          <button class="tab-btn" data-tab="tab-services-rank">
+            <i class="fas fa-chart-line"></i> Thống Kê Dịch Vụ Bán Chạy &amp; Doanh Thu
+          </button>
+        </div>
+
+        <!-- ─── TAB 1: DANH MỤC VẬT TƯ & KHO ─── -->
+        <div class="tab-content active" id="tab-inventory">
+          <div class="card">
+            <div class="card-header" style="flex-wrap: wrap; gap: 14px;">
+              <div class="filter-bar" style="margin-bottom:0; width:100%;">
+                <div class="search-input-wrap">
+                  <i class="fas fa-search"></i>
+                  <input type="text" id="invSearchInput" class="form-input" placeholder="Tìm tên sản phẩm, thương hiệu..." oninput="renderInventory()">
+                </div>
+
+                <div style="display:flex; align-items:center; gap:8px;">
+                  <span style="font-size:0.82rem; font-weight:600; color:var(--text-muted);">Phân loại:</span>
+                  <select id="invCatFilter" class="form-select" style="width:auto; padding:8px 12px;" onchange="renderInventory()">
+                    <option value="all">Tất cả phân loại</option>
+                    <option value="Thuốc nhuộm">Thuốc nhuộm</option>
+                    <option value="Thuốc tẩy">Thuốc tẩy</option>
+                    <option value="Thuốc uốn">Thuốc uốn</option>
+                    <option value="Thuốc duỗi">Thuốc duỗi</option>
+                    <option value="Chăm sóc">Chăm sóc &amp; Dầu gội</option>
+                    <option value="Dưỡng tóc">Dưỡng tóc &amp; Tinh dầu</option>
+                    <option value="Tạo kiểu">Tạo kiểu &amp; Keo xịt</option>
+                  </select>
+                </div>
+
+                <div style="display:flex; align-items:center; gap:8px;">
+                  <span style="font-size:0.82rem; font-weight:600; color:var(--text-muted);">Tình trạng:</span>
+                  <select id="invStatusFilter" class="form-select" style="width:auto; padding:8px 12px;" onchange="renderInventory()">
+                    <option value="all">Tất cả</option>
+                    <option value="low-stock">Sắp hết (Low stock)</option>
+                    <option value="in-stock">Đủ hàng</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <div class="card-body" style="padding:0;">
+              <div class="table-wrapper">
+                <table class="data-table" id="inventoryTable">
+                  <thead>
+                    <tr>
+                      <th>Mã SP</th>
+                      <th>Tên sản phẩm</th>
+                      <th>Thương hiệu</th>
+                      <th>Phân loại</th>
+                      <th>Đơn vị</th>
+                      <th>Giá vốn</th>
+                      <th>Giá bán lẻ</th>
+                      <th>Số lượng tồn kho</th>
+                      <th>Tình trạng</th>
+                      <th style="text-align:center;">Thao tác</th>
+                    </tr>
+                  </thead>
+                  <tbody id="inventoryTbody">
+                    <!-- Populated by JS -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ─── TAB 2: THỐNG KÊ DỊCH VỤ BÁN CHẠY NHẤT ─── -->
+        <div class="tab-content" id="tab-services-rank">
+          <div class="card">
+            <div class="card-header">
+              <div>
+                <h2><i class="fas fa-fire" style="color:var(--gold); margin-right:8px;"></i> Bảng Xếp Hạng Dịch Vụ Mang Lại Doanh Thu Nhiều Nhất</h2>
+                <p style="font-size:0.8rem; color:var(--text-muted); margin-top:2px;">
+                  Phân tích tỷ trọng doanh thu và tần suất khách hàng lựa chọn dịch vụ tại Võ Thuận Hair Salon
+                </p>
+              </div>
+              <button class="btn btn-outline btn-sm" onclick="exportTableToCSV('Top_Dich_Vu_Salon_VoThuan.csv', '#topServicesTable')">
+                <i class="fas fa-download"></i> Xuất Báo Cáo
+              </button>
+            </div>
+
+            <div class="card-body" style="padding:0;">
+              <div class="table-wrapper">
+                <table class="data-table" id="topServicesTable">
+                  <thead>
+                    <tr>
+                      <th>Hạng</th>
+                      <th>Tên Dịch Vụ</th>
+                      <th>Nhóm</th>
+                      <th>Đơn giá</th>
+                      <th>Thời lượng</th>
+                      <th>Số lượt đặt</th>
+                      <th>Tổng doanh thu</th>
+                      <th>Tỷ trọng</th>
+                      <th>Đánh giá TB</th>
+                    </tr>
+                  </thead>
+                  <tbody id="topServicesTbody">
+                    <!-- Populated by JS -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <!-- Visual Bar Comparison -->
+            <div style="padding: 24px; background: var(--bg-cream); border-top: 1px solid var(--border-light);">
+              <h3 style="font-size:0.95rem; font-weight:700; color:var(--primary); margin-bottom:14px;">
+                <i class="fas fa-chart-bar" style="color:var(--gold);"></i> Tỷ Trọng Doanh Thu Giữa Các Nhóm Dịch Vụ
+              </h3>
+              <div style="display:flex; flex-direction:column; gap:12px;" id="serviceCategoryBars">
+                <!-- Category Revenue Breakdown Bars -->
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </main>
+  </div>
+
+  <!-- ─── MODAL: NHẬP THÊM HÀNG VÀO KHO ─── -->
+  <div class="modal-overlay" id="restockModal">
+    <div class="modal">
+      <div class="modal-header">
+        <h2>Nhập Thêm Hàng Vào Kho Salon</h2>
+        <button class="modal-close" onclick="closeModal('restockModal')">&times;</button>
+      </div>
+      <form id="restockForm" onsubmit="handleRestockSubmit(event)">
+        <div class="modal-body">
+          <div class="form-group">
+            <label class="form-label">Chọn Sản Phẩm Cần Nhập *</label>
+            <select id="restockProductSelect" class="form-select" required onchange="handleProductSelectChange()">
+              <!-- Products -->
+            </select>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Tồn Kho Hiện Tại</label>
+              <input type="text" id="restockCurrentStock" class="form-input" readonly style="background:#F9FAFB;">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Số Lượng Nhập Thêm *</label>
+              <input type="number" id="restockQuantity" class="form-input" min="1" value="10" required>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Đơn Giá Nhập (VNĐ)</label>
+              <input type="number" id="restockCostPrice" class="form-input" step="10000" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Nhà Cung Cấp / Đại Lý</label>
+              <input type="text" id="restockSupplier" class="form-input" value="Công ty Mỹ phẩm Tóc Chính Hãng">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Ghi Chú Đợt Nhập</label>
+            <input type="text" id="restockNotes" class="form-input" placeholder="VD: Nhập bổ sung cho tuần lễ Black Friday...">
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline" onclick="closeModal('restockModal')">Hủy</button>
+          <button type="submit" class="btn btn-primary"><i class="fas fa-check"></i> Xác Nhận Nhập Kho</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- SCRIPTS -->
+  <script src="../data/mock-data.js"></script>
+  <script src="../shared/shared.js"></script>
+  <script src="admin.js"></script>
+  <script>
+    // Top services mock analytical data
+    const TOP_SERVICES = [
+      { id: 'S09', name: 'Combo VIP (Cắt + Nhuộm + Phục hồi)', category: 'Combo', price: 950000, duration: 210, bookings: 38, revenue: 36100000, percentage: 30.2, rating: 5.0 },
+      { id: 'S03', name: 'Nhuộm Màu Thời Trang', category: 'Nhuộm tóc', price: 500000, duration: 120, bookings: 46, revenue: 23000000, percentage: 19.2, rating: 4.9 },
+      { id: 'S06', name: 'Duỗi Thẳng Keratin', category: 'Duỗi tóc', price: 700000, duration: 180, bookings: 28, revenue: 19600000, percentage: 16.4, rating: 4.8 },
+      { id: 'S05', name: 'Uốn Setting / Uốn Lạnh', category: 'Uốn tóc', price: 600000, duration: 150, bookings: 31, revenue: 18600000, percentage: 15.5, rating: 4.7 },
+      { id: 'S01', name: 'Cắt Tóc Thiết Kế Nam & Nữ', category: 'Cắt tóc', price: 175000, duration: 50, bookings: 110, revenue: 18500000, percentage: 15.5, rating: 4.9 },
+      { id: 'S07', name: 'Phục Hồi Chuyên Sâu & Gội Đầu', category: 'Chăm sóc', price: 250000, duration: 60, bookings: 65, revenue: 12200000, percentage: 10.2, rating: 4.9 },
+      { id: 'S10', name: 'Tẩy Tóc Chuyên Nghiệp', category: 'Nhuộm tóc', price: 350000, duration: 60, bookings: 22, revenue: 7700000, percentage: 6.4, rating: 4.8 }
+    ];
+
+    document.addEventListener('DOMContentLoaded', () => {
+      renderInventory();
+      renderTopServices();
+      populateRestockSelect();
+    });
+
+    // 1. RENDER INVENTORY TABLE
+    function renderInventory() {
+      const tbody = document.getElementById('inventoryTbody');
+      const search = document.getElementById('invSearchInput').value.toLowerCase().trim();
+      const cat = document.getElementById('invCatFilter').value;
+      const status = document.getElementById('invStatusFilter').value;
+
+      let items = MOCK.inventory;
+
+      if (search) {
+        items = items.filter(i => i.name.toLowerCase().includes(search) || i.brand.toLowerCase().includes(search));
+      }
+
+      if (cat !== 'all') {
+        items = items.filter(i => i.category === cat);
+      }
+
+      if (status !== 'all') {
+        items = items.filter(i => i.status === status);
+      }
+
+      let lowCount = 0;
+      let totalVal = 0;
+
+      let html = '';
+      items.forEach(item => {
+        const isLow = item.stock <= item.minStock;
+        if (isLow) lowCount++;
+        totalVal += (item.stock * item.costPrice);
+
+        const statusBadge = isLow
+          ? `<span class="stock-badge-low"><i class="fas fa-exclamation-triangle"></i> Sắp hết (${item.stock}/${item.minStock})</span>`
+          : `<span class="stock-badge-ok"><i class="fas fa-check"></i> Đủ hàng (${item.stock})</span>`;
+
+        html += `
+          <tr ${isLow ? 'style="background:rgba(239,68,68,0.03);"' : ''}>
+            <td><strong>${item.id}</strong></td>
+            <td>
+              <div style="font-weight:600; color:var(--text-dark);">${item.name}</div>
+            </td>
+            <td>${item.brand}</td>
+            <td><span class="badge" style="background:var(--bg-cream); color:var(--primary); border:1px solid var(--border);">${item.category}</span></td>
+            <td>${item.unit}</td>
+            <td><strong>${MockDB.formatCurrency(item.costPrice)}</strong></td>
+            <td>${item.sellPrice > 0 ? MockDB.formatCurrency(item.sellPrice) : '<span style="color:var(--text-muted); font-size:0.75rem;">Nội bộ (Dịch vụ)</span>'}</td>
+            <td>
+              <div style="display:flex; align-items:center; gap:8px;">
+                <strong style="color:${isLow ? 'var(--red)' : 'var(--primary)'}; font-size:0.95rem;">${item.stock} ${item.unit}</strong>
+                <span style="font-size:0.72rem; color:var(--text-muted);">(Min: ${item.minStock})</span>
+              </div>
+            </td>
+            <td>${statusBadge}</td>
+            <td style="text-align:center;">
+              <button class="btn btn-outline btn-sm" onclick="openRestockModal('${item.id}')" title="Nhập thêm hàng">
+                <i class="fas fa-plus"></i> Nhập
+              </button>
+            </td>
+          </tr>
+        `;
+      });
+
+      tbody.innerHTML = html;
+
+      // Update Top Summary Stats
+      document.getElementById('statLowStockCount').innerText = `${lowCount} loại`;
+      document.getElementById('statTotalStockVal').innerText = MockDB.formatCurrency(totalVal);
+      document.getElementById('lowStockBadge').innerText = `${lowCount} thiếu`;
+
+      const warningBanner = document.getElementById('lowStockWarningBanner');
+      if (lowCount === 0) {
+        warningBanner.style.display = 'none';
+      } else {
+        warningBanner.style.display = 'flex';
+      }
+    }
+
+    // 2. RENDER TOP SERVICES TABLE & CATEGORY BARS
+    function renderTopServices() {
+      const tbody = document.getElementById('topServicesTbody');
+      let html = '';
+
+      TOP_SERVICES.forEach((s, idx) => {
+        const medalIcons = ['🥇', '🥈', '🥉'];
+        const rankDisplay = idx < 3 ? `<span style="font-size:1.1rem;">${medalIcons[idx]}</span>` : `<strong>#${idx + 1}</strong>`;
+
+        html += `
+          <tr>
+            <td style="text-align:center;">${rankDisplay}</td>
+            <td>
+              <div style="font-weight:700; color:var(--primary); font-size:0.92rem;">${s.name}</div>
+              <span style="font-size:0.75rem; color:var(--text-muted);">Mã: ${s.id}</span>
+            </td>
+            <td><span class="badge" style="background:var(--bg-cream); color:var(--primary); border:1px solid var(--border);">${s.category}</span></td>
+            <td><strong>${MockDB.formatCurrency(s.price)}</strong></td>
+            <td>${s.duration} phút</td>
+            <td><strong style="color:var(--primary);">${s.bookings} lượt</strong></td>
+            <td><strong style="color:var(--green); font-size:0.95rem;">${MockDB.formatCurrency(s.revenue)}</strong></td>
+            <td>
+              <div style="display:flex; align-items:center; gap:8px;">
+                <div class="progress-bar" style="width:70px;">
+                  <div class="progress-fill gold" style="width:${s.percentage * 2}%;"></div>
+                </div>
+                <span style="font-size:0.78rem; font-weight:600;">${s.percentage}%</span>
+              </div>
+            </td>
+            <td><span style="color:var(--gold); font-weight:700;">★ ${s.rating}</span></td>
+          </tr>
+        `;
+      });
+
+      tbody.innerHTML = html;
+
+      // Category breakdown bars
+      const catContainer = document.getElementById('serviceCategoryBars');
+      const catBreakdown = [
+        { name: 'Combo Làm Đẹp VIP (Cắt + Nhuộm + Phục hồi)', pct: 30.2, val: '36.1M', color: 'gold' },
+        { name: 'Nhuộm Tóc Thời Trang & Balayage', pct: 25.6, val: '30.7M', color: 'green' },
+        { name: 'Uốn & Duỗi Công Nghệ Cao (Keratin Nano)', pct: 31.9, val: '38.2M', color: 'blue' },
+        { name: 'Cắt Tóc Thiết Kế Nam/Nữ & Gội Dưỡng Sinh', pct: 12.3, val: '14.7M', color: 'purple' }
+      ];
+
+      let barsHtml = '';
+      catBreakdown.forEach(c => {
+        barsHtml += `
+          <div>
+            <div style="display:flex; justify-content:space-between; font-size:0.82rem; margin-bottom:4px;">
+              <span><strong>${c.name}</strong></span>
+              <span><strong>${c.val}</strong> (${c.pct}%)</span>
+            </div>
+            <div class="progress-bar" style="height:10px;">
+              <div class="progress-fill ${c.color}" style="width:${c.pct}%;"></div>
+            </div>
+          </div>
+        `;
+      });
+      catContainer.innerHTML = barsHtml;
+    }
+
+    // 3. RESTOCK MODAL
+    function populateRestockSelect() {
+      const select = document.getElementById('restockProductSelect');
+      select.innerHTML = MOCK.inventory.map(i => `<option value="${i.id}">${i.name} (${i.brand}) - Hiện còn ${i.stock} ${i.unit}</option>`).join('');
+      handleProductSelectChange();
+    }
+
+    function handleProductSelectChange() {
+      const select = document.getElementById('restockProductSelect');
+      const item = MOCK.inventory.find(i => i.id === select.value);
+      if (item) {
+        document.getElementById('restockCurrentStock').value = `${item.stock} ${item.unit} (Min: ${item.minStock})`;
+        document.getElementById('restockCostPrice').value = item.costPrice;
+      }
+    }
+
+    function openRestockModal(productId) {
+      if (productId) {
+        document.getElementById('restockProductSelect').value = productId;
+        handleProductSelectChange();
+      }
+      openModal('restockModal');
+    }
+
+    function handleRestockSubmit(e) {
+      e.preventDefault();
+      const pId = document.getElementById('restockProductSelect').value;
+      const qty = parseInt(document.getElementById('restockQuantity').value);
+      const costPrice = parseFloat(document.getElementById('restockCostPrice').value);
+
+      const item = MOCK.inventory.find(i => i.id === pId);
+      if (item) {
+        item.stock += qty;
+        item.costPrice = costPrice;
+        if (item.stock > item.minStock) {
+          item.status = 'in-stock';
+        }
+      }
+
+      closeModal('restockModal');
+      renderInventory();
+      Toast.show(`Đã nhập thành công +${qty} ${item.unit} cho sản phẩm ${item.name}!`, 'success');
+    }
+
+    function exportInventoryCSV() {
+      exportTableToCSV('Kiem_Ke_Ton_Kho_Salon_VoThuan.csv', '#inventoryTable');
+    }
+  </script>
+</body>
+</html>

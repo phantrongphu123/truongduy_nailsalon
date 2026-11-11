@@ -1,0 +1,583 @@
+/* ====================================================
+   ADMIN DASHBOARD CUSTOM STYLES
+   Võ Thuận Hair Salon Management
+   ==================================================== */
+
+/* ─── ADMIN HEADER EXTRA ────────────────────────── */
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.date-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--bg-cream);
+  padding: 6px 14px;
+  border-radius: 20px;
+  border: 1px solid var(--border);
+  font-size: 0.82rem;
+  color: var(--primary);
+  font-weight: 600;
+}
+
+.live-indicator {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  background: var(--green);
+  border-radius: 50%;
+  animation: pulseGreen 1.8s infinite;
+}
+
+@keyframes pulseGreen {
+  0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.7); }
+  70% { transform: scale(1.1); box-shadow: 0 0 0 6px rgba(34, 197, 94, 0); }
+  100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(34, 197, 94, 0); }
+}
+
+/* ─── URGENT / ALERT BANNER ─────────────────────── */
+.alert-banner {
+  background: linear-gradient(90deg, #FEF3C7 0%, #FFFBEB 100%);
+  border: 1px solid #FCD34D;
+  border-left: 5px solid #F59E0B;
+  border-radius: var(--radius-sm);
+  padding: 14px 18px;
+  margin-bottom: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  animation: fadeIn 0.4s ease;
+}
+
+.alert-content {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.alert-icon {
+  width: 36px;
+  height: 36px;
+  background: #FDE68A;
+  color: #B45309;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+  flex-shrink: 0;
+}
+
+.alert-text h4 {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #92400E;
+  margin-bottom: 2px;
+}
+
+.alert-text p {
+  font-size: 0.82rem;
+  color: #B45309;
+}
+
+/* ─── REVENUE SVG / CSS BAR CHART ────────────────── */
+.chart-card {
+  background: var(--bg-card);
+  border-radius: var(--radius);
+  border: 1px solid var(--border-light);
+  padding: 24px;
+  box-shadow: var(--shadow-sm);
+  margin-bottom: 28px;
+}
+
+.chart-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.chart-legend {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  font-size: 0.82rem;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--text-body);
+}
+
+.legend-color {
+  width: 12px;
+  height: 12px;
+  border-radius: 3px;
+}
+
+.bar-chart-container {
+  width: 100%;
+  height: 280px;
+  display: flex;
+  align-items: flex-end;
+  gap: 14px;
+  padding: 20px 0 10px;
+  border-bottom: 1px solid var(--border);
+  position: relative;
+}
+
+.chart-bar-group {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100%;
+  justify-content: flex-end;
+  cursor: pointer;
+  position: relative;
+}
+
+.chart-bar-wrapper {
+  width: 100%;
+  max-width: 48px;
+  height: 100%;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  position: relative;
+}
+
+.chart-bar {
+  width: 100%;
+  background: linear-gradient(180deg, var(--gold) 0%, #A88624 100%);
+  border-radius: 6px 6px 2px 2px;
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  position: relative;
+}
+
+.chart-bar:hover {
+  background: linear-gradient(180deg, #F3E5AB 0%, var(--gold) 100%);
+  transform: translateY(-4px);
+  box-shadow: 0 6px 14px rgba(212, 175, 55, 0.35);
+}
+
+.chart-bar.current {
+  background: linear-gradient(180deg, #22C55E 0%, #15803D 100%);
+}
+
+.chart-bar.current:hover {
+  background: linear-gradient(180deg, #86EFAC 0%, #22C55E 100%);
+}
+
+.chart-tooltip {
+  position: absolute;
+  bottom: calc(100% + 10px);
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--primary);
+  color: #fff;
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.2s;
+  z-index: 10;
+  box-shadow: var(--shadow-md);
+}
+
+.chart-tooltip::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border-width: 5px;
+  border-style: solid;
+  border-color: var(--primary) transparent transparent transparent;
+}
+
+.chart-bar-group:hover .chart-tooltip {
+  opacity: 1;
+}
+
+.chart-label {
+  margin-top: 10px;
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  font-weight: 500;
+  text-align: center;
+}
+
+.chart-value-tag {
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: var(--primary);
+  margin-bottom: 4px;
+}
+
+/* ─── MATRIX SCHEDULING GRID ─────────────────────── */
+.matrix-container {
+  overflow-x: auto;
+  background: var(--bg-white);
+  border-radius: var(--radius);
+  border: 1px solid var(--border-light);
+  box-shadow: var(--shadow-sm);
+}
+
+.matrix-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  min-width: 860px;
+}
+
+.matrix-table th, .matrix-table td {
+  border-right: 1px solid var(--border-light);
+  border-bottom: 1px solid var(--border-light);
+  padding: 8px 12px;
+}
+
+.matrix-table th:last-child, .matrix-table td:last-child {
+  border-right: none;
+}
+
+.matrix-table th {
+  background: var(--bg-cream);
+  color: var(--primary);
+  font-family: var(--font-title);
+  font-size: 0.88rem;
+  padding: 14px 16px;
+  position: sticky;
+  top: 0;
+  z-index: 5;
+}
+
+.matrix-time-col {
+  width: 100px;
+  background: #FAF8F5;
+  font-weight: 600;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  text-align: center;
+  white-space: nowrap;
+}
+
+.matrix-slot {
+  height: 60px;
+  vertical-align: top;
+  position: relative;
+  background: var(--bg-white);
+  transition: background 0.2s;
+}
+
+.matrix-slot:hover {
+  background: rgba(212, 175, 55, 0.04);
+}
+
+.schedule-card {
+  padding: 6px 10px;
+  border-radius: var(--radius-sm);
+  font-size: 0.75rem;
+  cursor: pointer;
+  transition: var(--transition);
+  margin-bottom: 4px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+}
+
+.schedule-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.schedule-card.confirmed {
+  background: var(--blue-bg);
+  border-left: 3px solid var(--blue);
+  color: #1E40AF;
+}
+
+.schedule-card.in-progress {
+  background: var(--orange-bg);
+  border-left: 3px solid var(--orange);
+  color: #C2410C;
+}
+
+.schedule-card.completed {
+  background: var(--green-bg);
+  border-left: 3px solid var(--green);
+  color: #166534;
+}
+
+.schedule-card.conflict {
+  background: #FEE2E2 !important;
+  border-left: 3px solid var(--red) !important;
+  color: #991B1B !important;
+  animation: pulseConflict 1.5s infinite;
+}
+
+@keyframes pulseConflict {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4); }
+  50% { box-shadow: 0 0 0 5px rgba(239, 68, 68, 0); }
+}
+
+.schedule-card .cust-name {
+  font-weight: 700;
+  margin-bottom: 2px;
+}
+
+.schedule-card .svc-name {
+  color: inherit;
+  opacity: 0.9;
+  font-size: 0.7rem;
+}
+
+/* ─── PAYROLL / PAYSLIP MODAL STYLING ────────────── */
+.payslip-container {
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 32px;
+  color: var(--text-dark);
+}
+
+.payslip-header {
+  border-bottom: 2px solid var(--primary);
+  padding-bottom: 18px;
+  margin-bottom: 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.payslip-brand h2 {
+  font-family: var(--font-title);
+  color: var(--primary);
+  font-size: 1.4rem;
+  letter-spacing: 1px;
+}
+
+.payslip-brand p {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+}
+
+.payslip-title {
+  text-align: right;
+}
+
+.payslip-title h3 {
+  font-size: 1.1rem;
+  color: var(--gold);
+  font-family: var(--font-title);
+  font-weight: 700;
+}
+
+.payslip-title span {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
+.payslip-emp-info {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  background: var(--bg-cream);
+  padding: 16px;
+  border-radius: var(--radius-sm);
+  margin-bottom: 24px;
+  font-size: 0.85rem;
+}
+
+.payslip-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 24px;
+}
+
+.payslip-table th {
+  background: #F4EFEA;
+  padding: 10px 14px;
+  text-align: left;
+  font-size: 0.8rem;
+  font-weight: 600;
+  border-bottom: 1px solid var(--border);
+}
+
+.payslip-table td {
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--border-light);
+  font-size: 0.85rem;
+}
+
+.payslip-total-row {
+  background: var(--bg-cream);
+  font-weight: 700;
+  font-size: 1rem;
+  color: var(--primary);
+}
+
+.payslip-signatures {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 32px;
+  margin-top: 36px;
+  text-align: center;
+  font-size: 0.85rem;
+}
+
+.signature-space {
+  height: 60px;
+}
+
+/* ─── TAX DECLARATION STATEMENT ─────────────────── */
+.tax-doc {
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 36px;
+  box-shadow: var(--shadow-sm);
+}
+
+.tax-header-doc {
+  text-align: center;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 20px;
+  margin-bottom: 24px;
+}
+
+.tax-motto {
+  font-size: 0.82rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--primary);
+  margin-bottom: 6px;
+}
+
+.tax-submotto {
+  font-size: 0.78rem;
+  font-style: italic;
+  color: var(--text-muted);
+  margin-bottom: 12px;
+}
+
+.tax-doc-title {
+  font-family: var(--font-title);
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--primary);
+  margin-top: 10px;
+}
+
+.tax-legal-ref {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+.tax-info-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px 24px;
+  font-size: 0.88rem;
+  margin-bottom: 24px;
+  background: var(--bg-cream);
+  padding: 16px 20px;
+  border-radius: var(--radius-sm);
+}
+
+.tax-calc-box {
+  background: #FDF8E8;
+  border: 1.5px solid var(--gold);
+  border-radius: var(--radius);
+  padding: 20px 24px;
+  margin-top: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.tax-calc-box .total-label {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--primary);
+}
+
+.tax-calc-box .total-amount {
+  font-size: 1.8rem;
+  font-weight: 800;
+  color: #B45309;
+}
+
+/* ─── INVENTORY STOCK LEVEL BAR ──────────────────── */
+.stock-badge-low {
+  background: var(--red-bg);
+  color: var(--red);
+  padding: 3px 8px;
+  border-radius: 4px;
+  font-weight: 700;
+  font-size: 0.75rem;
+}
+
+.stock-badge-ok {
+  background: var(--green-bg);
+  color: var(--green);
+  padding: 3px 8px;
+  border-radius: 4px;
+  font-weight: 600;
+  font-size: 0.75rem;
+}
+
+/* ─── QUICK FILTERS & SEARCH BAR ─────────────────── */
+.filter-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.search-input-wrap {
+  position: relative;
+  min-width: 260px;
+  flex: 1;
+  max-width: 380px;
+}
+
+.search-input-wrap i {
+  position: absolute;
+  left: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-muted);
+}
+
+.search-input-wrap input {
+  padding-left: 38px;
+}
+
+/* ─── PRINT RULES ────────────────────────────────── */
+@media print {
+  .sidebar, .top-bar, .no-print, .btn, .modal-close {
+    display: none !important;
+  }
+  .main-content {
+    margin-left: 0 !important;
+    padding: 0 !important;
+  }
+  .payslip-container, .tax-doc {
+    border: none !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+  }
+}

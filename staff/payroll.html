@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lương & Hoa Hồng – Võ Thuận Hair Salon</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="../shared/shared.css">
+  <link rel="stylesheet" href="staff.css">
+</head>
+<body>
+  <div class="dashboard-layout">
+    <!-- SIDEBAR -->
+    <aside class="sidebar"></aside>
+    <div class="sidebar-overlay"></div>
+
+    <!-- MAIN CONTENT -->
+    <main class="main-content">
+      <!-- TOPBAR -->
+      <header class="top-bar"></header>
+
+      <!-- PAGE CONTENT -->
+      <div class="page-content">
+
+        <!-- HEADER & MONTH SELECTOR -->
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; flex-wrap: wrap; gap: 16px;">
+          <div>
+            <h2 style="font-family: var(--font-title); font-size: 1.4rem; color: var(--primary);">
+              <i class="fas fa-wallet" style="color: var(--gold); margin-right: 8px;"></i> Bảng Lương & Hoa Hồng Minh Bạch
+            </h2>
+            <p style="font-size: 0.85rem; color: var(--text-muted);">
+              Công khai từng hóa đơn dịch vụ, tính hoa hồng chuẩn xác và đối chiếu tháng
+            </p>
+          </div>
+
+          <div style="display: flex; gap: 12px; align-items: center;">
+            <label for="monthSelect" style="font-size: 0.85rem; font-weight: 600;">Kỳ lương:</label>
+            <select id="monthSelect" class="form-select" style="min-width: 200px; font-weight: 600;" onchange="loadPayroll(this.value)">
+              <option value="2026-11" selected>Tháng 11/2026 (Đang tích lũy)</option>
+              <option value="2026-10">Tháng 10/2026 (Đã chốt)</option>
+            </select>
+            <button class="btn btn-outline btn-sm" onclick="window.print()">
+              <i class="fas fa-print"></i> In Phiếu Lương
+            </button>
+          </div>
+        </div>
+
+        <!-- SUMMARY BANNER -->
+        <section class="payroll-summary-banner">
+          <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 20px; border-bottom: 1px solid rgba(255,255,255,0.15); padding-bottom: 20px; margin-bottom: 20px;">
+            <div>
+              <div style="font-size: 0.8rem; text-transform: uppercase; color: var(--gold); letter-spacing: 1px; font-weight: 600;">
+                <i class="fas fa-file-invoice-dollar"></i> Phiếu Lương Stylist: <span id="payrollStylistName">--</span>
+              </div>
+              <h2 id="payrollMonthTitle" style="font-size: 1.6rem; font-family: var(--font-title); color: white; margin-top: 4px;">
+                Tháng 11 / 2026
+              </h2>
+            </div>
+            <div style="text-align: right;">
+              <div style="font-size: 0.8rem; color: rgba(255,255,255,0.7); text-transform: uppercase;">Thu Nhập Thực Nhận (Tạm Tính)</div>
+              <div id="payrollNetTotal" style="font-size: 2.2rem; font-weight: 700; color: var(--gold); line-height: 1.2;">
+                0 đ
+              </div>
+              <span id="payrollStatusBadge" class="badge badge-progress" style="margin-top: 6px;">
+                <i class="fas fa-clock"></i> Đang tích lũy đến hết tháng
+              </span>
+            </div>
+          </div>
+
+          <!-- Formula Components Breakdown Grid -->
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px;">
+            <div style="background: rgba(255,255,255,0.06); padding: 14px 16px; border-radius: 8px;">
+              <div style="font-size: 0.75rem; color: rgba(255,255,255,0.6); text-transform: uppercase;">Lương cơ bản</div>
+              <div id="pbBaseSalary" style="font-size: 1.25rem; font-weight: 700; color: white; margin-top: 4px;">0 đ</div>
+              <div style="font-size: 0.72rem; color: rgba(255,255,255,0.5);">Định mức theo bậc thợ</div>
+            </div>
+
+            <div style="background: rgba(255,255,255,0.06); padding: 14px 16px; border-radius: 8px;">
+              <div style="font-size: 0.75rem; color: rgba(255,255,255,0.6); text-transform: uppercase;">Hoa hồng dịch vụ (<span id="pbCommRate">15</span>%)</div>
+              <div id="pbCommission" style="font-size: 1.25rem; font-weight: 700; color: var(--gold); margin-top: 4px;">0 đ</div>
+              <div style="font-size: 0.72rem; color: rgba(255,255,255,0.5);">Từ <span id="pbTotalRevenue">0 đ</span> doanh số</div>
+            </div>
+
+            <div style="background: rgba(255,255,255,0.06); padding: 14px 16px; border-radius: 8px;">
+              <div style="font-size: 0.75rem; color: rgba(255,255,255,0.6); text-transform: uppercase;">Tiền Tip từ khách</div>
+              <div id="pbTip" style="font-size: 1.25rem; font-weight: 700; color: #6EE7B7; margin-top: 4px;">0 đ</div>
+              <div style="font-size: 0.72rem; color: rgba(255,255,255,0.5);">100% trả trực tiếp thợ</div>
+            </div>
+
+            <div style="background: rgba(255,255,255,0.06); padding: 14px 16px; border-radius: 8px;">
+              <div style="font-size: 0.75rem; color: rgba(255,255,255,0.6); text-transform: uppercase;">Thưởng & Giảm trừ</div>
+              <div id="pbBonusDeduct" style="font-size: 1.25rem; font-weight: 700; color: white; margin-top: 4px;">+0 đ</div>
+              <div style="font-size: 0.72rem; color: rgba(255,255,255,0.5);">KPI / Giảm trừ đi trễ</div>
+            </div>
+          </div>
+        </section>
+
+        <!-- MONTH COMPARISON SECTION (THÁNG 10 VS THÁNG 11) -->
+        <section class="card" style="margin-bottom: 28px;">
+          <div class="card-header">
+            <h2><i class="fas fa-chart-column" style="color: var(--gold); margin-right: 8px;"></i> So Sánh Thu Nhập: Tháng 10 vs Tháng 11/2026</h2>
+            <span class="badge badge-confirmed">Chỉ số tăng trưởng</span>
+          </div>
+          <div class="card-body">
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px;">
+              <!-- Metrics Table -->
+              <div class="table-wrapper">
+                <table class="data-table" style="font-size: 0.85rem;">
+                  <thead>
+                    <tr>
+                      <th>Khoản Mục</th>
+                      <th>Tháng 10 (Đã Chốt)</th>
+                      <th>Tháng 11 (Tạm Tính)</th>
+                      <th>Chênh Lệch</th>
+                    </tr>
+                  </thead>
+                  <tbody id="comparisonTableBody">
+                    <!-- Populated via JS -->
+                  </tbody>
+                </table>
+              </div>
+
+              <!-- Visual Comparison Bars -->
+              <div style="display: flex; flex-direction: column; justify-content: center; gap: 18px; background: var(--bg-cream); padding: 20px; border-radius: var(--radius-sm);">
+                <div>
+                  <div style="display: flex; justify-content: space-between; font-size: 0.82rem; margin-bottom: 6px;">
+                    <span>Tổng Thu Nhập Tháng 10: <strong id="barOctText">12.300.000 đ</strong></span>
+                    <span style="color: var(--text-muted);">Đã thanh toán</span>
+                  </div>
+                  <div class="progress-bar" style="height: 12px;">
+                    <div class="progress-fill" style="width: 100%; background: var(--primary-light);"></div>
+                  </div>
+                </div>
+
+                <div>
+                  <div style="display: flex; justify-content: space-between; font-size: 0.82rem; margin-bottom: 6px;">
+                    <span>Tổng Thu Nhập Tháng 11: <strong id="barNovText" style="color: var(--gold);">9.320.000 đ</strong></span>
+                    <span style="color: var(--gold); font-weight: 600;">(Đến 11/11 - Tiến độ 40% tháng)</span>
+                  </div>
+                  <div class="progress-bar" style="height: 12px;">
+                    <div id="barNovProgress" class="progress-fill gold" style="width: 75%;"></div>
+                  </div>
+                </div>
+
+                <div style="font-size: 0.78rem; color: var(--text-muted); line-height: 1.4; border-top: 1px dashed var(--border); padding-top: 10px;">
+                  <i class="fas fa-lightbulb" style="color: var(--gold);"></i> 
+                  <strong>Nhận xét:</strong> Mới qua 11 ngày đầu tháng, bạn đã đạt hơn 75% thu nhập so với tổng tháng trước! Dự kiến cuối tháng thu nhập vượt mốc 15.000.000 đ.
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- DETAILED BILLS COMMISSION BREAKDOWN -->
+        <section class="card">
+          <div class="card-header">
+            <h2><i class="fas fa-receipt" style="color: var(--gold); margin-right: 8px;"></i> Danh Sách Chi Tiết Từng Hóa Đơn Dịch Vụ & Hoa Hồng Nhận Được</h2>
+            <div style="font-size: 0.82rem; color: var(--text-muted);">
+              Tỷ lệ hoa hồng áp dụng: <strong style="color: var(--gold);"><span id="tableCommRate">15</span>%</strong> trên doanh thu dịch vụ
+            </div>
+          </div>
+          <div class="card-body" style="padding: 0;">
+            <div class="table-wrapper">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Mã Lịch Hẹn</th>
+                    <th>Thời Gian</th>
+                    <th>Khách Hàng</th>
+                    <th>Dịch Vụ Đã Phục Vụ</th>
+                    <th>Doanh Số Bill</th>
+                    <th>Tỷ Lệ %</th>
+                    <th>Hoa Hồng Nhận</th>
+                  </tr>
+                </thead>
+                <tbody id="billsTableBody">
+                  <!-- Populated via JS -->
+                </tbody>
+                <tfoot>
+                  <tr style="background: var(--bg-cream); font-weight: 700;">
+                    <td colspan="4" style="text-align: right; padding: 14px 16px;">TỔNG CỘNG:</td>
+                    <td id="tfootTotalRevenue" style="color: var(--primary);">0 đ</td>
+                    <td>—</td>
+                    <td id="tfootTotalComm" style="color: var(--gold); font-size: 1rem;">0 đ</td>
+                  </tr>
+                </tfoot>
+              </table>
+            </div>
+          </div>
+        </section>
+
+      </div>
+    </main>
+  </div>
+
+  <script src="../data/mock-data.js"></script>
+  <script src="../shared/shared.js"></script>
+  <script src="staff.js"></script>
+  <script>
+    let currentMonth = '2026-11';
+
+    document.addEventListener('DOMContentLoaded', () => {
+      StaffUI.setupLayout('payroll', 'Lương & Hoa Hồng', 'Bảng Kê Chi Tiết');
+      loadPayroll(currentMonth);
+    });
+
+    function loadPayroll(month) {
+      currentMonth = month;
+      const stylist = StaffDB.getCurrentStylist();
+      const data = StaffDB.getStylistPayrollData(stylist.id, month);
+
+      // Banner Elements
+      document.getElementById('payrollStylistName').textContent = stylist.name;
+      document.getElementById('payrollMonthTitle').textContent = data.monthName;
+      document.getElementById('payrollNetTotal').textContent = MockDB.formatCurrency(data.netSalary);
+
+      const statusBadge = document.getElementById('payrollStatusBadge');
+      if (data.isClosed) {
+        statusBadge.className = 'badge badge-completed';
+        statusBadge.innerHTML = '<i class="fas fa-check-double"></i> Đã quyết toán lương chuyển khoản';
+      } else {
+        statusBadge.className = 'badge badge-progress';
+        statusBadge.innerHTML = '<i class="fas fa-clock"></i> Đang tích lũy đến hết tháng 11';
+      }
+
+      document.getElementById('pbBaseSalary').textContent = MockDB.formatCurrency(data.baseSalary);
+      document.getElementById('pbCommRate').textContent = Math.round(data.commissionRate * 100);
+      document.getElementById('tableCommRate').textContent = Math.round(data.commissionRate * 100);
+      document.getElementById('pbCommission').textContent = MockDB.formatCurrency(data.commissionEarned);
+      document.getElementById('pbTotalRevenue').textContent = MockDB.formatCurrency(data.totalRevenue);
+      document.getElementById('pbTip').textContent = MockDB.formatCurrency(data.tip);
+
+      const bonusDeductNet = (data.bonus || 0) - (data.deductions || 0);
+      document.getElementById('pbBonusDeduct').textContent = (bonusDeductNet >= 0 ? '+' : '') + MockDB.formatCurrency(bonusDeductNet);
+
+      // Bills table
+      renderBillsTable(data.bills || []);
+
+      // Comparison table
+      renderComparisonTable(stylist.id);
+    }
+
+    function renderBillsTable(bills) {
+      const tbody = document.getElementById('billsTableBody');
+      if (!bills || bills.length === 0) {
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="7" style="text-align: center; padding: 30px; color: var(--text-muted);">
+              Chưa có hóa đơn nào hoàn thành trong kỳ tính lương này.
+            </td>
+          </tr>
+        `;
+        document.getElementById('tfootTotalRevenue').textContent = '0 đ';
+        document.getElementById('tfootTotalComm').textContent = '0 đ';
+        return;
+      }
+
+      let sumRevenue = 0;
+      let sumComm = 0;
+
+      tbody.innerHTML = bills.map(b => {
+        sumRevenue += b.amount;
+        sumComm += b.commission;
+        return `
+          <tr>
+            <td style="font-weight: 600; font-family: monospace; color: var(--primary);">#${b.id}</td>
+            <td>
+              <div style="font-weight: 500;">${MockDB.formatDateShort(b.date)}/2026</div>
+              <div style="font-size: 0.75rem; color: var(--text-muted);">${b.time}</div>
+            </td>
+            <td style="font-weight: 600;">${b.customerName}</td>
+            <td>${b.services}</td>
+            <td style="font-weight: 600;">${MockDB.formatCurrency(b.amount)}</td>
+            <td><span class="badge badge-confirmed">${b.commissionRate}%</span></td>
+            <td style="font-weight: 700; color: var(--gold);">${MockDB.formatCurrency(b.commission)}</td>
+          </tr>
+        `;
+      }).join('');
+
+      document.getElementById('tfootTotalRevenue').textContent = MockDB.formatCurrency(sumRevenue);
+      document.getElementById('tfootTotalComm').textContent = MockDB.formatCurrency(sumComm);
+    }
+
+    function renderComparisonTable(stylistId) {
+      const oct = StaffDB.getStylistPayrollData(stylistId, '2026-10');
+      const nov = StaffDB.getStylistPayrollData(stylistId, '2026-11');
+
+      const rows = [
+        { label: 'Lương cơ bản', oct: oct.baseSalary, nov: nov.baseSalary, isCurr: true },
+        { label: 'Hoa hồng dịch vụ', oct: oct.commissionEarned, nov: nov.commissionEarned, isCurr: true },
+        { label: 'Tiền tip từ khách', oct: oct.tip, nov: nov.tip, isCurr: true },
+        { label: 'Thưởng KPI / Chuyên cần', oct: oct.bonus, nov: nov.bonus, isCurr: true },
+        { label: 'Khoản giảm trừ đi trễ', oct: oct.deductions, nov: nov.deductions, isCurr: true, isNegative: true },
+        { label: 'Tổng số lượt khách', oct: oct.totalCustomers, nov: nov.totalCustomers, isCurr: false, suffix: ' khách' },
+        { label: 'Tổng Thực Nhận', oct: oct.netSalary, nov: nov.netSalary, isCurr: true, isHighlight: true }
+      ];
+
+      const tbody = document.getElementById('comparisonTableBody');
+      tbody.innerHTML = rows.map(r => {
+        let octVal = r.isCurr ? MockDB.formatCurrency(r.oct) : (r.oct + (r.suffix || ''));
+        let novVal = r.isCurr ? MockDB.formatCurrency(r.nov) : (r.nov + (r.suffix || ''));
+        let diff = r.nov - r.oct;
+        let diffText = '';
+
+        if (r.isCurr) {
+          diffText = (diff >= 0 ? '+' : '') + MockDB.formatCurrency(diff);
+        } else {
+          diffText = (diff >= 0 ? '+' : '') + diff + (r.suffix || '');
+        }
+
+        const diffClass = diff >= 0 ? 'color: var(--green); font-weight: 600;' : 'color: var(--red); font-weight: 600;';
+
+        return `
+          <tr style="${r.isHighlight ? 'background: rgba(212,175,55,0.08); font-weight: 700;' : ''}">
+            <td><strong>${r.label}</strong></td>
+            <td>${octVal}</td>
+            <td style="${r.isHighlight ? 'color: var(--gold); font-size: 1rem;' : ''}">${novVal}</td>
+            <td style="${diffClass}">${diffText}</td>
+          </tr>
+        `;
+      }).join('');
+
+      document.getElementById('barOctText').textContent = MockDB.formatCurrency(oct.netSalary);
+      document.getElementById('barNovText').textContent = MockDB.formatCurrency(nov.netSalary);
+
+      const percent = Math.min(100, Math.round((nov.netSalary / oct.netSalary) * 100));
+      document.getElementById('barNovProgress').style.width = percent + '%';
+    }
+  </script>
+</body>
+</html>

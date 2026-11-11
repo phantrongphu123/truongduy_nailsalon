@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hồ Sơ Khách Hàng – Võ Thuận Hair Salon</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="../shared/shared.css">
+  <link rel="stylesheet" href="staff.css">
+</head>
+<body>
+  <div class="dashboard-layout">
+    <!-- SIDEBAR -->
+    <aside class="sidebar"></aside>
+    <div class="sidebar-overlay"></div>
+
+    <!-- MAIN CONTENT -->
+    <main class="main-content">
+      <!-- TOPBAR -->
+      <header class="top-bar"></header>
+
+      <!-- PAGE CONTENT -->
+      <div class="page-content">
+
+        <!-- CUSTOMER SELECTOR BANNER -->
+        <div class="card" style="margin-bottom: 24px; padding: 18px 24px; background: linear-gradient(135deg, #FFFDF9 0%, #FAF6EE 100%);">
+          <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;">
+            <div style="display: flex; align-items: center; gap: 14px;">
+              <div style="width: 44px; height: 44px; border-radius: 50%; background: var(--gold-dim); display: flex; align-items: center; justify-content: center; color: var(--gold); font-size: 1.2rem;">
+                <i class="fas fa-address-book"></i>
+              </div>
+              <div>
+                <h3 style="font-size: 1.1rem; color: var(--primary); font-family: var(--font-title); margin-bottom: 2px;">
+                  Hồ Sơ Kỹ Thuật Tóc Khách Hàng
+                </h3>
+                <p style="font-size: 0.82rem; color: var(--text-muted);">
+                  Tra cứu lịch sử làm tóc, màu nhuộm cũ, công thức uốn và lưu ghi chú chuyên môn
+                </p>
+              </div>
+            </div>
+
+            <!-- Customer Picker -->
+            <div style="display: flex; align-items: center; gap: 10px;">
+              <label for="selectCustomer" style="font-size: 0.85rem; font-weight: 600; color: var(--text-dark);">
+                <i class="fas fa-magnifying-glass"></i> Chọn Khách Hàng:
+              </label>
+              <select id="selectCustomer" class="form-select" style="min-width: 260px; font-weight: 600;" onchange="loadCustomerDetail(this.value)">
+                <!-- Customers populated via JS -->
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <!-- MAIN CUSTOMER PROFILE DETAILS -->
+        <div class="grid-1-2" id="customerDetailContainer">
+          <!-- LEFT: CUSTOMER PERSONAL CARD -->
+          <div>
+            <div class="card" style="margin-bottom: 24px;">
+              <div class="card-body" style="text-align: center; padding: 28px 20px;">
+                <img id="custAvatar" src="" alt="" style="width: 90px; height: 90px; border-radius: 50%; border: 3px solid var(--gold); object-fit: cover; margin: 0 auto 14px; box-shadow: var(--shadow-sm);">
+                <h3 id="custName" style="font-size: 1.25rem; font-weight: 700; color: var(--primary); margin-bottom: 6px;">--</h3>
+                <div style="margin-bottom: 16px;">
+                  <span id="custTierBadge" class="tier-badge tier-gold">Vàng</span>
+                </div>
+
+                <div style="text-align: left; background: var(--bg-cream); border-radius: var(--radius-sm); padding: 16px; font-size: 0.88rem; display: flex; flex-direction: column; gap: 10px;">
+                  <div style="display: flex; justify-content: space-between;">
+                    <span style="color: var(--text-muted);"><i class="fas fa-phone"></i> SĐT:</span>
+                    <strong id="custPhone">--</strong>
+                  </div>
+                  <div style="display: flex; justify-content: space-between;">
+                    <span style="color: var(--text-muted);"><i class="fas fa-envelope"></i> Email:</span>
+                    <span id="custEmail" style="font-size: 0.82rem;">--</span>
+                  </div>
+                  <div style="display: flex; justify-content: space-between;">
+                    <span style="color: var(--text-muted);"><i class="fas fa-coins" style="color: var(--gold);"></i> Điểm tích lũy:</span>
+                    <strong id="custPoints" style="color: var(--gold);">0</strong>
+                  </div>
+                  <div style="display: flex; justify-content: space-between;">
+                    <span style="color: var(--text-muted);"><i class="fas fa-receipt"></i> Tổng chi tiêu:</span>
+                    <strong id="custTotalSpent" style="color: var(--primary);">0 đ</strong>
+                  </div>
+                  <div style="display: flex; justify-content: space-between;">
+                    <span style="color: var(--text-muted);"><i class="fas fa-calendar-check"></i> Ngày tham gia:</span>
+                    <span id="custJoinDate">--</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- QUICK ACTIONS -->
+            <div class="card">
+              <div class="card-header">
+                <h2><i class="fas fa-bolt" style="color: var(--gold); margin-right: 8px;"></i> Thao Tác Nhanh</h2>
+              </div>
+              <div class="card-body" style="display: flex; flex-direction: column; gap: 10px;">
+                <a id="btnBookAppointment" href="schedule.html" class="btn btn-outline btn-block btn-sm">
+                  <i class="fas fa-calendar-plus"></i> Xem Lịch Hẹn Của Khách
+                </a>
+                <button class="btn btn-primary btn-block btn-sm" onclick="document.getElementById('newNoteInput').focus()">
+                  <i class="fas fa-pen-to-square"></i> Viết Ghi Chú Kỹ Thuật
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- RIGHT: TECHNICAL HAIR PROFILE & HISTORY -->
+          <div>
+            <!-- TECHNICAL SPECS -->
+            <div class="hair-profile-card">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+                <h3 style="font-family: var(--font-title); font-size: 1.15rem; color: var(--primary);">
+                  <i class="fas fa-microscope" style="color: var(--gold); margin-right: 8px;"></i> Tình Trạng Tóc & Da Đầu
+                </h3>
+                <span class="badge badge-confirmed">Dữ liệu salon cập nhật</span>
+              </div>
+
+              <!-- Metric Grid -->
+              <div class="hair-metric-grid">
+                <div class="hair-metric-box">
+                  <div class="hair-metric-label"><i class="fas fa-feather"></i> Chất tóc</div>
+                  <div class="hair-metric-val" id="specHairType">--</div>
+                </div>
+                <div class="hair-metric-box">
+                  <div class="hair-metric-label"><i class="fas fa-head-side-virus"></i> Tình trạng da đầu</div>
+                  <div class="hair-metric-val" id="specScalpType">--</div>
+                </div>
+                <div class="hair-metric-box">
+                  <div class="hair-metric-label"><i class="fas fa-triangle-exclamation"></i> Mức độ hư tổn</div>
+                  <div class="hair-metric-val" id="specDamageLevel">--</div>
+                </div>
+                <div class="hair-metric-box">
+                  <div class="hair-metric-label"><i class="fas fa-ruler-vertical"></i> Chiều dài & Dáng tóc</div>
+                  <div class="hair-metric-val" id="specHairLength">--</div>
+                </div>
+              </div>
+
+              <!-- Past Formula Cards -->
+              <div class="formula-card">
+                <div class="formula-title">
+                  <i class="fas fa-palette" style="color: #D97706;"></i> Màu Nhuộm & Mã Màu Cũ Đã Dùng:
+                </div>
+                <div class="formula-code" id="specColorHistory">--</div>
+              </div>
+
+              <div class="formula-card" style="border-color: #3B82F6;">
+                <div class="formula-title" style="color: #2563EB;">
+                  <i class="fas fa-wind"></i> Công Thức Uốn / Duỗi Đã Áp Dụng:
+                </div>
+                <div class="formula-code" style="color: #1D4ED8; background: #DBEAFE;" id="specPermFormula">--</div>
+              </div>
+
+              <div class="formula-card" style="border-color: #10B981;">
+                <div class="formula-title" style="color: #059669;">
+                  <i class="fas fa-spa"></i> Phục Hồi & Chăm Sóc Đã Làm:
+                </div>
+                <div class="formula-code" style="color: #065F46; background: #D1FAE5;" id="specTreatment">--</div>
+              </div>
+            </div>
+
+            <!-- TECHNICIAN NOTES SECTION -->
+            <div class="card" style="margin-bottom: 24px;">
+              <div class="card-header">
+                <h2><i class="fas fa-clipboard-user" style="color: var(--gold); margin-right: 8px;"></i> Sổ Ghi Chú Kỹ Thuật Viên</h2>
+              </div>
+              <div class="card-body">
+                <!-- Add note input -->
+                <div style="margin-bottom: 20px;">
+                  <label class="form-label" for="newNoteInput">Thêm ghi chú mới lưu ý cho lần làm tóc tới:</label>
+                  <div style="display: flex; gap: 10px;">
+                    <textarea id="newNoteInput" class="form-input" rows="2" placeholder="Ví dụ: Da đầu nhạy cảm, chỉ dùng thuốc nhuộm cách chân 1cm; khách thích sấy lọn tự nhiên..."></textarea>
+                  </div>
+                  <div style="display: flex; justify-content: flex-end; margin-top: 8px;">
+                    <button class="btn btn-primary btn-sm" onclick="handleSaveNewNote()">
+                      <i class="fas fa-plus"></i> Lưu Ghi Chú Chuyên Môn
+                    </button>
+                  </div>
+                </div>
+
+                <!-- Existing notes -->
+                <div id="technicianNotesList" style="display: flex; flex-direction: column; gap: 12px;">
+                  <!-- Injected via JS -->
+                </div>
+              </div>
+            </div>
+
+            <!-- PAST SERVICE HISTORY TABLE -->
+            <div class="card">
+              <div class="card-header">
+                <h2><i class="fas fa-clock-rotate-left" style="color: var(--gold); margin-right: 8px;"></i> Lịch Sử Dịch Vụ Đã Làm Trước Đây</h2>
+              </div>
+              <div class="card-body" style="padding: 0;">
+                <div class="table-wrapper">
+                  <table class="data-table">
+                    <thead>
+                      <tr>
+                        <th>Ngày Làm</th>
+                        <th>Dịch Vụ</th>
+                        <th>Thợ Thực Hiện</th>
+                        <th>Chi Phí</th>
+                        <th>Đánh Giá Của Khách</th>
+                      </tr>
+                    </thead>
+                    <tbody id="pastServiceHistoryBody">
+                      <!-- Injected via JS -->
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+    </main>
+  </div>
+
+  <script src="../data/mock-data.js"></script>
+  <script src="../shared/shared.js"></script>
+  <script src="staff.js"></script>
+  <script>
+    let currentCustomerId = 'U201';
+
+    document.addEventListener('DOMContentLoaded', () => {
+      StaffUI.setupLayout('customer', 'Hồ Sơ Khách Hàng', 'Chi Tiết Khách Hàng');
+
+      // Check URL query param ?id=...
+      const urlParams = new URLSearchParams(window.location.search);
+      const paramId = urlParams.get('id');
+      if (paramId && MockDB.getUser(paramId)) {
+        currentCustomerId = paramId;
+      }
+
+      populateCustomerSelector();
+      loadCustomerDetail(currentCustomerId);
+    });
+
+    function populateCustomerSelector() {
+      const customers = MockDB.getUsersByRole('customer');
+      const select = document.getElementById('selectCustomer');
+      select.innerHTML = customers.map(c => `
+        <option value="${c.id}" ${c.id === currentCustomerId ? 'selected' : ''}>
+          ${c.name} (${c.phone}) – Hạng ${c.memberTier}
+        </option>
+      `).join('');
+    }
+
+    function loadCustomerDetail(customerId) {
+      currentCustomerId = customerId;
+      const customer = MockDB.getUser(customerId);
+      if (!customer) return;
+
+      const profile = StaffDB.getCustomerHairProfile(customerId);
+
+      // Customer info
+      document.getElementById('custAvatar').src = customer.avatar;
+      document.getElementById('custName').textContent = customer.name;
+      document.getElementById('custPhone').textContent = customer.phone;
+      document.getElementById('custEmail').textContent = customer.email;
+      document.getElementById('custPoints').textContent = (customer.points || 0) + ' pts';
+      document.getElementById('custTotalSpent').textContent = MockDB.formatCurrency(customer.totalSpent || 0);
+      document.getElementById('custJoinDate').textContent = customer.joinDate || '2024-01-15';
+
+      const tierBadge = document.getElementById('custTierBadge');
+      tierBadge.textContent = customer.memberTier;
+      tierBadge.className = `tier-badge ${MockDB.getMemberTierClass(customer.memberTier)}`;
+
+      // Hair Specs
+      document.getElementById('specHairType').textContent = profile.hairType || 'Tóc thường';
+      document.getElementById('specScalpType').textContent = profile.scalpType || 'Da đầu thường';
+      document.getElementById('specDamageLevel').textContent = profile.damageLevel || 'Khỏe mạnh';
+      document.getElementById('specHairLength').textContent = profile.hairLength || 'Trung bình';
+      document.getElementById('specColorHistory').textContent = profile.colorHistory || 'Chưa ghi nhận màu cũ';
+      document.getElementById('specPermFormula').textContent = profile.permFormula || 'Chưa ghi nhận công thức uốn';
+      document.getElementById('specTreatment').textContent = profile.treatmentHistory || 'Chăm sóc cơ bản';
+
+      // Render Notes
+      renderNotesList(profile.notes || []);
+
+      // Render Past Appointments
+      renderPastHistory(customerId);
+    }
+
+    function renderNotesList(notes) {
+      const container = document.getElementById('technicianNotesList');
+      if (!notes || notes.length === 0) {
+        container.innerHTML = `
+          <div style="font-size: 0.85rem; color: var(--text-muted); text-align: center; padding: 12px 0;">
+            Chưa có ghi chú nào cho khách hàng này.
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = notes.map(n => `
+        <div style="background: var(--bg-cream); border-left: 3px solid var(--gold); padding: 12px 16px; border-radius: var(--radius-sm);">
+          <div style="display: flex; justify-content: space-between; color: var(--text-muted); font-size: 0.78rem; margin-bottom: 4px;">
+            <strong style="color: var(--primary);"><i class="fas fa-user-pen"></i> Thợ: ${n.author}</strong>
+            <span><i class="fas fa-calendar-alt"></i> ${n.date}</span>
+          </div>
+          <div style="font-size: 0.88rem; color: var(--text-dark);">${n.text}</div>
+        </div>
+      `).join('');
+    }
+
+    function handleSaveNewNote() {
+      const input = document.getElementById('newNoteInput');
+      const val = input.value.trim();
+      if (!val) {
+        Toast.show('Vui lòng nhập nội dung ghi chú!', 'warning');
+        return;
+      }
+
+      const updatedProfile = StaffDB.addCustomerTechnicianNote(currentCustomerId, val);
+      input.value = '';
+      Toast.show('Đã lưu ghi chú kỹ thuật viên thành công!', 'success');
+      renderNotesList(updatedProfile.notes || []);
+    }
+
+    function renderPastHistory(customerId) {
+      const tbody = document.getElementById('pastServiceHistoryBody');
+      const appts = MockDB.getCustomerAppointments(customerId);
+
+      if (!appts || appts.length === 0) {
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="5" style="text-align: center; padding: 30px; color: var(--text-muted);">
+              Khách hàng chưa có lịch sử làm dịch vụ trước đây.
+            </td>
+          </tr>
+        `;
+        return;
+      }
+
+      tbody.innerHTML = appts.map(a => {
+        const stylist = MockDB.getUser(a.stylistId) || { name: 'Stylist' };
+        const services = (a.serviceIds || []).map(sid => MockDB.getService(sid)?.name).filter(Boolean).join(' + ');
+
+        return `
+          <tr>
+            <td>
+              <div style="font-weight: 600; color: var(--primary);">${MockDB.formatDateShort(a.date)}/2026</div>
+              <div style="font-size: 0.75rem; color: var(--text-muted);">${a.time}</div>
+            </td>
+            <td>
+              <div style="font-weight: 600;">${services}</div>
+              ${a.notes ? `<div style="font-size: 0.75rem; color: var(--text-muted);"><i class="fas fa-sticky-note"></i> ${a.notes}</div>` : ''}
+            </td>
+            <td>
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <img src="${stylist.avatar || 'https://i.pravatar.cc/150'}" style="width: 26px; height: 26px; border-radius: 50%; object-fit: cover;">
+                <span style="font-size: 0.85rem; font-weight: 500;">${stylist.name}</span>
+              </div>
+            </td>
+            <td style="font-weight: 700; color: var(--gold);">
+              ${MockDB.formatCurrency(a.totalAmount)}
+            </td>
+            <td>
+              ${a.rating ? `
+                <div style="color: var(--gold); font-size: 0.82rem;">
+                  ${renderStars(a.rating)}
+                </div>
+                ${a.review ? `<div style="font-size: 0.75rem; color: var(--text-muted); font-style: italic; margin-top: 2px;">"${a.review}"</div>` : ''}
+              ` : `
+                <span style="color: var(--text-muted); font-size: 0.78rem;">Chưa đánh giá</span>
+              `}
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+  </script>
+</body>
+</html>

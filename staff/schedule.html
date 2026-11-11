@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lịch Làm & Ca Trực – Võ Thuận Hair Salon</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="../shared/shared.css">
+  <link rel="stylesheet" href="staff.css">
+</head>
+<body>
+  <div class="dashboard-layout">
+    <!-- SIDEBAR -->
+    <aside class="sidebar"></aside>
+    <div class="sidebar-overlay"></div>
+
+    <!-- MAIN CONTENT -->
+    <main class="main-content">
+      <!-- TOPBAR -->
+      <header class="top-bar"></header>
+
+      <!-- PAGE CONTENT -->
+      <div class="page-content">
+
+        <!-- HEADER CONTROLS -->
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; flex-wrap: wrap; gap: 16px;">
+          <div>
+            <h2 style="font-family: var(--font-title); font-size: 1.4rem; color: var(--primary);">
+              <i class="fas fa-calendar-check" style="color: var(--gold); margin-right: 8px;"></i> Quản Lý Lịch Hẹn & Ca Làm
+            </h2>
+            <p style="font-size: 0.85rem; color: var(--text-muted);">
+              Theo dõi lịch khách đặt, chuyển trạng thái phục vụ và kiểm tra tiền cọc
+            </p>
+          </div>
+
+          <!-- VIEW MODE TABS -->
+          <div class="btn-group">
+            <button class="btn btn-primary btn-sm view-toggle-btn active" data-view="week" onclick="switchScheduleView('week')">
+              <i class="fas fa-calendar-week"></i> Theo Tuần
+            </button>
+            <button class="btn btn-outline btn-sm view-toggle-btn" data-view="month" onclick="switchScheduleView('month')">
+              <i class="fas fa-calendar"></i> Theo Tháng
+            </button>
+            <button class="btn btn-outline btn-sm view-toggle-btn" data-view="list" onclick="switchScheduleView('list')">
+              <i class="fas fa-list-check"></i> Danh Sách Chi Tiết
+            </button>
+          </div>
+        </div>
+
+        <!-- VIEW 1: WEEK VIEW -->
+        <section id="viewWeek" class="view-panel active">
+          <div class="card" style="margin-bottom: 24px;">
+            <div class="card-header">
+              <h2><i class="fas fa-calendar-days" style="color: var(--gold); margin-right: 8px;"></i> Tuần Hiện Tại: 09/11/2026 – 15/11/2026</h2>
+              <div style="font-size: 0.82rem; color: var(--text-muted);">
+                <span class="badge badge-working"><i class="fas fa-circle" style="font-size: 0.5rem;"></i> Hôm nay: Thứ 4, 11/11</span>
+              </div>
+            </div>
+            <div class="card-body" style="padding: 16px;">
+              <div class="week-grid" id="weekGridContainer">
+                <!-- Rendered via JS -->
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- VIEW 2: MONTH VIEW -->
+        <section id="viewMonth" class="view-panel" style="display: none;">
+          <div class="card" style="margin-bottom: 24px;">
+            <div class="card-header">
+              <h2><i class="fas fa-calendar-alt" style="color: var(--gold); margin-right: 8px;"></i> Tháng 11 / 2026</h2>
+              <div style="font-size: 0.85rem; color: var(--text-muted);">
+                Chọn một ngày để xem danh sách lịch hẹn
+              </div>
+            </div>
+            <div class="card-body">
+              <div class="calendar-grid">
+                <div class="calendar-header-cell">Hai</div>
+                <div class="calendar-header-cell">Ba</div>
+                <div class="calendar-header-cell">Tư</div>
+                <div class="calendar-header-cell">Năm</div>
+                <div class="calendar-header-cell">Sáu</div>
+                <div class="calendar-header-cell">Bảy</div>
+                <div class="calendar-header-cell">CN</div>
+              </div>
+              <div class="calendar-grid" id="monthCalendarCells">
+                <!-- Days rendered dynamically -->
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- DETAILED APPOINTMENTS LIST SECTION -->
+        <section class="card" id="appointmentsListCard">
+          <div class="card-header" style="flex-wrap: wrap; gap: 12px;">
+            <h2 id="listTitle"><i class="fas fa-clipboard-list" style="color: var(--gold); margin-right: 8px;"></i> Danh Sách Khách Hẹn</h2>
+            
+            <!-- Filters -->
+            <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+              <select id="filterDateSelect" class="form-select" style="padding: 6px 12px; font-size: 0.82rem; width: auto;" onchange="renderAppointmentsTable()">
+                <option value="today">Hôm nay (11/11)</option>
+                <option value="tomorrow">Ngày mai (12/11)</option>
+                <option value="week">Tuần này</option>
+                <option value="all">Tất cả các ngày</option>
+              </select>
+
+              <select id="filterStatusSelect" class="form-select" style="padding: 6px 12px; font-size: 0.82rem; width: auto;" onchange="renderAppointmentsTable()">
+                <option value="all">Tất cả trạng thái</option>
+                <option value="confirmed">Đã xác nhận</option>
+                <option value="in-progress">Đang thực hiện</option>
+                <option value="completed">Đã hoàn thành</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="card-body" style="padding: 0;">
+            <div class="table-wrapper">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Khung Giờ</th>
+                    <th>Khách Hàng</th>
+                    <th>Dịch Vụ Đã Đặt</th>
+                    <th>Tổng Tiền</th>
+                    <th>Thanh Toán / Cọc</th>
+                    <th>Trạng Thái</th>
+                    <th>Thao Tác</th>
+                  </tr>
+                </thead>
+                <tbody id="appointmentsTableBody">
+                  <!-- Rendered dynamically -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+      </div>
+    </main>
+  </div>
+
+  <script src="../data/mock-data.js"></script>
+  <script src="../shared/shared.js"></script>
+  <script src="staff.js"></script>
+  <script>
+    let selectedDateFilter = 'today';
+    let selectedCalendarDay = '2026-11-11';
+
+    document.addEventListener('DOMContentLoaded', () => {
+      StaffUI.setupLayout('schedule', 'Lịch Làm & Ca Trực', 'Lịch Làm Việc');
+      renderWeekView();
+      renderMonthView();
+      renderAppointmentsTable();
+    });
+
+    function switchScheduleView(view) {
+      document.querySelectorAll('.view-toggle-btn').forEach(b => {
+        b.classList.toggle('active', b.dataset.view === view);
+        if (b.dataset.view === view) {
+          b.className = 'btn btn-primary btn-sm view-toggle-btn active';
+        } else {
+          b.className = 'btn btn-outline btn-sm view-toggle-btn';
+        }
+      });
+
+      const viewWeek = document.getElementById('viewWeek');
+      const viewMonth = document.getElementById('viewMonth');
+
+      if (view === 'week') {
+        viewWeek.style.display = 'block';
+        viewMonth.style.display = 'none';
+      } else if (view === 'month') {
+        viewWeek.style.display = 'none';
+        viewMonth.style.display = 'block';
+      } else {
+        viewWeek.style.display = 'none';
+        viewMonth.style.display = 'none';
+      }
+    }
+
+    function renderWeekView() {
+      const container = document.getElementById('weekGridContainer');
+      const stylist = StaffDB.getCurrentStylist();
+      const allAppts = StaffDB.getStylistAppointments(stylist.id);
+
+      // Week dates from Monday Nov 09 to Sunday Nov 15
+      const days = [
+        { name: 'Thứ Hai', dateStr: '2026-11-09', dayNum: '09' },
+        { name: 'Thứ Ba', dateStr: '2026-11-10', dayNum: '10' },
+        { name: 'Thứ Tư', dateStr: '2026-11-11', dayNum: '11', isToday: true },
+        { name: 'Thứ Năm', dateStr: '2026-11-12', dayNum: '12' },
+        { name: 'Thứ Sáu', dateStr: '2026-11-13', dayNum: '13' },
+        { name: 'Thứ Bảy', dateStr: '2026-11-14', dayNum: '14' },
+        { name: 'Chủ Nhật', dateStr: '2026-11-15', dayNum: '15' },
+      ];
+
+      container.innerHTML = days.map(d => {
+        const dayAppts = allAppts.filter(a => a.date === d.dateStr);
+        return `
+          <div class="week-day-col ${d.isToday ? 'today' : ''}">
+            <div class="week-day-header">
+              <div class="week-day-name">${d.name}</div>
+              <div class="week-day-date">${d.dayNum}</div>
+            </div>
+            <div class="week-day-body">
+              ${dayAppts.length === 0 ? `
+                <div style="font-size: 0.72rem; color: var(--text-muted); text-align: center; margin-top: 20px;">
+                  Trống lịch
+                </div>
+              ` : dayAppts.map(a => {
+                const customer = MockDB.getUser(a.customerId) || { name: 'Khách' };
+                const services = (a.serviceIds || []).map(sid => MockDB.getService(sid)?.name).filter(Boolean).join(', ');
+                return `
+                  <div class="schedule-mini-card ${a.status}" onclick="openCustomerHairModal('${a.customerId}')" title="Bấm xem hồ sơ khách: ${customer.name}">
+                    <div class="schedule-mini-time"><i class="fas fa-clock"></i> ${a.time}</div>
+                    <div class="schedule-mini-customer">${customer.name}</div>
+                    <div class="schedule-mini-service">${services}</div>
+                  </div>
+                `;
+              }).join('')}
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function renderMonthView() {
+      const container = document.getElementById('monthCalendarCells');
+      const stylist = StaffDB.getCurrentStylist();
+      const allAppts = StaffDB.getStylistAppointments(stylist.id);
+
+      // November 2026: Nov 1 is Sunday. In Monday-first calendar, padding = 6 days (Oct 26-31)
+      let html = '';
+      // 6 previous month cells
+      for (let p = 26; p <= 31; p++) {
+        html += `<div class="calendar-cell other-month">${p}</div>`;
+      }
+
+      // 30 days of November
+      for (let d = 1; d <= 30; d++) {
+        const dayStr = `2026-11-${String(d).padStart(2, '0')}`;
+        const isToday = dayStr === '2026-11-11';
+        const isSelected = dayStr === selectedCalendarDay;
+        const count = allAppts.filter(a => a.date === dayStr).length;
+
+        html += `
+          <div class="calendar-cell ${isToday ? 'today' : ''} ${isSelected ? 'selected' : ''}" onclick="selectCalendarDate('${dayStr}')">
+            <span>${d}</span>
+            ${count > 0 ? `<div class="dot" title="${count} lịch hẹn"></div>` : ''}
+          </div>
+        `;
+      }
+
+      container.innerHTML = html;
+    }
+
+    function selectCalendarDate(dateStr) {
+      selectedCalendarDay = dateStr;
+      renderMonthView();
+      // Filter list to this date
+      document.getElementById('filterDateSelect').value = 'all';
+      renderAppointmentsTable(dateStr);
+    }
+
+    function renderAppointmentsTable(specificDate = null) {
+      const stylist = StaffDB.getCurrentStylist();
+      let appts = StaffDB.getStylistAppointments(stylist.id);
+      const dateFilter = document.getElementById('filterDateSelect').value;
+      const statusFilter = document.getElementById('filterStatusSelect').value;
+
+      if (specificDate) {
+        appts = appts.filter(a => a.date === specificDate);
+        document.getElementById('listTitle').innerHTML = `
+          <i class="fas fa-clipboard-list" style="color: var(--gold); margin-right: 8px;"></i> 
+          Lịch Hẹn Ngày ${MockDB.formatDateShort(specificDate)}/2026 (${appts.length} khách)
+        `;
+      } else {
+        if (dateFilter === 'today') {
+          appts = appts.filter(a => a.date === '2026-11-11');
+          document.getElementById('listTitle').innerHTML = `<i class="fas fa-clipboard-list" style="color: var(--gold); margin-right: 8px;"></i> Lịch Hẹn Hôm Nay (11/11/2026)`;
+        } else if (dateFilter === 'tomorrow') {
+          appts = appts.filter(a => a.date === '2026-11-12');
+          document.getElementById('listTitle').innerHTML = `<i class="fas fa-clipboard-list" style="color: var(--gold); margin-right: 8px;"></i> Lịch Hẹn Ngày Mai (12/11/2026)`;
+        } else if (dateFilter === 'week') {
+          appts = appts.filter(a => a.date >= '2026-11-09' && a.date <= '2026-11-15');
+          document.getElementById('listTitle').innerHTML = `<i class="fas fa-clipboard-list" style="color: var(--gold); margin-right: 8px;"></i> Lịch Hẹn Tuần Này (09/11 – 15/11)`;
+        } else {
+          document.getElementById('listTitle').innerHTML = `<i class="fas fa-clipboard-list" style="color: var(--gold); margin-right: 8px;"></i> Toàn Bộ Lịch Hẹn`;
+        }
+      }
+
+      if (statusFilter !== 'all') {
+        appts = appts.filter(a => a.status === statusFilter);
+      }
+
+      const tbody = document.getElementById('appointmentsTableBody');
+      if (appts.length === 0) {
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="7" style="text-align: center; padding: 40px 0; color: var(--text-muted);">
+              <i class="fas fa-calendar-check" style="font-size: 2rem; color: var(--border); margin-bottom: 8px; display: block;"></i>
+              Không tìm thấy lịch hẹn nào theo điều kiện lọc
+            </td>
+          </tr>
+        `;
+        return;
+      }
+
+      tbody.innerHTML = appts.map(a => {
+        const customer = MockDB.getUser(a.customerId) || { name: 'Khách', phone: '0900000000', memberTier: 'Đồng', avatar: 'https://i.pravatar.cc/150' };
+        const tierClass = MockDB.getMemberTierClass(customer.memberTier);
+        const services = (a.serviceIds || []).map(sid => MockDB.getService(sid)?.name).filter(Boolean).join(', ');
+
+        // Payment status badge
+        let paymentBadge = '<span class="badge badge-unpaid">Chưa thanh toán</span>';
+        if (a.paymentStatus === 'paid') {
+          paymentBadge = `<span class="badge badge-paid"><i class="fas fa-check"></i> Đã thanh toán (${a.paymentMethod || 'Tiền mặt'})</span>`;
+        } else if (a.paymentStatus === 'deposit') {
+          paymentBadge = `<span class="badge badge-deposit"><i class="fas fa-shield-alt"></i> Cọc: ${MockDB.formatCurrency(a.depositAmount || 50000)}</span>`;
+        }
+
+        // Status badge
+        let statusBadge = '<span class="badge badge-confirmed">Đã xác nhận</span>';
+        if (a.status === 'in-progress') {
+          statusBadge = '<span class="badge badge-progress"><i class="fas fa-spinner fa-spin"></i> Đang làm</span>';
+        } else if (a.status === 'completed') {
+          statusBadge = '<span class="badge badge-completed"><i class="fas fa-check-circle"></i> Hoàn thành</span>';
+        }
+
+        return `
+          <tr>
+            <td>
+              <div style="font-weight: 700; color: var(--primary);">${a.time}</div>
+              <div style="font-size: 0.75rem; color: var(--text-muted);"><i class="fas fa-calendar-day"></i> ${MockDB.formatDateShort(a.date)}</div>
+            </td>
+            <td>
+              <div class="user-cell">
+                <img src="${customer.avatar}" alt="${customer.name}">
+                <div>
+                  <div class="name" style="cursor: pointer;" onclick="openCustomerHairModal('${a.customerId}')">
+                    ${customer.name}
+                  </div>
+                  <div class="sub">
+                    <span class="tier-badge ${tierClass}" style="font-size: 0.68rem; padding: 2px 8px;">${customer.memberTier}</span>
+                    <span style="margin-left: 4px;">${customer.phone}</span>
+                  </div>
+                </div>
+              </div>
+            </td>
+            <td>
+              <div style="font-weight: 600; color: var(--text-dark);">${services}</div>
+              ${a.notes ? `<div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 2px;"><i class="fas fa-info-circle"></i> ${a.notes}</div>` : ''}
+            </td>
+            <td style="font-weight: 700; color: var(--gold);">
+              ${MockDB.formatCurrency(a.totalAmount)}
+            </td>
+            <td>
+              ${paymentBadge}
+            </td>
+            <td>
+              ${statusBadge}
+            </td>
+            <td>
+              <div class="btn-group">
+                <button class="btn btn-outline btn-sm" onclick="openCustomerHairModal('${a.customerId}')" title="Xem hồ sơ tóc">
+                  <i class="fas fa-eye"></i> Hồ sơ
+                </button>
+                ${a.status === 'confirmed' ? `
+                  <button class="btn btn-primary btn-sm" onclick="handleTableStatusChange('${a.id}', 'in-progress')">
+                    <i class="fas fa-play"></i> Bắt đầu làm
+                  </button>
+                ` : a.status === 'in-progress' ? `
+                  <button class="btn btn-primary btn-sm" style="background: var(--green); color: white;" onclick="handleTableStatusChange('${a.id}', 'completed')">
+                    <i class="fas fa-check"></i> Hoàn thành
+                  </button>
+                ` : `
+                  <span style="font-size: 0.75rem; color: var(--green); font-weight: 600;">
+                    <i class="fas fa-check-circle"></i> Đã xong
+                  </span>
+                `}
+              </div>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    function handleTableStatusChange(apptId, newStatus) {
+      StaffDB.updateAppointmentStatus(apptId, newStatus);
+      const text = newStatus === 'in-progress' ? 'Bắt đầu làm cho khách' : 'Đã hoàn thành ca hẹn & ghi nhận doanh thu';
+      Toast.show(text, 'success');
+      renderWeekView();
+      renderAppointmentsTable();
+    }
+  </script>
+</body>
+</html>

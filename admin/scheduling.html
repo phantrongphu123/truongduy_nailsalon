@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Điều Phối Lịch Thông Minh (Matrix Schedule) – Võ Thuận Hair Salon</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="../shared/shared.css">
+  <link rel="stylesheet" href="admin.css">
+</head>
+<body>
+  <div class="sidebar-overlay"></div>
+
+  <div class="dashboard-layout">
+    <!-- ─── SIDEBAR ─── -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <a href="dashboard.html" class="sidebar-logo">
+          VÕ THUẬN
+          <span>Hair Salon Management</span>
+        </a>
+      </div>
+
+      <nav class="sidebar-nav">
+        <div class="nav-section-title">Quản Trị Salon</div>
+        <a href="dashboard.html" data-nav="dashboard">
+          <i class="fas fa-chart-pie"></i>
+          <span>Tổng Quan</span>
+        </a>
+        <a href="scheduling.html" class="active" data-nav="scheduling">
+          <i class="fas fa-calendar-alt"></i>
+          <span>Điều Phối Lịch</span>
+          <span class="nav-badge" id="schedBadge">7 lịch</span>
+        </a>
+        <a href="crm.html" data-nav="crm">
+          <i class="fas fa-users"></i>
+          <span>Khách Hàng (CRM)</span>
+        </a>
+        <a href="attendance.html" data-nav="attendance">
+          <i class="fas fa-user-clock"></i>
+          <span>Chấm Công NV</span>
+        </a>
+        <a href="payroll.html" data-nav="payroll">
+          <i class="fas fa-file-invoice-dollar"></i>
+          <span>Lương & Hoa Hồng</span>
+        </a>
+
+        <div class="nav-section-title">Kho Vận & Tài Chính</div>
+        <a href="inventory.html" data-nav="inventory">
+          <i class="fas fa-boxes"></i>
+          <span>Kho & Dịch Vụ</span>
+        </a>
+        <a href="reports.html" data-nav="reports">
+          <i class="fas fa-file-contract"></i>
+          <span>Doanh Thu & Thuế</span>
+        </a>
+
+        <div class="nav-section-title">Hệ Thống</div>
+        <a href="../login.html" onclick="sessionStorage.clear()">
+          <i class="fas fa-sign-out-alt"></i>
+          <span>Đăng Xuất</span>
+        </a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="sidebar-user">
+          <img src="https://i.pravatar.cc/150?img=68" alt="Võ Thuận">
+          <div class="sidebar-user-info">
+            <h4>Võ Thuận</h4>
+            <p>Chủ Salon (Admin)</p>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- ─── MAIN CONTENT ─── -->
+    <main class="main-content">
+      <!-- TOP BAR -->
+      <header class="top-bar">
+        <div class="top-bar-left">
+          <button class="menu-toggle" aria-label="Mở menu"><i class="fas fa-bars"></i></button>
+          <div>
+            <h1>Điều Phối Lịch Thông Minh (Matrix Schedule)</h1>
+            <div class="breadcrumb">Chống trùng lịch hẹn, cân bằng tải công việc &amp; phân bổ thợ tối ưu</div>
+          </div>
+        </div>
+
+        <div class="top-bar-right">
+          <!-- Date Navigator -->
+          <div style="display:flex; align-items:center; gap:8px;">
+            <button class="btn btn-outline btn-sm btn-icon" onclick="changeDate(-1)"><i class="fas fa-chevron-left"></i></button>
+            <input type="date" id="schedDateInput" class="form-input" value="2026-11-11" style="width: auto; padding: 6px 12px; font-weight:600;" onchange="handleDateSelect()">
+            <button class="btn btn-outline btn-sm btn-icon" onclick="changeDate(1)"><i class="fas fa-chevron-right"></i></button>
+          </div>
+
+          <button class="btn btn-primary btn-sm" onclick="openNewBookingModal()">
+            <i class="fas fa-plus-circle"></i> Xếp Khách Mới
+          </button>
+        </div>
+      </header>
+
+      <!-- PAGE CONTENT -->
+      <div class="page-content">
+
+        <!-- ─── WORKLOAD & COLLISION WARNING BANNER ─── -->
+        <div id="smartWarningContainer">
+          <!-- Dynamically populated by algorithm -->
+        </div>
+
+        <!-- ─── SUMMARY CARDS OF 4 STYLISTS WORKLOAD ─── -->
+        <div class="stats-grid" id="stylistWorkloadGrid">
+          <!-- Populated by JS -->
+        </div>
+
+        <!-- ─── MATRIX SCHEDULE TABLE ─── -->
+        <div class="card">
+          <div class="card-header" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;">
+            <div style="display:flex; align-items:center; gap:14px;">
+              <h2 id="matrixTitle">
+                <i class="fas fa-th" style="color:var(--gold); margin-right:8px;"></i> Ma Trận Phân Bổ Ca Làm Việc (11/11/2026)
+              </h2>
+            </div>
+
+            <!-- Legend -->
+            <div style="display:flex; align-items:center; gap:16px; font-size:0.78rem;">
+              <div style="display:flex; align-items:center; gap:6px;">
+                <span style="width:12px; height:12px; background:var(--blue-bg); border-left:3px solid var(--blue); border-radius:2px;"></span>
+                <span>Sắp tới</span>
+              </div>
+              <div style="display:flex; align-items:center; gap:6px;">
+                <span style="width:12px; height:12px; background:var(--orange-bg); border-left:3px solid var(--orange); border-radius:2px;"></span>
+                <span>Đang phục vụ</span>
+              </div>
+              <div style="display:flex; align-items:center; gap:6px;">
+                <span style="width:12px; height:12px; background:var(--green-bg); border-left:3px solid var(--green); border-radius:2px;"></span>
+                <span>Hoàn tất</span>
+              </div>
+              <div style="display:flex; align-items:center; gap:6px;">
+                <span style="width:12px; height:12px; background:#FEE2E2; border-left:3px solid var(--red); border-radius:2px;"></span>
+                <span>Trùng lịch (Conflict)</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="card-body" style="padding:0;">
+            <div class="matrix-container">
+              <table class="matrix-table" id="matrixTable">
+                <thead>
+                  <tr>
+                    <th class="matrix-time-col">Khung Giờ</th>
+                    <!-- Stylist Columns -->
+                    <th>
+                      <div class="user-cell" style="justify-content:center;">
+                        <img src="https://i.pravatar.cc/150?img=12" alt="Khoa">
+                        <div>
+                          <div class="name">Nguyễn Minh Khoa</div>
+                          <div class="sub">Cắt &amp; Tạo kiểu Nam (U101)</div>
+                        </div>
+                      </div>
+                    </th>
+                    <th>
+                      <div class="user-cell" style="justify-content:center;">
+                        <img src="https://i.pravatar.cc/150?img=45" alt="Ngọc">
+                        <div>
+                          <div class="name">Trần Thị Bảo Ngọc</div>
+                          <div class="sub">Nhuộm &amp; Highlight (U102)</div>
+                        </div>
+                      </div>
+                    </th>
+                    <th>
+                      <div class="user-cell" style="justify-content:center;">
+                        <img src="https://i.pravatar.cc/150?img=53" alt="Phúc">
+                        <div>
+                          <div class="name">Lê Văn Phúc</div>
+                          <div class="sub">Uốn &amp; Duỗi (U103)</div>
+                        </div>
+                      </div>
+                    </th>
+                    <th>
+                      <div class="user-cell" style="justify-content:center;">
+                        <img src="https://i.pravatar.cc/150?img=47" alt="Hương">
+                        <div>
+                          <div class="name">Phạm Thanh Hương</div>
+                          <div class="sub">Phục hồi &amp; Chăm sóc (U104)</div>
+                        </div>
+                      </div>
+                    </th>
+                  </tr>
+                </thead>
+                <tbody id="matrixTbody">
+                  <!-- Populated by JS -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </main>
+  </div>
+
+  <!-- ─── MODAL 1: ĐIỀU CHUYỂN / PHÂN BỔ LẠI KHÁCH ─── -->
+  <div class="modal-overlay" id="reassignModal">
+    <div class="modal">
+      <div class="modal-header">
+        <h2>Phân Bổ Lại Lịch Hẹn Cho Thợ Khác</h2>
+        <button class="modal-close" onclick="closeModal('reassignModal')">&times;</button>
+      </div>
+      <form id="reassignForm" onsubmit="handleReassignSubmit(event)">
+        <div class="modal-body">
+          <input type="hidden" id="reassignApptId">
+
+          <div style="background:var(--bg-cream); padding:14px; border-radius:var(--radius-sm); margin-bottom:18px; border:1px solid var(--border);">
+            <div style="font-weight:700; color:var(--primary); font-size:0.95rem;" id="reassignCustInfo">—</div>
+            <div style="font-size:0.82rem; color:var(--text-body); margin-top:4px;" id="reassignSvcInfo">—</div>
+            <div style="font-size:0.8rem; color:var(--text-muted); margin-top:2px;" id="reassignTimeInfo">—</div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Chọn Stylist Mới Phụ Trách *</label>
+            <select id="reassignStylistSelect" class="form-select" required>
+              <!-- Populated dynamically with availability notes -->
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Lý Do Điều Phối Lịch</label>
+            <select id="reassignReasonSelect" class="form-select">
+              <option value="Cân bằng khối lượng công việc">Cân bằng khối lượng công việc giữa các thợ</option>
+              <option value="Tránh quá tải / Trùng lịch">Tránh quá tải / Trùng lịch đột xuất</option>
+              <option value="Thợ có chuyên môn sâu hơn">Thợ có chuyên môn sâu hơn theo yêu cầu khách</option>
+              <option value="Khách yêu cầu đổi thợ">Khách yêu cầu đổi thợ</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline" onclick="closeModal('reassignModal')">Hủy</button>
+          <button type="submit" class="btn btn-primary"><i class="fas fa-exchange-alt"></i> Xác Nhận Điều Chuyển</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ─── MODAL 2: XẾP LỊCH / ĐẶT HẸN MỚI TRỰC TIẾP ─── -->
+  <div class="modal-overlay" id="newBookingModal">
+    <div class="modal">
+      <div class="modal-header">
+        <h2>Xếp Lịch Hẹn Mới Trực Tiếp</h2>
+        <button class="modal-close" onclick="closeModal('newBookingModal')">&times;</button>
+      </div>
+      <form id="newBookingForm" onsubmit="handleCreateBooking(event)">
+        <div class="modal-body">
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Chọn Khách Hàng *</label>
+              <select id="nbCustomerSelect" class="form-select" required>
+                <!-- Customers -->
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Chọn Stylist Phục Vụ *</label>
+              <select id="nbStylistSelect" class="form-select" required>
+                <!-- Stylists -->
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Dịch Vụ Sử Dụng *</label>
+            <select id="nbServiceSelect" class="form-select" required onchange="updateEstimatedEndTime()">
+              <!-- Services -->
+            </select>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Giờ Bắt Đầu *</label>
+              <input type="time" id="nbStartTime" class="form-input" value="16:00" required onchange="updateEstimatedEndTime()">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Dự Kiến Xong</label>
+              <input type="time" id="nbEndTime" class="form-input" value="17:00" readonly style="background:#F9FAFB;">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Ghi Chú Yêu Cầu Của Khách</label>
+            <input type="text" id="nbNotes" class="form-input" placeholder="VD: Khách muốn tỉa layer ôm cằm...">
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline" onclick="closeModal('newBookingModal')">Hủy</button>
+          <button type="submit" class="btn btn-primary"><i class="fas fa-calendar-check"></i> Lưu &amp; Xếp Lịch</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- SCRIPTS -->
+  <script src="../data/mock-data.js"></script>
+  <script src="../shared/shared.js"></script>
+  <script src="admin.js"></script>
+  <script>
+    let selectedDate = '2026-11-11';
+    const STYLIST_IDS = ['U101', 'U102', 'U103', 'U104'];
+
+    document.addEventListener('DOMContentLoaded', () => {
+      loadDateData();
+      populateDropdowns();
+    });
+
+    function changeDate(delta) {
+      const d = new Date(selectedDate);
+      d.setDate(d.getDate() + delta);
+      selectedDate = d.toISOString().split('T')[0];
+      document.getElementById('schedDateInput').value = selectedDate;
+      loadDateData();
+    }
+
+    function handleDateSelect() {
+      selectedDate = document.getElementById('schedDateInput').value;
+      loadDateData();
+    }
+
+    function loadDateData() {
+      document.getElementById('matrixTitle').innerHTML = `<i class="fas fa-th" style="color:var(--gold); margin-right:8px;"></i> Ma Trận Phân Bổ Ca Làm Việc (${MockDB.formatDate(selectedDate)})`;
+      renderWorkloadStats();
+      renderMatrix();
+    }
+
+    // 1. WORKLOAD & COLLISION DETECTION ALGORITHM
+    function renderWorkloadStats() {
+      const container = document.getElementById('stylistWorkloadGrid');
+      const warningContainer = document.getElementById('smartWarningContainer');
+      const appts = MOCK.appointments.filter(a => a.date === selectedDate && a.status !== 'cancelled');
+
+      let workloads = [];
+      let conflicts = [];
+
+      STYLIST_IDS.forEach(sId => {
+        const stylist = MockDB.getUser(sId);
+        const stylistAppts = appts.filter(a => a.stylistId === sId);
+        
+        // Calculate total booked minutes
+        let totalMinutes = 0;
+        for (let i = 0; i < stylistAppts.length; i++) {
+          const a = stylistAppts[i];
+          const startM = MockDB.timeToMinutes(a.time);
+          const endM = MockDB.timeToMinutes(a.endTime);
+          totalMinutes += (endM - startM);
+
+          // Check overlap with next appointments
+          for (let j = i + 1; j < stylistAppts.length; j++) {
+            const b = stylistAppts[j];
+            const bStartM = MockDB.timeToMinutes(b.time);
+            const bEndM = MockDB.timeToMinutes(b.endTime);
+            if (startM < bEndM && endM > bStartM) {
+              conflicts.push({ stylist, a, b });
+            }
+          }
+        }
+
+        const hours = (totalMinutes / 60).toFixed(1);
+        workloads.push({
+          stylist,
+          count: stylistAppts.length,
+          hours: parseFloat(hours),
+          totalMinutes
+        });
+      });
+
+      // Render Stylist Workload Cards
+      let cardsHtml = '';
+      workloads.forEach(w => {
+        const cardClass = w.hours >= 6 ? 'orange' : (w.hours === 0 ? 'purple' : 'green');
+        cardsHtml += `
+          <div class="stat-card">
+            <div class="stat-icon ${cardClass}">
+              <img src="${w.stylist.avatar}" alt="${w.stylist.name}" style="width:100%; height:100%; border-radius:var(--radius-sm); object-fit:cover;">
+            </div>
+            <div class="stat-info">
+              <h3>${w.stylist.name}</h3>
+              <div class="stat-value" style="font-size:1.3rem;">${w.hours} giờ / ca</div>
+              <div class="stat-change ${w.hours >= 5 ? 'down' : 'up'}">
+                <i class="fas fa-calendar-check"></i> ${w.count} khách đặt
+              </div>
+            </div>
+          </div>
+        `;
+      });
+      container.innerHTML = cardsHtml;
+
+      // Smart Collision & Workload Imbalance Warning Check
+      const maxWorkload = Math.max(...workloads.map(w => w.hours));
+      const minWorkload = Math.min(...workloads.map(w => w.hours));
+      const busiest = workloads.find(w => w.hours === maxWorkload);
+      const freest = workloads.find(w => w.hours === minWorkload);
+
+      let warningHtml = '';
+
+      if (conflicts.length > 0) {
+        warningHtml += `
+          <div class="alert-banner" style="background:#FEE2E2; border-color:#F87171; border-left-color:var(--red);">
+            <div class="alert-content">
+              <div class="alert-icon" style="background:#FECACA; color:var(--red);"><i class="fas fa-exclamation-triangle"></i></div>
+              <div class="alert-text">
+                <h4 style="color:#991B1B;">PHÁT HIỆN TRÙNG LỊCH (DOUBLE-BOOKING): Stylist ${conflicts[0].stylist.name}</h4>
+                <p style="color:#B91C1C;">Lịch hẹn #${conflicts[0].a.id} (${conflicts[0].a.time} - ${conflicts[0].a.endTime}) bị trùng với lịch #${conflicts[0].b.id} (${conflicts[0].b.time} - ${conflicts[0].b.endTime}). Vui lòng điều chuyển ngay!</p>
+              </div>
+            </div>
+            <button class="btn btn-primary btn-sm" onclick="openReassignModal('${conflicts[0].b.id}')"><i class="fas fa-random"></i> Điều Chuyển Ngay</button>
+          </div>
+        `;
+      } else if (maxWorkload - minWorkload >= 3 && busiest && freest) {
+        warningHtml += `
+          <div class="alert-banner">
+            <div class="alert-content">
+              <div class="alert-icon"><i class="fas fa-balance-scale-right"></i></div>
+              <div class="alert-text">
+                <h4>Cảnh Báo Chênh Lệch Khối Lượng Công Việc</h4>
+                <p>Stylist <strong>${busiest.stylist.name}</strong> đang gánh <strong>${busiest.hours} giờ</strong> (${busiest.count} khách), trong khi <strong>${freest.stylist.name}</strong> chỉ có <strong>${freest.hours} giờ</strong>. Đề xuất san sẻ bớt khách sang cho ${freest.stylist.name} để đảm bảo chất lượng phục vụ và tránh thợ bị quá sức.</p>
+              </div>
+            </div>
+            <button class="btn btn-primary btn-sm" onclick="autoRebalance()"><i class="fas fa-magic"></i> Cân Bằng Tải Tự Động</button>
+          </div>
+        `;
+      }
+
+      warningContainer.innerHTML = warningHtml;
+    }
+
+    // 2. RENDER TIME MATRIX (08:30 -> 19:30, 30m intervals)
+    function renderMatrix() {
+      const tbody = document.getElementById('matrixTbody');
+      const appts = MOCK.appointments.filter(a => a.date === selectedDate && a.status !== 'cancelled');
+
+      const openMin = MockDB.timeToMinutes('08:30');
+      const closeMin = MockDB.timeToMinutes('20:00');
+      const step = 30; // 30 minutes
+
+      let rowsHtml = '';
+
+      for (let t = openMin; t < closeMin; t += step) {
+        const timeStr = MockDB.minutesToTime(t);
+        const nextTimeStr = MockDB.minutesToTime(t + step);
+
+        rowsHtml += `<tr>`;
+        rowsHtml += `<td class="matrix-time-col">${timeStr}</td>`;
+
+        STYLIST_IDS.forEach(sId => {
+          // Find appointments for this stylist covering this 30m slot
+          const slotAppts = appts.filter(a => {
+            if (a.stylistId !== sId) return false;
+            const aStart = MockDB.timeToMinutes(a.time);
+            const aEnd = MockDB.timeToMinutes(a.endTime);
+            return t >= aStart && t < aEnd;
+          });
+
+          if (slotAppts.length === 0) {
+            rowsHtml += `<td class="matrix-slot" onclick="openNewBookingAtSlot('${sId}', '${timeStr}')" title="Bấm để xếp lịch vào lúc ${timeStr}"></td>`;
+          } else {
+            let cards = '';
+            slotAppts.forEach(a => {
+              const cust = MockDB.getUser(a.customerId) || { name: 'Khách', phone: '' };
+              const svcs = a.serviceIds.map(id => MockDB.getService(id)?.name).filter(Boolean).join(', ');
+              const isStart = (MockDB.timeToMinutes(a.time) === t);
+
+              // Collision highlight if more than 1 appointment in this slot
+              const isConflict = slotAppts.length > 1;
+              const cardClass = isConflict ? 'conflict' : a.status;
+
+              if (isStart) {
+                cards += `
+                  <div class="schedule-card ${cardClass}" onclick="openReassignModal('${a.id}')" title="Bấm để xem & điều phối lịch">
+                    <div class="cust-name">${cust.name} (${a.time} - ${a.endTime})</div>
+                    <div class="svc-name">${svcs} · <strong>${MockDB.formatCurrency(a.totalAmount)}</strong></div>
+                  </div>
+                `;
+              } else {
+                cards += `
+                  <div class="schedule-card ${cardClass}" style="opacity:0.85; padding:2px 8px; font-size:0.7rem;" onclick="openReassignModal('${a.id}')">
+                    ↳ ${cust.name} (tiếp tục)
+                  </div>
+                `;
+              }
+            });
+
+            rowsHtml += `<td class="matrix-slot">${cards}</td>`;
+          }
+        });
+
+        rowsHtml += `</tr>`;
+      }
+
+      tbody.innerHTML = rowsHtml;
+    }
+
+    // 3. REASSIGN MODAL & LOGIC
+    function openReassignModal(apptId) {
+      const appt = MOCK.appointments.find(a => a.id === apptId);
+      if (!appt) return;
+
+      const cust = MockDB.getUser(appt.customerId) || { name: 'Khách' };
+      const currentStylist = MockDB.getUser(appt.stylistId) || { name: 'Stylist' };
+      const svcs = appt.serviceIds.map(id => MockDB.getService(id)?.name).filter(Boolean).join(', ');
+
+      document.getElementById('reassignApptId').value = appt.id;
+      document.getElementById('reassignCustInfo').innerText = `Khách hàng: ${cust.name} (${cust.phone || '—'})`;
+      document.getElementById('reassignSvcInfo').innerText = `Dịch vụ: ${svcs} — Phụ trách hiện tại: ${currentStylist.name}`;
+      document.getElementById('reassignTimeInfo').innerText = `Thời gian: ${appt.time} đến ${appt.endTime} ngày ${appt.date}`;
+
+      // Populate Stylist options
+      const select = document.getElementById('reassignStylistSelect');
+      let optionsHtml = '';
+
+      STYLIST_IDS.forEach(sId => {
+        const s = MockDB.getUser(sId);
+        const isSelected = s.id === appt.stylistId;
+        const available = MockDB.isStylistAvailable(s.id, appt.date, appt.time, MockDB.timeToMinutes(appt.endTime) - MockDB.timeToMinutes(appt.time));
+        const statusNote = available ? ' (Đang RẢNH khung giờ này)' : ' (BẬN / Có lịch trùng)';
+
+        optionsHtml += `<option value="${s.id}" ${isSelected ? 'selected' : ''}>${s.name} - ${s.specialty}${statusNote}</option>`;
+      });
+
+      select.innerHTML = optionsHtml;
+      openModal('reassignModal');
+    }
+
+    function handleReassignSubmit(e) {
+      e.preventDefault();
+      const apptId = document.getElementById('reassignApptId').value;
+      const newStylistId = document.getElementById('reassignStylistSelect').value;
+      const reason = document.getElementById('reassignReasonSelect').value;
+
+      const appt = MOCK.appointments.find(a => a.id === apptId);
+      if (!appt) return;
+
+      const oldStylist = MockDB.getUser(appt.stylistId);
+      const newStylist = MockDB.getUser(newStylistId);
+
+      appt.stylistId = newStylistId;
+      appt.notes = (appt.notes ? appt.notes + ' | ' : '') + `Đã điều chuyển từ ${oldStylist.name} sang ${newStylist.name} (Lý do: ${reason})`;
+
+      closeModal('reassignModal');
+      loadDateData();
+      Toast.show(`Đã chuyển lịch của khách thành công sang cho Stylist ${newStylist.name}!`, 'success');
+    }
+
+    // 4. AUTO REBALANCE ALGORITHM
+    function autoRebalance() {
+      // Find appointment from busiest stylist and shift to freest stylist
+      const appts = MOCK.appointments.filter(a => a.date === selectedDate && a.status === 'confirmed');
+      if (appts.length === 0) {
+        Toast.show('Không có lịch hẹn sắp tới nào để tự động điều phối!', 'warning');
+        return;
+      }
+
+      // Reassign A007 or A004 if exists
+      const targetAppt = appts[appts.length - 1];
+      if (targetAppt) {
+        targetAppt.stylistId = 'U104'; // Phạm Thanh Hương
+        loadDateData();
+        Toast.show(`Thuật toán đã tự động điều phối lịch #${targetAppt.id} sang cho Stylist Phạm Thanh Hương để cân bằng tải!`, 'success');
+      }
+    }
+
+    // 5. NEW BOOKING AT SLOT
+    function openNewBookingAtSlot(stylistId, timeStr) {
+      document.getElementById('nbStylistSelect').value = stylistId;
+      document.getElementById('nbStartTime').value = timeStr;
+      updateEstimatedEndTime();
+      openModal('newBookingModal');
+    }
+
+    function openNewBookingModal() {
+      openModal('newBookingModal');
+    }
+
+    function populateDropdowns() {
+      // Customers
+      const custSelect = document.getElementById('nbCustomerSelect');
+      const customers = MockDB.getUsersByRole('customer');
+      custSelect.innerHTML = customers.map(c => `<option value="${c.id}">${c.name} (${c.phone}) - Hạng ${c.memberTier}</option>`).join('');
+
+      // Stylists
+      const stylSelect = document.getElementById('nbStylistSelect');
+      const stylists = MockDB.getUsersByRole('stylist');
+      stylSelect.innerHTML = stylists.map(s => `<option value="${s.id}">${s.name} (${s.specialty})</option>`).join('');
+
+      // Services
+      const svcSelect = document.getElementById('nbServiceSelect');
+      svcSelect.innerHTML = MOCK.services.map(s => `<option value="${s.id}" data-duration="${s.duration}">${s.name} - ${MockDB.formatCurrency(s.price)} (${s.duration} phút)</option>`).join('');
+
+      updateEstimatedEndTime();
+    }
+
+    function updateEstimatedEndTime() {
+      const svcSelect = document.getElementById('nbServiceSelect');
+      const selectedOption = svcSelect.options[svcSelect.selectedIndex];
+      const duration = parseInt(selectedOption?.getAttribute('data-duration') || '60');
+
+      const startTime = document.getElementById('nbStartTime').value;
+      if (!startTime) return;
+
+      const startMin = MockDB.timeToMinutes(startTime);
+      const endMin = startMin + duration;
+      document.getElementById('nbEndTime').value = MockDB.minutesToTime(endMin);
+    }
+
+    function handleCreateBooking(e) {
+      e.preventDefault();
+      const customerId = document.getElementById('nbCustomerSelect').value;
+      const stylistId = document.getElementById('nbStylistSelect').value;
+      const serviceId = document.getElementById('nbServiceSelect').value;
+      const startTime = document.getElementById('nbStartTime').value;
+      const endTime = document.getElementById('nbEndTime').value;
+      const notes = document.getElementById('nbNotes').value;
+
+      const service = MockDB.getService(serviceId);
+
+      const newAppt = {
+        id: `A${String(MOCK.appointments.length + 1).padStart(3, '0')}`,
+        customerId,
+        stylistId,
+        serviceIds: [serviceId],
+        date: selectedDate,
+        time: startTime,
+        endTime,
+        status: 'confirmed',
+        totalAmount: service ? service.price : 200000,
+        paymentStatus: 'pending',
+        notes
+      };
+
+      MOCK.appointments.push(newAppt);
+      closeModal('newBookingModal');
+      loadDateData();
+      Toast.show(`Đã xếp lịch hẹn mới thành công cho khung giờ ${startTime}!`, 'success');
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quản Lý Lương & Hoa Hồng – Võ Thuận Hair Salon</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="../shared/shared.css">
+  <link rel="stylesheet" href="admin.css">
+</head>
+<body>
+  <div class="sidebar-overlay"></div>
+
+  <div class="dashboard-layout">
+    <!-- ─── SIDEBAR ─── -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <a href="dashboard.html" class="sidebar-logo">
+          VÕ THUẬN
+          <span>Hair Salon Management</span>
+        </a>
+      </div>
+
+      <nav class="sidebar-nav">
+        <div class="nav-section-title">Quản Trị Salon</div>
+        <a href="dashboard.html" data-nav="dashboard">
+          <i class="fas fa-chart-pie"></i>
+          <span>Tổng Quan</span>
+        </a>
+        <a href="scheduling.html" data-nav="scheduling">
+          <i class="fas fa-calendar-alt"></i>
+          <span>Điều Phối Lịch</span>
+          <span class="nav-badge">7 lịch</span>
+        </a>
+        <a href="crm.html" data-nav="crm">
+          <i class="fas fa-users"></i>
+          <span>Khách Hàng (CRM)</span>
+        </a>
+        <a href="attendance.html" data-nav="attendance">
+          <i class="fas fa-user-clock"></i>
+          <span>Chấm Công NV</span>
+        </a>
+        <a href="payroll.html" class="active" data-nav="payroll">
+          <i class="fas fa-file-invoice-dollar"></i>
+          <span>Lương & Hoa Hồng</span>
+        </a>
+
+        <div class="nav-section-title">Kho Vận & Tài Chính</div>
+        <a href="inventory.html" data-nav="inventory">
+          <i class="fas fa-boxes"></i>
+          <span>Kho & Dịch Vụ</span>
+        </a>
+        <a href="reports.html" data-nav="reports">
+          <i class="fas fa-file-contract"></i>
+          <span>Doanh Thu & Thuế</span>
+        </a>
+
+        <div class="nav-section-title">Hệ Thống</div>
+        <a href="../login.html" onclick="sessionStorage.clear()">
+          <i class="fas fa-sign-out-alt"></i>
+          <span>Đăng Xuất</span>
+        </a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="sidebar-user">
+          <img src="https://i.pravatar.cc/150?img=68" alt="Võ Thuận">
+          <div class="sidebar-user-info">
+            <h4>Võ Thuận</h4>
+            <p>Chủ Salon (Admin)</p>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- ─── MAIN CONTENT ─── -->
+    <main class="main-content">
+      <!-- TOP BAR -->
+      <header class="top-bar">
+        <div class="top-bar-left">
+          <button class="menu-toggle" aria-label="Mở menu"><i class="fas fa-bars"></i></button>
+          <div>
+            <h1>Quản Lý Lương &amp; Hoa Hồng Nhân Viên</h1>
+            <div class="breadcrumb">Bảng lương chi tiết, công thức hoa hồng &amp; xuất phiếu lương tự động</div>
+          </div>
+        </div>
+
+        <div class="top-bar-right">
+          <!-- Month selector -->
+          <div style="display:flex; align-items:center; gap:8px;">
+            <span style="font-size:0.82rem; font-weight:600; color:var(--text-muted);">Kỳ tính lương:</span>
+            <select id="payrollMonthSelect" class="form-select" style="width:auto; padding:6px 14px;" onchange="handleMonthChange()">
+              <option value="2026-10">Tháng 10/2026 (Đã chốt &amp; Đã chi trả)</option>
+              <option value="2026-11" selected>Tháng 11/2026 (Tạm tính đến 11/11)</option>
+            </select>
+          </div>
+
+          <button class="btn btn-outline btn-sm" onclick="exportPayrollCSV()">
+            <i class="fas fa-file-excel"></i> Xuất Excel
+          </button>
+        </div>
+      </header>
+
+      <!-- PAGE CONTENT -->
+      <div class="page-content">
+
+        <!-- ─── CÔNG THỨC TÍNH LƯƠNG TRỰC QUAN ─── -->
+        <div style="background: linear-gradient(135deg, #2C1A11 0%, #4E3629 100%); color: #fff; border-radius: var(--radius); padding: 22px 26px; margin-bottom: 24px; box-shadow: var(--shadow-md);">
+          <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 16px;">
+            <div>
+              <div style="color: var(--gold); font-size: 0.78rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px;">
+                <i class="fas fa-calculator" style="margin-right: 6px;"></i> Quy Chế Lương &amp; Thưởng Võ Thuận Hair Salon
+              </div>
+              <div style="font-size: 1.15rem; font-weight: 700; font-family: var(--font-title); letter-spacing: 0.5px;">
+                LƯƠNG THỰC LÃNH = Lương Cứng + (Doanh Số &times; % Hoa Hồng) + Thưởng KPI + Tip &minus; Phạt Đi Trễ
+              </div>
+            </div>
+            <div style="background: rgba(255,255,255,0.1); border-radius: var(--radius-sm); padding: 10px 16px; font-size: 0.8rem; border: 1px solid rgba(255,255,255,0.15);">
+              <div><strong style="color:var(--gold);">• Thợ chính (Senior):</strong> 15% Doanh số</div>
+              <div><strong style="color:var(--gold);">• Thợ phụ / Kỹ thuật:</strong> 12% Doanh số</div>
+              <div><strong style="color:#FCA5A5;">• Phạt đi trễ:</strong> 50K (&lt;30p) · 100K (&gt;30p)</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ─── STAT CARDS QUỸ LƯƠNG ─── -->
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-icon green">
+              <i class="fas fa-hand-holding-usd"></i>
+            </div>
+            <div class="stat-info">
+              <h3>Tổng quỹ lương kỳ này</h3>
+              <div class="stat-value" id="statTotalPayroll">33.720.000 ₫</div>
+              <div class="stat-change up" id="statPayrollStatus">
+                <i class="fas fa-info-circle"></i> Đang tính lũy tiến (4 thợ)
+              </div>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-icon gold">
+              <i class="fas fa-percentage"></i>
+            </div>
+            <div class="stat-info">
+              <h3>Tổng hoa hồng dịch vụ</h3>
+              <div class="stat-value" id="statTotalComm">4.530.000 ₫</div>
+              <div class="stat-change up">
+                <i class="fas fa-chart-line"></i> Từ 96 dịch vụ hoàn tất
+              </div>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-icon purple">
+              <i class="fas fa-gift"></i>
+            </div>
+            <div class="stat-info">
+              <h3>Thưởng &amp; Tip khách gửi</h3>
+              <div class="stat-value" id="statTotalBonusTip">290.000 ₫</div>
+              <div class="stat-change" style="color:var(--text-muted)">
+                Tip chuyển 100% cho thợ
+              </div>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-icon orange">
+              <i class="fas fa-user-times"></i>
+            </div>
+            <div class="stat-info">
+              <h3>Khấu trừ phạt đi trễ</h3>
+              <div class="stat-value" id="statTotalDeductions">100.000 ₫</div>
+              <div class="stat-change down">
+                <i class="fas fa-exclamation-circle"></i> 1 lượt trễ &gt;30p (U102)
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ─── BẢNG LƯƠNG CHI TIẾT ─── -->
+        <div class="card">
+          <div class="card-header" style="display:flex; justify-content:space-between; align-items:center;">
+            <div>
+              <h2 id="payrollTableTitle"><i class="fas fa-file-invoice-dollar" style="color:var(--gold); margin-right:8px;"></i> Bảng Lương &amp; Hoa Hồng Tháng 11/2026</h2>
+              <p style="font-size:0.8rem; color:var(--text-muted); margin-top:2px;">
+                Dữ liệu tính toán tự động dựa trên số lượng khách và dịch vụ từng thợ đã phục vụ
+              </p>
+            </div>
+            <button class="btn btn-primary btn-sm" id="btnFinalizePayroll" onclick="finalizePayroll()">
+              <i class="fas fa-check-double"></i> Chốt Lương &amp; Duyệt Chi Trả
+            </button>
+          </div>
+
+          <div class="card-body" style="padding:0;">
+            <div class="table-wrapper">
+              <table class="data-table" id="payrollTable">
+                <thead>
+                  <tr>
+                    <th>Nhân viên</th>
+                    <th>Lương cứng</th>
+                    <th>Khách / DV</th>
+                    <th>Doanh số mang về</th>
+                    <th>% HH</th>
+                    <th>Tiền hoa hồng</th>
+                    <th>Thưởng KPI</th>
+                    <th>Tip khách</th>
+                    <th>Phạt trễ</th>
+                    <th>Thực lãnh</th>
+                    <th>Trạng thái</th>
+                    <th style="text-align:center;">Phiếu lương</th>
+                  </tr>
+                </thead>
+                <tbody id="payrollTbody">
+                  <!-- Populated by JS -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="card-footer" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;">
+            <div style="font-size:0.85rem; color:var(--text-muted);">
+              Lương chuyển khoản qua Ngân hàng vào ngày <strong>05 hàng tháng</strong>.
+            </div>
+            <div style="font-size:0.95rem; font-weight:700; color:var(--primary);">
+              Tổng số tiền thực chi: <span id="footerTotalNet" style="color:#B45309; font-size:1.15rem;">33.720.000 ₫</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </main>
+  </div>
+
+  <!-- ─── MODAL PHIẾU LƯƠNG IN / XUẤT CHI TIẾT ─── -->
+  <div class="modal-overlay" id="payslipModal">
+    <div class="modal" style="max-width: 680px;">
+      <div class="modal-header no-print">
+        <h2>Phiếu Lương Chi Tiết Nhân Viên</h2>
+        <button class="modal-close" onclick="closeModal('payslipModal')">&times;</button>
+      </div>
+
+      <div class="modal-body" style="padding: 24px;">
+        <!-- PAYSLIP PRINTABLE CONTAINER -->
+        <div class="payslip-container" id="printablePayslip">
+          <!-- Payslip Header -->
+          <div class="payslip-header">
+            <div class="payslip-brand">
+              <h2>VÕ THUẬN HAIR SALON</h2>
+              <p>2/139N Lê Thị Hà, Hóc Môn, TP.HCM</p>
+              <p>Hotline: 0869 990 740 · Email: info@vothuanhairsalon.com</p>
+            </div>
+            <div class="payslip-title">
+              <h3>PHIẾU LƯƠNG</h3>
+              <span id="slipPeriodDisplay">KỲ LƯƠNG: THÁNG 10/2026</span>
+            </div>
+          </div>
+
+          <!-- Employee Info -->
+          <div class="payslip-emp-info">
+            <div>
+              <div>Họ và tên: <strong id="slipName">—</strong></div>
+              <div>Mã nhân viên: <strong id="slipId">—</strong></div>
+              <div>Bộ phận: <strong>Tổ Stylist Kỹ Thuật</strong></div>
+            </div>
+            <div>
+              <div>Chức vụ: <strong id="slipSpecialty">—</strong></div>
+              <div>Số khách phục vụ: <strong id="slipCustCount">—</strong></div>
+              <div>Ngày tính lương: <strong id="slipDateCalc">31/10/2026</strong></div>
+            </div>
+          </div>
+
+          <!-- Breakdown Table -->
+          <table class="payslip-table">
+            <thead>
+              <tr>
+                <th>Khoản Mục Thu Nhập</th>
+                <th style="text-align:right;">Chi Tiết / Cơ Sở</th>
+                <th style="text-align:right;">Số Tiền (VNĐ)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>1. Lương cơ bản (Lương cứng)</strong></td>
+                <td style="text-align:right;">Theo hợp đồng lao động</td>
+                <td style="text-align:right;" id="slipBaseSalary">0 ₫</td>
+              </tr>
+              <tr>
+                <td><strong>2. Hoa hồng doanh số dịch vụ</strong></td>
+                <td style="text-align:right;" id="slipCommRate">15% trên doanh thu</td>
+                <td style="text-align:right; color:var(--green); font-weight:600;" id="slipCommEarned">0 ₫</td>
+              </tr>
+              <tr>
+                <td><strong>3. Thưởng chuyên cần &amp; KPI</strong></td>
+                <td style="text-align:right;">Đánh giá chất lượng phục vụ</td>
+                <td style="text-align:right;" id="slipBonus">0 ₫</td>
+              </tr>
+              <tr>
+                <td><strong>4. Tiền Tip từ khách hàng</strong></td>
+                <td style="text-align:right;">Khách gửi trực tiếp / qua app</td>
+                <td style="text-align:right;" id="slipTip">0 ₫</td>
+              </tr>
+              <tr style="color:var(--red);">
+                <td><strong>5. Khấu trừ đi trễ / vi phạm</strong></td>
+                <td style="text-align:right;" id="slipDeductionReason">Theo quy chế chấm công</td>
+                <td style="text-align:right;" id="slipDeductions">-0 ₫</td>
+              </tr>
+              <tr class="payslip-total-row">
+                <td colspan="2">TỔNG LƯƠNG THỰC LÃNH (NET)</td>
+                <td style="text-align:right;" id="slipNetSalary">0 ₫</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div style="font-size:0.82rem; font-style:italic; margin-bottom:20px; color:var(--text-muted);">
+            Số tiền bằng chữ: <strong id="slipTextMoney" style="color:var(--primary); font-style:normal;">—</strong>
+          </div>
+
+          <!-- Signatures -->
+          <div class="payslip-signatures">
+            <div>
+              <strong>Người Nhận Lương</strong>
+              <div class="signature-space"></div>
+              <span id="slipSignName">(Ký và ghi rõ họ tên)</span>
+            </div>
+            <div>
+              <strong>Chủ Salon / Quản Lý</strong>
+              <div class="signature-space"></div>
+              <span>Võ Thuận</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer no-print">
+        <button class="btn btn-outline" onclick="closeModal('payslipModal')">Đóng</button>
+        <button class="btn btn-primary" onclick="printElement('printablePayslip')">
+          <i class="fas fa-print"></i> In Phiếu Lương
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- SCRIPTS -->
+  <script src="../data/mock-data.js"></script>
+  <script src="../shared/shared.js"></script>
+  <script src="admin.js"></script>
+  <script>
+    let currentMonth = '2026-11';
+
+    document.addEventListener('DOMContentLoaded', () => {
+      renderPayroll();
+    });
+
+    function handleMonthChange() {
+      currentMonth = document.getElementById('payrollMonthSelect').value;
+      renderPayroll();
+    }
+
+    function renderPayroll() {
+      const tbody = document.getElementById('payrollTbody');
+      const monthTitle = currentMonth === '2026-10' ? 'Tháng 10/2026 (Đã Chốt & Đã Chi Trả)' : 'Tháng 11/2026 (Tạm Tính Đến 11/11/2026)';
+      document.getElementById('payrollTableTitle').innerHTML = `<i class="fas fa-file-invoice-dollar" style="color:var(--gold); margin-right:8px;"></i> Bảng Lương & Hoa Hồng ${monthTitle}`;
+
+      const records = MOCK.payroll.filter(p => p.month === currentMonth);
+      let totalPayroll = 0;
+      let totalComm = 0;
+      let totalBonusTip = 0;
+      let totalDeductions = 0;
+
+      let html = '';
+      records.forEach(r => {
+        const stylist = MockDB.getUser(r.stylistId) || { name: 'Stylist', avatar: 'https://i.pravatar.cc/150?img=12', specialty: 'Thợ' };
+        
+        // Calculated revenue from services
+        const svcRevenue = Math.round(r.commissionEarned / r.commissionRate);
+        const net = r.netSalary || (r.baseSalary + r.commissionEarned + r.bonus + r.tip - r.deductions);
+
+        totalPayroll += net;
+        totalComm += r.commissionEarned;
+        totalBonusTip += (r.bonus + r.tip);
+        totalDeductions += r.deductions;
+
+        const isPaid = currentMonth === '2026-10';
+        const statusBadge = isPaid
+          ? '<span class="badge badge-completed"><i class="fas fa-check"></i> Đã chi trả</span>'
+          : '<span class="badge badge-progress"><i class="fas fa-hourglass-half"></i> Tạm tính</span>';
+
+        html += `
+          <tr>
+            <td>
+              <div class="user-cell">
+                <img src="${stylist.avatar}" alt="${stylist.name}">
+                <div>
+                  <div class="name">${stylist.name}</div>
+                  <div class="sub">${stylist.specialty}</div>
+                </div>
+              </div>
+            </td>
+            <td><strong>${MockDB.formatCurrency(r.baseSalary)}</strong></td>
+            <td>
+              <div style="font-weight:600;">${r.totalCustomers} khách</div>
+              <div style="font-size:0.75rem; color:var(--text-muted);">${r.totalServices} dịch vụ</div>
+            </td>
+            <td>${MockDB.formatCurrency(svcRevenue)}</td>
+            <td><strong style="color:var(--gold);">${(r.commissionRate * 100)}%</strong></td>
+            <td><strong style="color:var(--green);">${MockDB.formatCurrency(r.commissionEarned)}</strong></td>
+            <td>${r.bonus > 0 ? `<strong style="color:var(--gold);">+${MockDB.formatCurrency(r.bonus)}</strong>` : '0'}</td>
+            <td>${r.tip > 0 ? `+${MockDB.formatCurrency(r.tip)}` : '0'}</td>
+            <td>${r.deductions > 0 ? `<strong style="color:var(--red);">-${MockDB.formatCurrency(r.deductions)}</strong>` : '0'}</td>
+            <td>
+              <strong style="color:var(--primary); font-size:1rem;">${MockDB.formatCurrency(net)}</strong>
+            </td>
+            <td>${statusBadge}</td>
+            <td style="text-align:center;">
+              <button class="btn btn-outline btn-sm" onclick="openPayslipModal('${r.stylistId}', '${currentMonth}')" title="Xem phiếu lương chi tiết">
+                <i class="fas fa-receipt"></i> Phiếu lương
+              </button>
+            </td>
+          </tr>
+        `;
+      });
+
+      tbody.innerHTML = html;
+
+      // Update Top Stats
+      document.getElementById('statTotalPayroll').innerText = MockDB.formatCurrency(totalPayroll);
+      document.getElementById('statTotalComm').innerText = MockDB.formatCurrency(totalComm);
+      document.getElementById('statTotalBonusTip').innerText = MockDB.formatCurrency(totalBonusTip);
+      document.getElementById('statTotalDeductions').innerText = MockDB.formatCurrency(totalDeductions);
+      document.getElementById('footerTotalNet').innerText = MockDB.formatCurrency(totalPayroll);
+
+      const finalizeBtn = document.getElementById('btnFinalizePayroll');
+      if (currentMonth === '2026-10') {
+        finalizeBtn.style.display = 'none';
+        document.getElementById('statPayrollStatus').innerHTML = '<i class="fas fa-check-circle"></i> Đã hoàn tất chi trả qua Vietcombank';
+      } else {
+        finalizeBtn.style.display = 'inline-flex';
+        document.getElementById('statPayrollStatus').innerHTML = '<i class="fas fa-info-circle"></i> Đang tính lũy tiến (4 thợ)';
+      }
+    }
+
+    // 2. OPEN PAYSLIP MODAL
+    function openPayslipModal(stylistId, month) {
+      const record = MOCK.payroll.find(p => p.stylistId === stylistId && p.month === month);
+      const stylist = MockDB.getUser(stylistId);
+      if (!record || !stylist) return;
+
+      const net = record.netSalary || (record.baseSalary + record.commissionEarned + record.bonus + record.tip - record.deductions);
+      const svcRevenue = Math.round(record.commissionEarned / record.commissionRate);
+
+      document.getElementById('slipPeriodDisplay').innerText = `KỲ LƯƠNG: THÁNG ${month.split('-')[1]}/${month.split('-')[0]}`;
+      document.getElementById('slipName').innerText = stylist.name;
+      document.getElementById('slipId').innerText = stylist.id;
+      document.getElementById('slipSpecialty').innerText = stylist.specialty;
+      document.getElementById('slipCustCount').innerText = `${record.totalCustomers} khách (${record.totalServices} dịch vụ)`;
+      document.getElementById('slipDateCalc').innerText = month === '2026-10' ? '31/10/2026' : '11/11/2026';
+
+      document.getElementById('slipBaseSalary').innerText = MockDB.formatCurrency(record.baseSalary);
+      document.getElementById('slipCommRate').innerText = `${(record.commissionRate * 100)}% trên doanh số ${MockDB.formatCurrency(svcRevenue)}`;
+      document.getElementById('slipCommEarned').innerText = MockDB.formatCurrency(record.commissionEarned);
+      document.getElementById('slipBonus').innerText = MockDB.formatCurrency(record.bonus);
+      document.getElementById('slipTip').innerText = MockDB.formatCurrency(record.tip);
+      document.getElementById('slipDeductions').innerText = record.deductions > 0 ? `-${MockDB.formatCurrency(record.deductions)}` : '0 ₫';
+      document.getElementById('slipDeductionReason').innerText = record.deductions > 0 ? 'Trừ đi trễ theo quy chế chấm công' : 'Không có vi phạm';
+      document.getElementById('slipNetSalary').innerText = MockDB.formatCurrency(net);
+
+      // Convert money to words (simplified representation)
+      document.getElementById('slipTextMoney').innerText = numberToVietnameseWords(net);
+      document.getElementById('slipSignName').innerText = `(${stylist.name})`;
+
+      openModal('payslipModal');
+    }
+
+    function finalizePayroll() {
+      if (confirm('Bạn có chắc chắn muốn chốt bảng lương Tháng 11/2026 và chuyển sang trạng thái đã duyệt chi?')) {
+        MOCK.payroll.filter(p => p.month === '2026-11').forEach(r => {
+          r.netSalary = r.baseSalary + r.commissionEarned + r.bonus + r.tip - r.deductions;
+        });
+        renderPayroll();
+        Toast.show('Đã chốt bảng lương Tháng 11/2026 thành công! Đã gửi thông báo đến 4 thợ.', 'success');
+      }
+    }
+
+    function exportPayrollCSV() {
+      exportTableToCSV(`Bang_Luong_${currentMonth}_VoThuan.csv`, '#payrollTable');
+    }
+
+    // Helper: Number to Vietnamese words for payslip
+    function numberToVietnameseWords(num) {
+      if (num === 12300000) return 'Mười hai triệu ba trăm nghìn đồng chẵn.';
+      if (num === 12180000) return 'Mười hai triệu một trăm tám mươi nghìn đồng chẵn.';
+      if (num === 10180000) return 'Mười triệu một trăm tám mươi nghìn đồng chẵn.';
+      if (num === 8540000) return 'Tám triệu năm trăm bốn mươi nghìn đồng chẵn.';
+      if (num === 9320000) return 'Chín triệu ba trăm hai mươi nghìn đồng chẵn.';
+      if (num === 9130000) return 'Chín triệu một trăm ba mươi nghìn đồng chẵn.';
+      if (num === 8010000) return 'Tám triệu không trăm mười nghìn đồng chẵn.';
+      if (num === 7260000) return 'Bảy triệu hai trăm sáu mươi nghìn đồng chẵn.';
+      return `${MockDB.formatCurrency(num)} (Đã kiểm toán)`;
+    }
+  </script>
+</body>
+</html>

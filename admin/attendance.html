@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chấm Công & Nghỉ Phép Nhân Viên – Võ Thuận Hair Salon</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="../shared/shared.css">
+  <link rel="stylesheet" href="admin.css">
+</head>
+<body>
+  <div class="sidebar-overlay"></div>
+
+  <div class="dashboard-layout">
+    <!-- ─── SIDEBAR ─── -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <a href="dashboard.html" class="sidebar-logo">
+          VÕ THUẬN
+          <span>Hair Salon Management</span>
+        </a>
+      </div>
+
+      <nav class="sidebar-nav">
+        <div class="nav-section-title">Quản Trị Salon</div>
+        <a href="dashboard.html" data-nav="dashboard">
+          <i class="fas fa-chart-pie"></i>
+          <span>Tổng Quan</span>
+        </a>
+        <a href="scheduling.html" data-nav="scheduling">
+          <i class="fas fa-calendar-alt"></i>
+          <span>Điều Phối Lịch</span>
+          <span class="nav-badge">7 lịch</span>
+        </a>
+        <a href="crm.html" data-nav="crm">
+          <i class="fas fa-users"></i>
+          <span>Khách Hàng (CRM)</span>
+        </a>
+        <a href="attendance.html" class="active" data-nav="attendance">
+          <i class="fas fa-user-clock"></i>
+          <span>Chấm Công NV</span>
+          <span class="nav-badge" id="leaveBadgeCount">2 đơn</span>
+        </a>
+        <a href="payroll.html" data-nav="payroll">
+          <i class="fas fa-file-invoice-dollar"></i>
+          <span>Lương & Hoa Hồng</span>
+        </a>
+
+        <div class="nav-section-title">Kho Vận & Tài Chính</div>
+        <a href="inventory.html" data-nav="inventory">
+          <i class="fas fa-boxes"></i>
+          <span>Kho & Dịch Vụ</span>
+        </a>
+        <a href="reports.html" data-nav="reports">
+          <i class="fas fa-file-contract"></i>
+          <span>Doanh Thu & Thuế</span>
+        </a>
+
+        <div class="nav-section-title">Hệ Thống</div>
+        <a href="../login.html" onclick="sessionStorage.clear()">
+          <i class="fas fa-sign-out-alt"></i>
+          <span>Đăng Xuất</span>
+        </a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="sidebar-user">
+          <img src="https://i.pravatar.cc/150?img=68" alt="Võ Thuận">
+          <div class="sidebar-user-info">
+            <h4>Võ Thuận</h4>
+            <p>Chủ Salon (Admin)</p>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- ─── MAIN CONTENT ─── -->
+    <main class="main-content">
+      <!-- TOP BAR -->
+      <header class="top-bar">
+        <div class="top-bar-left">
+          <button class="menu-toggle" aria-label="Mở menu"><i class="fas fa-bars"></i></button>
+          <div>
+            <h1>Chấm Công &amp; Điểm Danh Nhân Viên</h1>
+            <div class="breadcrumb">Bảng chấm công 4 thợ chính, theo dõi giờ công &amp; xét duyệt nghỉ phép</div>
+          </div>
+        </div>
+
+        <div class="top-bar-right">
+          <div class="date-badge">
+            <span class="live-indicator"></span>
+            <span>Hôm nay: 11/11/2026</span>
+          </div>
+          <button class="btn btn-outline btn-sm" onclick="exportAttendanceCSV()">
+            <i class="fas fa-download"></i> Xuất Bảng Công
+          </button>
+        </div>
+      </header>
+
+      <!-- PAGE CONTENT -->
+      <div class="page-content">
+
+        <!-- THỐNG KÊ CHẤM CÔNG THÁNG 11 -->
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-icon green">
+              <i class="fas fa-user-check"></i>
+            </div>
+            <div class="stat-info">
+              <h3>Đi đúng giờ</h3>
+              <div class="stat-value">94.7%</div>
+              <div class="stat-change up">
+                <i class="fas fa-check"></i> 36 / 38 ca đúng giờ
+              </div>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-icon orange">
+              <i class="fas fa-user-clock"></i>
+            </div>
+            <div class="stat-info">
+              <h3>Đi trễ tháng 11</h3>
+              <div class="stat-value">2 lượt</div>
+              <div class="stat-change down">
+                <i class="fas fa-clock"></i> U101 (15p) · U102 (30p)
+              </div>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-icon blue">
+              <i class="fas fa-business-time"></i>
+            </div>
+            <div class="stat-info">
+              <h3>Tổng giờ làm việc</h3>
+              <div class="stat-value">395 giờ</div>
+              <div class="stat-change up">
+                <i class="fas fa-bolt"></i> Trung bình 98.7h / thợ
+              </div>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-icon purple">
+              <i class="fas fa-calendar-minus"></i>
+            </div>
+            <div class="stat-info">
+              <h3>Đơn xin nghỉ chờ duyệt</h3>
+              <div class="stat-value" id="pendingLeaveCardCount">2 đơn</div>
+              <div class="stat-change" style="color:var(--text-muted)">
+                Đã duyệt 2 đơn trước đó
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ─── BẢNG CHẤM CÔNG HÔM NAY (11/11/2026) ─── -->
+        <div class="card" style="margin-bottom: 28px;">
+          <div class="card-header" style="display:flex; justify-content:space-between; align-items:center;">
+            <h2><i class="fas fa-calendar-day" style="color:var(--gold); margin-right:8px;"></i> Điểm Danh Hôm Nay (Thứ Tư, 11/11/2026)</h2>
+            <div style="font-size:0.85rem; color:var(--text-muted);">
+              Quy định ca: <strong>08:30 – 20:00</strong> (11.5 giờ / ca)
+            </div>
+          </div>
+
+          <div class="card-body" style="padding:0;">
+            <div class="table-wrapper">
+              <table class="data-table" id="todayAttendanceTable">
+                <thead>
+                  <tr>
+                    <th>Nhân viên</th>
+                    <th>Vị trí / Chuyên môn</th>
+                    <th>Giờ Check-in</th>
+                    <th>Giờ Check-out</th>
+                    <th>Trạng thái</th>
+                    <th>Số giờ đã làm</th>
+                    <th style="text-align:center;">Thao tác</th>
+                  </tr>
+                </thead>
+                <tbody id="todayAttendanceTbody">
+                  <!-- Populated by JS -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- ─── TABS: CHI TIẾT THÁNG & DUYỆT ĐƠN NGHỈ PHÉP ─── -->
+        <div class="tabs">
+          <button class="tab-btn active" data-tab="tab-monthly-att">
+            <i class="fas fa-calendar-alt"></i> Bảng Chấm Công Chi Tiết Tháng 11/2026
+          </button>
+          <button class="tab-btn" data-tab="tab-leave-requests">
+            <i class="fas fa-envelope-open-text"></i> Quản Lý Đơn Nghỉ Phép <span class="badge badge-progress" id="leaveTabCount" style="margin-left:6px;">2 chờ</span>
+          </button>
+        </div>
+
+        <!-- TAB 1: BẢNG CHẤM CÔNG THÁNG 11 -->
+        <div class="tab-content active" id="tab-monthly-att">
+          <div class="card">
+            <div class="card-header" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;">
+              <div>
+                <h2><i class="fas fa-history" style="color:var(--gold); margin-right:8px;"></i> Lịch Sử Chấm Công 01/11 - 11/11/2026</h2>
+                <p style="font-size:0.8rem; color:var(--text-muted); margin-top:2px;">
+                  Hiển thị chi tiết từng ngày công của 4 Stylist chính
+                </p>
+              </div>
+
+              <!-- Stylist filter dropdown -->
+              <div style="display:flex; align-items:center; gap:10px;">
+                <label style="font-size:0.82rem; font-weight:600; color:var(--text-muted);">Lọc Stylist:</label>
+                <select id="stylistMonthFilter" class="form-select" style="width:auto; padding:6px 12px;" onchange="renderMonthlyAttendance()">
+                  <option value="all">Tất cả 4 Stylist</option>
+                  <option value="U101">Nguyễn Minh Khoa (Cắt Nam)</option>
+                  <option value="U102">Trần Thị Bảo Ngọc (Nhuộm)</option>
+                  <option value="U103">Lê Văn Phúc (Uốn/Duỗi)</option>
+                  <option value="U104">Phạm Thanh Hương (Phục hồi)</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="card-body" style="padding:0;">
+              <div class="table-wrapper">
+                <table class="data-table" id="monthlyAttTable">
+                  <thead>
+                    <tr>
+                      <th>Ngày</th>
+                      <th>Nhân viên</th>
+                      <th>Giờ vào</th>
+                      <th>Giờ ra</th>
+                      <th>Thời gian làm</th>
+                      <th>Trạng thái</th>
+                      <th>Ghi chú</th>
+                      <th style="text-align:center;">Sửa</th>
+                    </tr>
+                  </thead>
+                  <tbody id="monthlyAttTbody">
+                    <!-- Populated by JS -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- TAB 2: QUẢN LÝ ĐƠN NGHỈ PHÉP -->
+        <div class="tab-content" id="tab-leave-requests">
+          <div class="card">
+            <div class="card-header">
+              <h2><i class="fas fa-calendar-check" style="color:var(--gold); margin-right:8px;"></i> Danh Sách Đơn Xin Nghỉ Phép Của Nhân Viên</h2>
+              <span style="font-size:0.82rem; color:var(--text-muted);">Salon áp dụng chế độ 1 ngày phép có lương / tháng</span>
+            </div>
+
+            <div class="card-body" style="padding:0;">
+              <div class="table-wrapper">
+                <table class="data-table" id="leaveTable">
+                  <thead>
+                    <tr>
+                      <th>Mã đơn</th>
+                      <th>Nhân viên xin nghỉ</th>
+                      <th>Ngày xin nghỉ</th>
+                      <th>Thời lượng</th>
+                      <th>Lý do</th>
+                      <th>Trạng thái duyệt</th>
+                      <th style="text-align:center;">Quyết định</th>
+                    </tr>
+                  </thead>
+                  <tbody id="leaveTableBody">
+                    <!-- Populated by JS -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </main>
+  </div>
+
+  <!-- ─── MODAL: CHỈNH SỬA CHẤM CÔNG THỦ CÔNG ─── -->
+  <div class="modal-overlay" id="editAttendanceModal">
+    <div class="modal">
+      <div class="modal-header">
+        <h2 id="editAttTitle">Chỉnh Sửa Chấm Công Nhân Viên</h2>
+        <button class="modal-close" onclick="closeModal('editAttendanceModal')">&times;</button>
+      </div>
+      <form id="editAttForm" onsubmit="handleSaveAttendance(event)">
+        <div class="modal-body">
+          <input type="hidden" id="attStylistId">
+          <input type="hidden" id="attDate">
+
+          <div class="form-group">
+            <label class="form-label">Nhân Viên</label>
+            <input type="text" id="attStylistName" class="form-input" readonly style="background:#F9FAFB;">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Ngày Chấm Công</label>
+            <input type="text" id="attDateDisplay" class="form-input" readonly style="background:#F9FAFB;">
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Giờ Check-in *</label>
+              <input type="time" id="attCheckIn" class="form-input" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Giờ Check-out</label>
+              <input type="time" id="attCheckOut" class="form-input">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Trạng Thái Chấm Công</label>
+            <select id="attStatus" class="form-select">
+              <option value="on-time">Đúng giờ (On time)</option>
+              <option value="late">Đi trễ (Late)</option>
+              <option value="day-off">Nghỉ phép (Day off)</option>
+              <option value="working">Đang làm việc (Working)</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Lý Do Điều Chỉnh (Chủ Salon ký nhận)</label>
+            <textarea id="attReason" class="form-input" rows="2" placeholder="VD: Quên quẹt thẻ, có việc đột xuất báo trước..."></textarea>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline" onclick="closeModal('editAttendanceModal')">Hủy</button>
+          <button type="submit" class="btn btn-primary"><i class="fas fa-check"></i> Lưu Chấm Công</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- SCRIPTS -->
+  <script src="../data/mock-data.js"></script>
+  <script src="../shared/shared.js"></script>
+  <script src="admin.js"></script>
+  <script>
+    // Leave requests mock data
+    const LEAVE_REQUESTS = [
+      { id: 'LR01', stylistId: 'U103', date: '2026-11-15', duration: 'Cả ngày (1 ca)', reason: 'Việc hiếu hỉ gia đình tại Đồng Nai', status: 'pending', applyDate: '2026-11-09' },
+      { id: 'LR02', stylistId: 'U104', date: '2026-11-18', duration: 'Nửa ca chiều (14:00 - 20:00)', reason: 'Khám sức khỏe tổng quát định kỳ', status: 'pending', applyDate: '2026-11-10' },
+      { id: 'LR03', stylistId: 'U101', date: '2026-11-04', duration: 'Cả ngày (1 ca)', reason: 'Nghỉ giải quyết giấy tờ cá nhân', status: 'approved', applyDate: '2026-11-01' },
+      { id: 'LR04', stylistId: 'U102', date: '2026-11-05', duration: 'Cả ngày (1 ca)', reason: 'Nghỉ bù do làm ca tăng cường chủ nhật', status: 'approved', applyDate: '2026-11-02' }
+    ];
+
+    document.addEventListener('DOMContentLoaded', () => {
+      renderTodayAttendance();
+      renderMonthlyAttendance();
+      renderLeaveRequests();
+    });
+
+    // 1. RENDER TODAY'S ATTENDANCE TABLE
+    function renderTodayAttendance() {
+      const tbody = document.getElementById('todayAttendanceTbody');
+      const stylists = MockDB.getUsersByRole('stylist');
+      const today = '2026-11-11';
+
+      let html = '';
+      stylists.forEach(s => {
+        const att = MOCK.attendance.find(a => a.stylistId === s.id && a.date === today) || {
+          checkIn: '08:30',
+          checkOut: null,
+          status: 'working',
+          hoursWorked: null
+        };
+
+        const statusBadges = {
+          'on-time': '<span class="badge badge-on-time"><i class="fas fa-check"></i> Đúng giờ</span>',
+          'late': '<span class="badge badge-late"><i class="fas fa-exclamation-triangle"></i> Đi trễ</span>',
+          'working': '<span class="badge badge-working"><i class="fas fa-spinner fa-spin"></i> Đang làm việc</span>',
+          'day-off': '<span class="badge badge-day-off">Nghỉ phép</span>'
+        };
+
+        html += `
+          <tr>
+            <td>
+              <div class="user-cell">
+                <img src="${s.avatar}" alt="${s.name}">
+                <div>
+                  <div class="name">${s.name}</div>
+                  <div class="sub">Mã NV: ${s.id}</div>
+                </div>
+              </div>
+            </td>
+            <td><strong>${s.specialty}</strong></td>
+            <td><strong style="color:var(--primary); font-size:0.95rem;">${att.checkIn || '—'}</strong></td>
+            <td>${att.checkOut || '<span style="color:var(--text-muted); font-style:italic;">Chưa check-out</span>'}</td>
+            <td>${statusBadges[att.status] || att.status}</td>
+            <td><strong>${att.checkIn ? '5.5 giờ (Tới 14:00)' : '0'}</strong></td>
+            <td style="text-align:center;">
+              <button class="btn btn-outline btn-sm" onclick="openEditAttendanceModal('${s.id}', '${today}')" title="Sửa giờ công">
+                <i class="fas fa-edit"></i> Chỉnh sửa
+              </button>
+            </td>
+          </tr>
+        `;
+      });
+
+      tbody.innerHTML = html;
+    }
+
+    // 2. RENDER MONTHLY ATTENDANCE TABLE
+    function renderMonthlyAttendance() {
+      const tbody = document.getElementById('monthlyAttTbody');
+      const filterStylist = document.getElementById('stylistMonthFilter').value;
+
+      // Filter
+      let records = MOCK.attendance.filter(a => a.date.startsWith('2026-11'));
+      if (filterStylist !== 'all') {
+        records = records.filter(a => a.stylistId === filterStylist);
+      }
+
+      // Sort by date desc
+      records.sort((a, b) => b.date.localeCompare(a.date));
+
+      if (records.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="8" class="empty-state"><h3>Không có bản ghi chấm công</h3></td></tr>`;
+        return;
+      }
+
+      let html = '';
+      records.forEach(r => {
+        const stylist = MockDB.getUser(r.stylistId) || { name: 'Stylist', avatar: 'https://i.pravatar.cc/150?img=12' };
+
+        const statusBadges = {
+          'on-time': '<span class="badge badge-on-time">Đúng giờ</span>',
+          'late': `<span class="badge badge-late">Trễ ${r.lateMinutes || 15}p</span>`,
+          'working': '<span class="badge badge-working">Đang làm việc</span>',
+          'day-off': '<span class="badge badge-day-off">Nghỉ phép</span>'
+        };
+
+        const noteText = r.status === 'late' 
+          ? `<span style="color:var(--orange); font-size:0.78rem;">Đi trễ ${r.lateMinutes} phút (Phạt quy định 50K)</span>` 
+          : (r.status === 'day-off' ? '<span style="color:var(--text-muted); font-size:0.78rem;">Nghỉ phép hợp lệ</span>' : 'Ca tiêu chuẩn');
+
+        html += `
+          <tr>
+            <td><strong>${r.date}</strong></td>
+            <td>
+              <div class="user-cell">
+                <img src="${stylist.avatar}" alt="${stylist.name}" style="width:28px;height:28px;">
+                <div>${stylist.name}</div>
+              </div>
+            </td>
+            <td>${r.checkIn || '—'}</td>
+            <td>${r.checkOut || '—'}</td>
+            <td><strong>${r.hoursWorked != null ? r.hoursWorked + ' giờ' : 'Đang tính'}</strong></td>
+            <td>${statusBadges[r.status] || r.status}</td>
+            <td>${noteText}</td>
+            <td style="text-align:center;">
+              <button class="btn btn-outline btn-sm" onclick="openEditAttendanceModal('${r.stylistId}', '${r.date}')">
+                <i class="fas fa-pencil-alt"></i>
+              </button>
+            </td>
+          </tr>
+        `;
+      });
+
+      tbody.innerHTML = html;
+    }
+
+    // 3. EDIT ATTENDANCE MODAL
+    function openEditAttendanceModal(stylistId, date) {
+      const stylist = MockDB.getUser(stylistId);
+      if (!stylist) return;
+
+      let att = MOCK.attendance.find(a => a.stylistId === stylistId && a.date === date);
+      if (!att) {
+        att = { stylistId, date, checkIn: '08:30', checkOut: '20:00', status: 'on-time', hoursWorked: 11.5 };
+      }
+
+      document.getElementById('attStylistId').value = stylistId;
+      document.getElementById('attDate').value = date;
+      document.getElementById('attStylistName').value = stylist.name;
+      document.getElementById('attDateDisplay').value = date;
+      document.getElementById('attCheckIn').value = att.checkIn || '08:30';
+      document.getElementById('attCheckOut').value = att.checkOut || '20:00';
+      document.getElementById('attStatus').value = att.status;
+      document.getElementById('attReason').value = '';
+
+      openModal('editAttendanceModal');
+    }
+
+    function handleSaveAttendance(e) {
+      e.preventDefault();
+      const stylistId = document.getElementById('attStylistId').value;
+      const date = document.getElementById('attDate').value;
+      const checkIn = document.getElementById('attCheckIn').value;
+      const checkOut = document.getElementById('attCheckOut').value;
+      const status = document.getElementById('attStatus').value;
+      const reason = document.getElementById('attReason').value;
+
+      let att = MOCK.attendance.find(a => a.stylistId === stylistId && a.date === date);
+      if (att) {
+        att.checkIn = checkIn;
+        att.checkOut = checkOut;
+        att.status = status;
+        if (checkIn && checkOut) {
+          const [h1, m1] = checkIn.split(':').map(Number);
+          const [h2, m2] = checkOut.split(':').map(Number);
+          att.hoursWorked = parseFloat(((h2 * 60 + m2 - (h1 * 60 + m1)) / 60).toFixed(1));
+        }
+      } else {
+        MOCK.attendance.push({
+          stylistId,
+          date,
+          checkIn,
+          checkOut,
+          status,
+          hoursWorked: 11.5
+        });
+      }
+
+      closeModal('editAttendanceModal');
+      renderTodayAttendance();
+      renderMonthlyAttendance();
+      Toast.show(`Đã cập nhật giờ công thành công cho ngày ${date}!`, 'success');
+    }
+
+    // 4. LEAVE REQUESTS
+    function renderLeaveRequests() {
+      const tbody = document.getElementById('leaveTableBody');
+      let pendingCount = 0;
+
+      let html = '';
+      LEAVE_REQUESTS.forEach(lr => {
+        const stylist = MockDB.getUser(lr.stylistId) || { name: 'Stylist', avatar: 'https://i.pravatar.cc/150?img=12' };
+        if (lr.status === 'pending') pendingCount++;
+
+        let statusBadge = lr.status === 'pending'
+          ? '<span class="badge badge-progress"><i class="fas fa-clock"></i> Chờ duyệt</span>'
+          : (lr.status === 'approved' ? '<span class="badge badge-completed"><i class="fas fa-check"></i> Đã duyệt</span>' : '<span class="badge badge-cancelled"><i class="fas fa-times"></i> Từ chối</span>');
+
+        let actionBtns = lr.status === 'pending'
+          ? `
+            <div style="display:flex; justify-content:center; gap:6px;">
+              <button class="btn btn-primary btn-sm" onclick="approveLeave('${lr.id}')" title="Duyệt đơn"><i class="fas fa-check"></i> Duyệt</button>
+              <button class="btn btn-outline btn-sm" onclick="rejectLeave('${lr.id}')" title="Từ chối"><i class="fas fa-times"></i></button>
+            </div>
+          `
+          : `<span style="font-size:0.75rem; color:var(--text-muted); font-style:italic;">Đã xử lý</span>`;
+
+        html += `
+          <tr>
+            <td><strong>#${lr.id}</strong></td>
+            <td>
+              <div class="user-cell">
+                <img src="${stylist.avatar}" alt="${stylist.name}">
+                <div>
+                  <div class="name">${stylist.name}</div>
+                  <div class="sub">Gửi lúc: ${lr.applyDate}</div>
+                </div>
+              </div>
+            </td>
+            <td><strong style="color:var(--primary);">${lr.date}</strong></td>
+            <td>${lr.duration}</td>
+            <td style="max-width:240px;">${lr.reason}</td>
+            <td>${statusBadge}</td>
+            <td style="text-align:center;">${actionBtns}</td>
+          </tr>
+        `;
+      });
+
+      tbody.innerHTML = html;
+      document.getElementById('pendingLeaveCardCount').innerText = `${pendingCount} đơn`;
+      document.getElementById('leaveBadgeCount').innerText = `${pendingCount} đơn`;
+      document.getElementById('leaveTabCount').innerText = `${pendingCount} chờ`;
+    }
+
+    function approveLeave(id) {
+      const req = LEAVE_REQUESTS.find(r => r.id === id);
+      if (!req) return;
+      req.status = 'approved';
+
+      // Record in attendance as day-off
+      MOCK.attendance.push({
+        stylistId: req.stylistId,
+        date: req.date,
+        checkIn: null,
+        checkOut: null,
+        status: 'day-off',
+        hoursWorked: 0
+      });
+
+      renderLeaveRequests();
+      renderMonthlyAttendance();
+      const stylist = MockDB.getUser(req.stylistId);
+      Toast.show(`Đã duyệt đơn nghỉ phép cho ${stylist.name} vào ngày ${req.date}!`, 'success');
+    }
+
+    function rejectLeave(id) {
+      const req = LEAVE_REQUESTS.find(r => r.id === id);
+      if (!req) return;
+      req.status = 'rejected';
+      renderLeaveRequests();
+      Toast.show(`Đã từ chối đơn nghỉ phép #${id}`, 'info');
+    }
+
+    function exportAttendanceCSV() {
+      exportTableToCSV('Bang_Cham_Cong_Thang11_VoThuan.csv', '#monthlyAttTable');
+    }
+  </script>
+</body>
+</html>

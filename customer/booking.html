@@ -1,0 +1,1475 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Đặt Lịch Hẹn Trực Tuyến – Võ Thuận Hair Salon</title>
+  <meta name="description" content="Đặt lịch làm tóc online tại Võ Thuận Hair Salon. Chọn stylist, chọn giờ hẹn theo thời gian thực, đặt cọc giữ chỗ tiện lợi.">
+
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <!-- Shared & Customer CSS -->
+  <link rel="stylesheet" href="../shared/shared.css">
+  <link rel="stylesheet" href="customer.css">
+</head>
+<body>
+
+  <!-- ─── HEADER & NAVBAR ──────────────────────────────── -->
+  <header class="customer-header">
+    <div class="customer-nav">
+      <div class="brand-group">
+        <a href="../index.html" class="brand-logo">
+          VÕ THUẬN
+          <span>Hair Salon</span>
+        </a>
+        <span class="brand-badge"><i class="fas fa-calendar-check"></i> Đặt Lịch Online</span>
+      </div>
+
+      <ul class="customer-nav-links">
+        <li><a href="../index.html"><i class="fas fa-home"></i> Trang Chủ</a></li>
+        <li><a href="../index.html#dich-vu"><i class="fas fa-scissors"></i> Bảng Giá Dịch Vụ</a></li>
+        <li><a href="booking.html" class="active"><i class="fas fa-calendar-alt"></i> Đặt Lịch Hẹn</a></li>
+        <li><a href="history.html"><i class="fas fa-history"></i> Lịch Sử Lịch Hẹn</a></li>
+      </ul>
+
+      <div class="customer-user-menu">
+        <div class="customer-user-pill-target"></div>
+        <a href="../login.html" class="btn btn-outline" style="padding: 6px 14px; font-size: 0.8rem; border-radius: 20px; color: var(--gold); border-color: var(--gold);" title="Đổi cổng quản trị">
+          <i class="fas fa-sign-out-alt"></i> Thoát
+        </a>
+        <button class="customer-hamburger" onclick="toggleCustomerMobileMenu()" aria-label="Menu">
+          <i class="fas fa-bars"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- Mobile Drawer Menu -->
+    <div class="customer-mobile-drawer" id="customer-mobile-drawer">
+      <div class="customer-mobile-links">
+        <a href="../index.html"><i class="fas fa-home"></i> Trang Chủ</a>
+        <a href="../index.html#dich-vu"><i class="fas fa-scissors"></i> Bảng Giá Dịch Vụ</a>
+        <a href="booking.html" class="active"><i class="fas fa-calendar-alt"></i> Đặt Lịch Hẹn</a>
+        <a href="history.html"><i class="fas fa-history"></i> Lịch Sử Lịch Hẹn</a>
+        <a href="javascript:void(0)" onclick="switchCustomerModal(); toggleCustomerMobileMenu();"><i class="fas fa-user-edit"></i> Đổi Khách Hàng Trải Nghiệm</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- ─── HERO BANNER ──────────────────────────────────── -->
+  <section class="booking-hero">
+    <div class="booking-hero-tag">
+      <i class="fas fa-sparkles"></i> Trải Nghiệm Chuẩn 5 Sao
+    </div>
+    <h1 class="booking-hero-title">ĐẶT LỊCH HẸN TRỰC TUYẾN</h1>
+    <p class="booking-hero-desc">
+      Chọn dịch vụ yêu thích, đặt lịch trực tiếp với Master Stylist theo thời gian thực và đặt cọc giữ chỗ tiện lợi chỉ trong 1 phút.
+    </p>
+  </section>
+
+  <!-- ─── STEP PROGRESS BAR ────────────────────────────── -->
+  <div class="steps-container">
+    <div class="steps-wrapper">
+      <div class="step-item active" id="step-indicator-1" onclick="wizard.goToStep(1)">
+        <div class="step-icon">1</div>
+        <div class="step-text">
+          <span class="step-number">Bước 1</span>
+          <span class="step-title">Chọn Dịch Vụ</span>
+        </div>
+      </div>
+      <div class="step-connector" id="step-conn-1"></div>
+
+      <div class="step-item" id="step-indicator-2" onclick="wizard.goToStep(2)">
+        <div class="step-icon">2</div>
+        <div class="step-text">
+          <span class="step-number">Bước 2</span>
+          <span class="step-title">Thợ & Giờ Hẹn</span>
+        </div>
+      </div>
+      <div class="step-connector" id="step-conn-2"></div>
+
+      <div class="step-item" id="step-indicator-3" onclick="wizard.goToStep(3)">
+        <div class="step-icon">3</div>
+        <div class="step-text">
+          <span class="step-number">Bước 3</span>
+          <span class="step-title">Thông Tin & Ưu Đãi</span>
+        </div>
+      </div>
+      <div class="step-connector" id="step-conn-3"></div>
+
+      <div class="step-item" id="step-indicator-4" onclick="wizard.goToStep(4)">
+        <div class="step-icon">4</div>
+        <div class="step-text">
+          <span class="step-number">Bước 4</span>
+          <span class="step-title">Đặt Cọc / Thanh Toán</span>
+        </div>
+      </div>
+      <div class="step-connector" id="step-conn-4"></div>
+
+      <div class="step-item" id="step-indicator-5">
+        <div class="step-icon"><i class="fas fa-check"></i></div>
+        <div class="step-text">
+          <span class="step-number">Bước 5</span>
+          <span class="step-title">Xác Nhận</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── MAIN CONTENT CONTAINER ───────────────────────── -->
+  <main class="container" style="padding-bottom: 120px;">
+
+    <!-- ══════════════════════════════════════════════════
+         BƯỚC 1: XEM TRƯỚC VÀ CHỌN DỊCH VỤ
+         ══════════════════════════════════════════════════ -->
+    <section class="booking-step-panel active" id="panel-step-1">
+      <div class="section-header" style="text-align: left; margin-bottom: 20px;">
+        <span class="tag">Danh Mục Dịch Vụ</span>
+        <h2>Chọn Dịch Vụ Làm Tóc & Chăm Sóc</h2>
+        <p style="color: var(--text-muted); font-size: 0.9rem;">
+          Quý khách có thể chọn 1 hoặc nhiều dịch vụ kết hợp (ví dụ: Cắt tóc + Phục hồi chuyên sâu) để nhận thêm ưu đãi combo.
+        </p>
+      </div>
+
+      <!-- Toolbar Filter & Search -->
+      <div class="catalog-toolbar">
+        <div class="category-pills" id="category-filter-pills">
+          <!-- Populated by JS -->
+        </div>
+        <div class="catalog-search">
+          <i class="fas fa-search"></i>
+          <input type="text" id="service-search-input" placeholder="Tìm tên dịch vụ, uốn, nhuộm..." oninput="wizard.filterServices()">
+        </div>
+      </div>
+
+      <!-- Service Cards Grid -->
+      <div class="service-catalog" id="services-grid">
+        <!-- Rendered by JS -->
+      </div>
+    </section>
+
+    <!-- ══════════════════════════════════════════════════
+         BƯỚC 2: CHỌN THỢ & THỜI GIAN THỰC
+         ══════════════════════════════════════════════════ -->
+    <section class="booking-step-panel" id="panel-step-2">
+      <div class="section-header" style="text-align: left; margin-bottom: 20px;">
+        <span class="tag">Chọn Chuyên Viên & Khung Giờ</span>
+        <h2>Đặt Hẹn Trực Tiếp Theo Thời Gian Thực</h2>
+        <p style="color: var(--text-muted); font-size: 0.9rem;">
+          Hệ thống kiểm tra trực tiếp lịch trống của từng Stylist để đảm bảo bạn không phải chờ đợi khi đến salon.
+        </p>
+      </div>
+
+      <!-- Date Selection -->
+      <div class="date-picker-section">
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
+          <div>
+            <h4 style="font-size: 1rem; color: var(--primary);"><i class="fas fa-calendar-day" style="color: var(--gold);"></i> 1. Chọn ngày đến salon:</h4>
+            <span style="font-size: 0.8rem; color: var(--text-muted);">Mở cửa từ 08:30 đến 20:00 hàng ngày</span>
+          </div>
+          <div>
+            <input type="date" id="custom-booking-date" class="form-input" style="padding: 6px 12px; font-weight: 600;" onchange="wizard.onCustomDateChange(this.value)">
+          </div>
+        </div>
+
+        <div class="date-chips" id="quick-date-chips">
+          <!-- Populated by JS: Hôm nay (11/11), Ngày mai (12/11), Ngày kia (13/11)... -->
+        </div>
+      </div>
+
+      <!-- Stylist Selection -->
+      <div style="margin-top: 28px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+          <h4 style="font-size: 1rem; color: var(--primary);">
+            <i class="fas fa-user-tie" style="color: var(--gold);"></i> 2. Chọn Stylist phụ trách:
+          </h4>
+          <span style="font-size: 0.8rem; color: var(--text-muted);" id="stylist-availability-hint"></span>
+        </div>
+
+        <div class="stylist-grid" id="stylists-list-container">
+          <!-- Stylists rendered by JS -->
+        </div>
+      </div>
+
+      <!-- Time Slots Selection -->
+      <div class="time-slots-container">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+          <div>
+            <h4 style="font-size: 1rem; color: var(--primary);">
+              <i class="fas fa-clock" style="color: var(--gold);"></i> 3. Chọn khung giờ bắt đầu:
+            </h4>
+            <span style="font-size: 0.82rem; color: var(--text-muted);">
+              Thời lượng dịch vụ ước tính: <strong id="slots-estimated-duration" style="color: var(--primary);">0 phút</strong>
+            </span>
+          </div>
+          <div style="display: flex; gap: 14px; font-size: 0.78rem;">
+            <span><i class="fas fa-square" style="color: var(--gold);"></i> Đang chọn</span>
+            <span><i class="fas fa-square" style="color: var(--bg-white); border: 1px solid var(--border);"></i> Còn trống</span>
+            <span><i class="fas fa-square" style="color: #ccc;"></i> Đã kín lịch</span>
+          </div>
+        </div>
+
+        <div id="slots-groups-wrapper">
+          <!-- Time slots grouped by Sáng / Chiều / Tối rendered by JS -->
+        </div>
+      </div>
+
+      <!-- Navigation buttons for Step 2 -->
+      <div style="display: flex; justify-content: space-between; margin-top: 32px;">
+        <button class="btn btn-outline" onclick="wizard.goToStep(1)">
+          <i class="fas fa-arrow-left"></i> Quay lại chọn dịch vụ
+        </button>
+        <button class="btn btn-primary" onclick="wizard.validateStep2AndProceed()">
+          Tiếp tục sang Thông tin khách <i class="fas fa-arrow-right"></i>
+        </button>
+      </div>
+    </section>
+
+    <!-- ══════════════════════════════════════════════════
+         BƯỚC 3: THÔNG TIN KHÁCH HÀNG & MÃ GIẢM GIÁ
+         ══════════════════════════════════════════════════ -->
+    <section class="booking-step-panel" id="panel-step-3">
+      <div class="section-header" style="text-align: left; margin-bottom: 20px;">
+        <span class="tag">Thông Tin Đặt Chỗ & Ưu Đãi</span>
+        <h2>Xác Nhận Người Đặt & Áp Dụng Voucher</h2>
+        <p style="color: var(--text-muted); font-size: 0.9rem;">
+          Vui lòng kiểm tra thông tin để salon gửi tin nhắn nhắc lịch hẹn và chuẩn bị dịch vụ chu đáo nhất.
+        </p>
+      </div>
+
+      <div class="booking-two-columns">
+        <!-- Form Left: Customer Info -->
+        <div class="card" style="padding: 24px;">
+          <h4 style="font-size: 1rem; color: var(--primary); margin-bottom: 16px;">
+            <i class="fas fa-user-circle" style="color: var(--gold);"></i> Thông Tin Khách Hàng
+          </h4>
+
+          <div class="form-group">
+            <label class="form-label">Họ và tên khách hàng <span style="color: var(--red);">*</span></label>
+            <input type="text" id="cust-fullname" class="form-input" placeholder="Ví dụ: Nguyễn Thảo Linh" required>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Số điện thoại liên hệ <span style="color: var(--red);">*</span></label>
+            <input type="tel" id="cust-phone" class="form-input" placeholder="Ví dụ: 0912345001" required>
+            <span style="font-size: 0.75rem; color: var(--text-muted);">Salon sẽ gửi mã QR check-in vào số này</span>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Email nhận hóa đơn (nếu có)</label>
+            <input type="email" id="cust-email" class="form-input" placeholder="linh@gmail.com">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Ghi chú yêu cầu riêng cho Stylist</label>
+            <textarea id="cust-notes" class="form-input" rows="3" placeholder="Ví dụ: Tóc từng tẩy 1 lần, da đầu nhạy cảm, muốn được tư vấn cắt layer ngắn bồng bềnh..."></textarea>
+          </div>
+
+          <div style="display: flex; align-items: center; gap: 8px; margin-top: 10px;">
+            <input type="checkbox" id="cust-notify-opt" checked style="accent-color: var(--gold); width: 16px; height: 16px;">
+            <label for="cust-notify-opt" style="font-size: 0.85rem; color: var(--text-body); cursor: pointer;">
+              Nhận thông báo nhắc lịch và ưu đãi sinh nhật qua Zalo / SMS
+            </label>
+          </div>
+        </div>
+
+        <!-- Form Right: Voucher & Order Summary -->
+        <div>
+          <div class="card" style="padding: 24px; margin-bottom: 20px;">
+            <h4 style="font-size: 1rem; color: var(--primary); margin-bottom: 12px;">
+              <i class="fas fa-ticket-alt" style="color: var(--gold);"></i> Mã Giảm Giá / Voucher
+            </h4>
+
+            <div class="voucher-input-box">
+              <input type="text" id="voucher-code-input" class="form-input" placeholder="NHẬP MÃ (VD: WELCOME50)">
+              <button class="btn btn-primary" style="padding: 8px 18px;" onclick="wizard.applyVoucher()">Áp Dụng</button>
+            </div>
+            <div id="voucher-message" style="font-size: 0.8rem; margin-bottom: 12px;"></div>
+
+            <!-- List of available vouchers from MOCK.promotions -->
+            <div style="font-size: 0.8rem; font-weight: 600; color: var(--primary); margin-bottom: 8px;">
+              Ưu đãi dành riêng cho bạn:
+            </div>
+            <div class="promos-list" id="promos-list-box">
+              <!-- Rendered by JS -->
+            </div>
+          </div>
+
+          <!-- Price Summary Preview -->
+          <div class="card" style="padding: 24px;">
+            <h4 style="font-size: 1rem; color: var(--primary); margin-bottom: 14px;">
+              <i class="fas fa-receipt" style="color: var(--gold);"></i> Tóm Tắt Chi Phí Dự Kiến
+            </h4>
+
+            <div id="step3-selected-services-list" style="font-size: 0.85rem; margin-bottom: 12px;">
+              <!-- List itemized -->
+            </div>
+
+            <div class="price-breakdown">
+              <div class="breakdown-row">
+                <span>Tạm tính dịch vụ:</span>
+                <span id="summary-subtotal" style="font-weight: 600;">0 đ</span>
+              </div>
+              <div class="breakdown-row discount" id="summary-discount-row" style="display: none;">
+                <span>Giảm giá voucher (<span id="summary-voucher-code"></span>):</span>
+                <span id="summary-discount-val">-0 đ</span>
+              </div>
+              <div class="breakdown-row total">
+                <span>Tổng chi phí:</span>
+                <span id="summary-final-total">0 đ</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Navigation buttons for Step 3 -->
+      <div style="display: flex; justify-content: space-between; margin-top: 32px;">
+        <button class="btn btn-outline" onclick="wizard.goToStep(2)">
+          <i class="fas fa-arrow-left"></i> Quay lại chọn giờ
+        </button>
+        <button class="btn btn-primary" onclick="wizard.validateStep3AndProceed()">
+          Tiếp tục sang Đặt cọc & Thanh toán <i class="fas fa-arrow-right"></i>
+        </button>
+      </div>
+    </section>
+
+    <!-- ══════════════════════════════════════════════════
+         BƯỚC 4: THANH TOÁN TRƯỚC / ĐẶT CỌC GIỮ CHỖ
+         ══════════════════════════════════════════════════ -->
+    <section class="booking-step-panel" id="panel-step-4">
+      <div class="section-header" style="text-align: left; margin-bottom: 20px;">
+        <span class="tag">Chính Sách Đặt Cọc Giữ Chỗ</span>
+        <h2>Thanh Toán Tiền Cọc / Trả Trước</h2>
+        <p style="color: var(--text-muted); font-size: 0.9rem;">
+          Để bảo đảm Stylist luôn sẵn sàng và chuẩn bị dụng cụ cho riêng bạn, quý khách vui lòng đặt cọc giữ chỗ. 
+          <strong>Tiền cọc sẽ được trừ trực tiếp 100%</strong> vào hóa đơn thực tế tại salon.
+        </p>
+      </div>
+
+      <!-- Deposit Amount Option Cards -->
+      <div class="deposit-options-grid">
+        <div class="deposit-card selected" id="deposit-opt-50k" onclick="wizard.selectDepositOption('50k', 50000)">
+          <div class="deposit-popular-tag">Phổ biến nhất</div>
+          <div class="deposit-title">Đặt Cọc Tiêu Chuẩn</div>
+          <div class="deposit-amount">50.000 đ</div>
+          <div class="deposit-desc">Giữ chỗ đảm bảo, hoàn tiền nếu báo trước 2 tiếng</div>
+        </div>
+
+        <div class="deposit-card" id="deposit-opt-100k" onclick="wizard.selectDepositOption('100k', 100000)">
+          <div class="deposit-title">Đặt Cọc Giờ Vàng</div>
+          <div class="deposit-amount">100.000 đ</div>
+          <div class="deposit-desc">Giữ chỗ ưu tiên cao điểm cuối tuần & buổi tối</div>
+        </div>
+
+        <div class="deposit-card" id="deposit-opt-full" onclick="wizard.selectDepositOption('full')">
+          <div class="deposit-title">Thanh Toán Toàn Bộ</div>
+          <div class="deposit-amount" id="deposit-full-amount">0 đ</div>
+          <div class="deposit-desc">Tiện lợi, làm xong ra về ngay không cần thanh toán lại</div>
+        </div>
+      </div>
+
+      <!-- QR Code & Bank Transfer Box -->
+      <div class="qr-payment-container">
+        <!-- Left: Dynamic QR Code -->
+        <div class="qr-code-box">
+          <div class="qr-image-wrapper" id="payment-qr-wrapper">
+            <!-- SVG QR injected by JS -->
+            <div class="qr-scan-line"></div>
+          </div>
+          <div class="qr-badge-logo">
+            <i class="fas fa-qrcode"></i> <span id="qr-bank-brand">VIETQR 24/7</span>
+          </div>
+          <span style="font-size: 0.72rem; color: #888; margin-top: 4px;">Quét bằng app ngân hàng hoặc MoMo</span>
+        </div>
+
+        <!-- Right: Transfer Details & Actions -->
+        <div class="transfer-info-details">
+          <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.15); padding-bottom: 10px;">
+            <h3 style="font-size: 1.15rem; color: var(--gold);">
+              <i class="fas fa-university"></i> Thông Tin Chuyển Khoản Chính Thức
+            </h3>
+            <div class="payment-timer">
+              <i class="fas fa-stopwatch"></i> Hết hạn sau: <span id="payment-countdown">10:00</span>
+            </div>
+          </div>
+
+          <div class="transfer-row">
+            <span class="transfer-label">Ngân hàng thụ hưởng:</span>
+            <span class="transfer-value">MB Bank (Ngân Hàng Quân Đội)</span>
+          </div>
+
+          <div class="transfer-row">
+            <span class="transfer-label">Số tài khoản:</span>
+            <span class="transfer-value">
+              <strong style="color: var(--gold); letter-spacing: 1px;">0869 990 740</strong>
+              <button class="btn-copy-info" onclick="copyToClipboard('0869990740', 'Đã chép số tài khoản!')">
+                <i class="fas fa-copy"></i> Sao chép
+              </button>
+            </span>
+          </div>
+
+          <div class="transfer-row">
+            <span class="transfer-label">Chủ tài khoản:</span>
+            <span class="transfer-value">VÕ THUẬN (HAIR SALON)</span>
+          </div>
+
+          <div class="transfer-row">
+            <span class="transfer-label">Số tiền chuyển khoản:</span>
+            <span class="transfer-value">
+              <span id="qr-transfer-amount" style="font-size: 1.2rem; color: #4ade80;">50.000 đ</span>
+            </span>
+          </div>
+
+          <div class="transfer-row">
+            <span class="transfer-label">Nội dung chuyển khoản (bắt buộc):</span>
+            <span class="transfer-value">
+              <code id="qr-transfer-memo" style="color: var(--gold); font-weight: bold; background: rgba(0,0,0,0.3); padding: 2px 6px; border-radius: 4px;">VTBOOK</code>
+              <button class="btn-copy-info" onclick="wizard.copyTransferMemo()">
+                <i class="fas fa-copy"></i> Sao chép
+              </button>
+            </span>
+          </div>
+
+          <!-- Payment Confirmation Button -->
+          <div style="margin-top: 8px;">
+            <button class="btn btn-primary" id="btn-confirm-transfer" style="width: 100%; padding: 14px; font-size: 1rem; border-radius: var(--radius-sm);" onclick="wizard.confirmPaymentAndComplete()">
+              <i class="fas fa-check-circle"></i> Tôi Đã Chuyển Khoản Xong – Xác Nhận Lịch
+            </button>
+            <div style="text-align: center; font-size: 0.76rem; color: #c9bfb5; margin-top: 8px;">
+              <i class="fas fa-shield-alt"></i> Hệ thống tự động đối soát giao dịch ngân hàng & giữ chỗ ngay lập tức.
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Navigation back button -->
+      <div style="display: flex; justify-content: flex-start; margin-top: 32px;">
+        <button class="btn btn-outline" onclick="wizard.goToStep(3)">
+          <i class="fas fa-arrow-left"></i> Quay lại sửa thông tin
+        </button>
+      </div>
+    </section>
+
+    <!-- ══════════════════════════════════════════════════
+         BƯỚC 5: MÀN HÌNH XÁC NHẬN ĐẶT LỊCH THÀNH CÔNG
+         ══════════════════════════════════════════════════ -->
+    <section class="booking-step-panel" id="panel-step-5">
+      <div class="confirmation-card">
+        <div class="confirmation-header">
+          <div class="success-icon-wrap">
+            <i class="fas fa-check"></i>
+          </div>
+          <h2 class="confirmation-title">ĐẶT LỊCH THÀNH CÔNG!</h2>
+          <p style="font-size: 0.9rem; color: #e5ded6;">
+            Cảm ơn quý khách đã tin tưởng lựa chọn Võ Thuận Hair Salon.
+          </p>
+          <div class="confirmation-code" id="success-booking-code">#VT-20261111-XXXX</div>
+        </div>
+
+        <div class="confirmation-body">
+          <!-- QR Check-in Box -->
+          <div class="checkin-qr-section">
+            <div class="checkin-qr-img" id="success-checkin-qr">
+              <!-- SVG Check-in QR injected by JS -->
+            </div>
+            <div class="checkin-qr-text">
+              <h4><i class="fas fa-qrcode" style="color: var(--gold);"></i> Mã QR Check-in Khi Đến Salon</h4>
+              <p>
+                Quý khách chỉ cần đưa mã QR này cho lễ tân khi đến để được tiếp đón ưu tiên và bắt đầu dịch vụ đúng giờ hẹn.
+              </p>
+            </div>
+          </div>
+
+          <!-- Appointment Metadata -->
+          <div class="appointment-meta-list">
+            <div class="meta-row">
+              <span class="label">Khách hàng:</span>
+              <span class="value" id="success-customer-name">--</span>
+            </div>
+            <div class="meta-row">
+              <span class="label">Số điện thoại:</span>
+              <span class="value" id="success-customer-phone">--</span>
+            </div>
+            <div class="meta-row">
+              <span class="label">Stylist phụ trách:</span>
+              <span class="value" id="success-stylist-name">--</span>
+            </div>
+            <div class="meta-row">
+              <span class="label">Thời gian hẹn:</span>
+              <span class="value" id="success-appointment-time" style="color: var(--primary); font-weight: 700;">--</span>
+            </div>
+            <div class="meta-row">
+              <span class="label">Dịch vụ đã chọn:</span>
+              <span class="value" id="success-services-list">--</span>
+            </div>
+            <div class="meta-row">
+              <span class="label">Tiền cọc đã thanh toán:</span>
+              <span class="value" id="success-deposit-amount" style="color: var(--green);">--</span>
+            </div>
+            <div class="meta-row">
+              <span class="label">Số tiền còn lại tại salon:</span>
+              <span class="value" id="success-remaining-amount">--</span>
+            </div>
+            <div class="meta-row">
+              <span class="label">Địa chỉ salon:</span>
+              <span class="value">2/139N Lê Thị Hà, Hóc Môn, TP.HCM</span>
+            </div>
+          </div>
+
+          <!-- Action Buttons -->
+          <div class="confirmation-actions">
+            <button class="btn btn-outline" onclick="wizard.printAppointmentTicket()">
+              <i class="fas fa-print"></i> In Phiếu Hẹn / Lưu PDF
+            </button>
+            <a href="history.html" class="btn btn-primary">
+              <i class="fas fa-history"></i> Xem Trong Lịch Sử Của Tôi
+            </a>
+            <button class="btn btn-outline" onclick="wizard.resetBooking()">
+              <i class="fas fa-calendar-plus"></i> Đặt Thêm Lịch Mới
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ─── FLOATING BOTTOM SUMMARY BAR (FOR STEP 1) ─────── -->
+  <div class="booking-summary-bar" id="sticky-summary-bar">
+    <div class="booking-summary-inner">
+      <div class="summary-selection-info">
+        <span class="selected-count-badge" id="bar-selected-count">0 Dịch Vụ</span>
+        <div class="summary-details">
+          <div class="summary-services-names" id="bar-services-names">Chưa chọn dịch vụ nào</div>
+          <div class="summary-meta-line">
+            <span><i class="fas fa-clock"></i> Thời lượng: <strong id="bar-total-duration">0 phút</strong></span>
+            <span><i class="fas fa-shield-alt"></i> Bảo hành tóc 4 tuần</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="summary-price-box">
+        <div>
+          <div class="summary-total-label">Tạm Tính:</div>
+          <div class="summary-total-value" id="bar-total-price">0 đ</div>
+        </div>
+        <button class="btn btn-primary" id="btn-summary-next" onclick="wizard.proceedToStep2()">
+          Chọn Thợ & Giờ Hẹn <i class="fas fa-arrow-right"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── MODAL: SERVICE DETAIL ────────────────────────── -->
+  <div class="modal-overlay" id="modal-service-detail">
+    <div class="modal-box" style="max-width: 580px;">
+      <div class="modal-header">
+        <h3 class="modal-title" id="modal-svc-title">Chi Tiết Dịch Vụ</h3>
+        <button class="modal-close" onclick="closeModal('modal-service-detail')">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div style="height: 220px; border-radius: var(--radius); overflow: hidden; margin-bottom: 16px;">
+          <img id="modal-svc-img" src="" alt="Dịch vụ" style="width: 100%; height: 100%; object-fit: cover;">
+        </div>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+          <span class="badge" id="modal-svc-category" style="background: var(--gold-dim); color: var(--primary); font-size: 0.8rem;"></span>
+          <div style="display: flex; align-items: center; gap: 14px;">
+            <span style="font-size: 0.85rem; color: var(--text-muted);"><i class="fas fa-clock" style="color: var(--gold);"></i> <span id="modal-svc-duration"></span></span>
+            <span style="font-size: 1.25rem; font-weight: 700; color: var(--primary);" id="modal-svc-price"></span>
+          </div>
+        </div>
+        <p id="modal-svc-desc" style="font-size: 0.9rem; color: var(--text-body); margin-bottom: 16px; line-height: 1.6;"></p>
+
+        <div style="background: var(--bg-cream); padding: 14px; border-radius: var(--radius-sm); border: 1px solid var(--border); margin-bottom: 16px;">
+          <h5 style="font-size: 0.88rem; color: var(--primary); margin-bottom: 8px;">Quy trình & Quyền lợi bao gồm:</h5>
+          <ul id="modal-svc-includes" style="font-size: 0.82rem; color: var(--text-body); display: flex; flex-direction: column; gap: 6px;">
+            <!-- Rendered by JS -->
+          </ul>
+        </div>
+
+        <button class="btn btn-primary" id="btn-modal-select-svc" style="width: 100%;">
+          Chọn Dịch Vụ Này
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── MODAL: STYLIST PORTFOLIO & REVIEWS ────────────── -->
+  <div class="modal-overlay" id="modal-stylist-portfolio">
+    <div class="modal-box" style="max-width: 640px;">
+      <div class="modal-header">
+        <h3 class="modal-title" id="modal-stylist-title">Hồ Sơ Master Stylist</h3>
+        <button class="modal-close" onclick="closeModal('modal-stylist-portfolio')">&times;</button>
+      </div>
+      <div class="modal-body" id="modal-stylist-body">
+        <!-- Injected by JS -->
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── PRINTABLE INVOICE TEMPLATE (FOR WINDOW.PRINT) ─── -->
+  <div class="printable-invoice" id="printable-ticket" style="display: none;">
+    <div style="text-align: center; border-bottom: 2px dashed #2C1A11; padding-bottom: 14px; margin-bottom: 16px;">
+      <h2 style="font-family: Cinzel, serif; margin-bottom: 2px;">VÕ THUẬN HAIR SALON</h2>
+      <p style="font-size: 12px; margin: 0;">2/139N Lê Thị Hà, Hóc Môn, TP.HCM · Hotline: 0869 990 740</p>
+      <h3 style="margin-top: 10px; font-size: 16px;">PHIẾU XÁC NHẬN ĐẶT LỊCH HẸN</h3>
+      <div style="font-family: monospace; font-size: 14px; font-weight: bold;" id="print-booking-code">#VT-20261111-0000</div>
+    </div>
+
+    <div style="font-size: 13px; line-height: 1.8; margin-bottom: 16px;">
+      <div><strong>Khách hàng:</strong> <span id="print-cust-name"></span> (<span id="print-cust-phone"></span>)</div>
+      <div><strong>Thời gian hẹn:</strong> <span id="print-time"></span></div>
+      <div><strong>Stylist:</strong> <span id="print-stylist"></span></div>
+      <div><strong>Dịch vụ:</strong> <span id="print-services"></span></div>
+      <div><strong>Thời lượng dự kiến:</strong> <span id="print-duration"></span></div>
+    </div>
+
+    <table style="width: 100%; border-collapse: collapse; font-size: 13px; margin-bottom: 16px;">
+      <thead>
+        <tr style="border-bottom: 1px solid #ccc; text-align: left;">
+          <th style="padding: 6px 0;">Khoản mục</th>
+          <th style="padding: 6px 0; text-align: right;">Số tiền</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td style="padding: 6px 0;">Tổng giá trị dịch vụ</td>
+          <td style="padding: 6px 0; text-align: right;" id="print-total-price">0 đ</td>
+        </tr>
+        <tr>
+          <td style="padding: 6px 0;">Giảm giá Voucher</td>
+          <td style="padding: 6px 0; text-align: right;" id="print-discount">0 đ</td>
+        </tr>
+        <tr style="font-weight: bold; border-top: 1px solid #ccc;">
+          <td style="padding: 6px 0;">Đã đặt cọc chuyển khoản</td>
+          <td style="padding: 6px 0; text-align: right;" id="print-deposit">0 đ</td>
+        </tr>
+        <tr style="font-weight: bold; color: #2C1A11;">
+          <td style="padding: 6px 0;">Còn lại thanh toán tại salon</td>
+          <td style="padding: 6px 0; text-align: right;" id="print-remaining">0 đ</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div style="text-align: center; border-top: 1px dashed #ccc; padding-top: 12px; font-size: 11px;">
+      <p>Quý khách vui lòng đến trước 5 - 10 phút. Hân hạnh được phục vụ quý khách!</p>
+    </div>
+  </div>
+
+  <!-- ─── JAVASCRIPTS ──────────────────────────────────── -->
+  <script src="../data/mock-data.js"></script>
+  <script src="../shared/shared.js"></script>
+  <script src="customer.js"></script>
+  <script>
+    /**
+     * WIZARD CONTROLLER OBJECT
+     */
+    const wizard = {
+      currentStep: 1,
+      selectedServices: [], // Array of service IDs
+      selectedCategory: 'all',
+      selectedDate: getToday(), // '2026-11-11'
+      selectedStylistId: null, // null means "any"
+      selectedTimeSlot: null,
+      appliedVoucher: null,
+      depositType: '50k',
+      depositAmount: 50000,
+      paymentMethod: 'vietqr',
+      paymentMemo: 'VTBOOK' + Math.floor(100000 + Math.random() * 900000),
+      currentBookingId: null,
+      timerInterval: null,
+
+      startPaymentTimer() {
+        if (this.timerInterval) clearInterval(this.timerInterval);
+        let timeLeft = 600; // 10 minutes
+        const timerEl = document.getElementById('payment-countdown');
+        this.timerInterval = setInterval(() => {
+          timeLeft--;
+          if (timeLeft <= 0) {
+            clearInterval(this.timerInterval);
+            if (timerEl) timerEl.innerText = '00:00 (Hết hạn)';
+            return;
+          }
+          const mins = Math.floor(timeLeft / 60);
+          const secs = timeLeft % 60;
+          if (timerEl) timerEl.innerText = `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+        }, 1000);
+      },
+
+      init() {
+        initCustomerSession();
+        this.renderCategoryPills();
+        this.renderServices();
+        this.renderQuickDates();
+        this.renderStylists();
+        this.renderPromotions();
+        this.prefillCustomerInfo();
+
+        // Check query params if any
+        const urlParams = new URLSearchParams(window.location.search);
+        const svcParam = urlParams.get('service');
+        if (svcParam && MOCK.services.some(s => s.id === svcParam)) {
+          this.toggleService(svcParam);
+        }
+      },
+
+      // ─── STEP 1 LOGIC ────────────────────────────────
+      renderCategoryPills() {
+        const cats = ['all', ...MockDB.getCategories()];
+        const container = document.getElementById('category-filter-pills');
+        container.innerHTML = cats.map(cat => {
+          const label = cat === 'all' ? 'Tất cả' : cat;
+          const count = cat === 'all' ? MOCK.services.length : MOCK.services.filter(s => s.category === cat).length;
+          return `
+            <button class="category-pill ${this.selectedCategory === cat ? 'active' : ''}" onclick="wizard.setCategory('${cat}')">
+              ${label} (${count})
+            </button>
+          `;
+        }).join('');
+      },
+
+      setCategory(cat) {
+        this.selectedCategory = cat;
+        this.renderCategoryPills();
+        this.filterServices();
+      },
+
+      filterServices() {
+        const query = document.getElementById('service-search-input').value.trim().toLowerCase();
+        let list = MOCK.services;
+        if (this.selectedCategory !== 'all') {
+          list = list.filter(s => s.category === this.selectedCategory);
+        }
+        if (query) {
+          list = list.filter(s => s.name.toLowerCase().includes(query) || s.description.toLowerCase().includes(query));
+        }
+        this.renderServices(list);
+      },
+
+      renderServices(services = MOCK.services) {
+        const grid = document.getElementById('services-grid');
+        if (services.length === 0) {
+          grid.innerHTML = `
+            <div class="empty-state" style="grid-column: 1 / -1; padding: 40px; text-align: center;">
+              <i class="fas fa-search" style="font-size: 2.5rem; color: var(--border); margin-bottom: 12px;"></i>
+              <p style="color: var(--text-muted);">Không tìm thấy dịch vụ phù hợp với từ khóa của bạn.</p>
+            </div>
+          `;
+          return;
+        }
+
+        grid.innerHTML = services.map(svc => {
+          const isSelected = this.selectedServices.includes(svc.id);
+          return `
+            <div class="svc-card ${isSelected ? 'selected' : ''}" id="card-svc-${svc.id}" onclick="wizard.toggleService('${svc.id}')">
+              <div class="svc-card-check">
+                <i class="fas fa-check"></i>
+              </div>
+              <div class="svc-card-category">${svc.category}</div>
+              <div class="svc-card-img">
+                <img src="${svc.image}" alt="${svc.name}" loading="lazy">
+                <span class="svc-card-price">${MockDB.formatCurrency(svc.price)}</span>
+              </div>
+              <div class="svc-card-body">
+                <h3>${svc.name}</h3>
+                <p>${svc.description}</p>
+                <div class="svc-card-meta">
+                  <span><i class="fas fa-clock"></i> ${svc.duration} phút</span>
+                  <span><i class="fas fa-sparkles"></i> Chuẩn 5 sao</span>
+                </div>
+              </div>
+              <div class="svc-card-footer" onclick="event.stopPropagation()">
+                <span class="btn-detail-link" onclick="wizard.showServiceDetail('${svc.id}')">
+                  <i class="fas fa-info-circle"></i> Xem chi tiết
+                </span>
+                <button class="btn-select-svc" onclick="wizard.toggleService('${svc.id}')">
+                  ${isSelected ? '<i class="fas fa-check"></i> Đã chọn' : '+ Chọn dịch vụ'}
+                </button>
+              </div>
+            </div>
+          `;
+        }).join('');
+      },
+
+      toggleService(svcId) {
+        const idx = this.selectedServices.indexOf(svcId);
+        if (idx > -1) {
+          this.selectedServices.splice(idx, 1);
+        } else {
+          this.selectedServices.push(svcId);
+        }
+        this.updateServiceSelectionUI();
+      },
+
+      updateServiceSelectionUI() {
+        // Update card styles
+        MOCK.services.forEach(svc => {
+          const card = document.getElementById(`card-svc-${svc.id}`);
+          if (card) {
+            const isSel = this.selectedServices.includes(svc.id);
+            card.classList.toggle('selected', isSel);
+            const btn = card.querySelector('.btn-select-svc');
+            if (btn) {
+              btn.innerHTML = isSel ? '<i class="fas fa-check"></i> Đã chọn' : '+ Chọn dịch vụ';
+            }
+          }
+        });
+
+        // Calculate summary
+        const selectedSvcs = this.selectedServices.map(id => MockDB.getService(id)).filter(Boolean);
+        const count = selectedSvcs.length;
+        const totalDuration = selectedSvcs.reduce((acc, s) => acc + s.duration, 0);
+        const totalPrice = selectedSvcs.reduce((acc, s) => acc + s.price, 0);
+
+        // Update floating bar
+        const bar = document.getElementById('sticky-summary-bar');
+        if (count > 0 && this.currentStep === 1) {
+          bar.classList.add('visible');
+          document.getElementById('bar-selected-count').innerText = `${count} Dịch Vụ Đã Chọn`;
+          document.getElementById('bar-services-names').innerText = selectedSvcs.map(s => s.name).join(' + ');
+          document.getElementById('bar-total-duration').innerText = `${totalDuration} phút`;
+          document.getElementById('bar-total-price').innerText = MockDB.formatCurrency(totalPrice);
+        } else {
+          bar.classList.remove('visible');
+        }
+
+        // Update duration on step 2
+        document.getElementById('slots-estimated-duration').innerText = `${totalDuration} phút`;
+      },
+
+      showServiceDetail(svcId) {
+        const svc = MockDB.getService(svcId);
+        if (!svc) return;
+
+        document.getElementById('modal-svc-title').innerText = svc.name;
+        document.getElementById('modal-svc-img').src = svc.image;
+        document.getElementById('modal-svc-category').innerText = svc.category;
+        document.getElementById('modal-svc-duration').innerText = `${svc.duration} phút`;
+        document.getElementById('modal-svc-price').innerText = MockDB.formatCurrency(svc.price);
+        document.getElementById('modal-svc-desc').innerText = svc.description;
+
+        const includesList = document.getElementById('modal-svc-includes');
+        if (svc.includes && svc.includes.length) {
+          includesList.innerHTML = svc.includes.map(inc => `
+            <li><i class="fas fa-check-circle" style="color: var(--green); margin-right: 6px;"></i> ${inc}</li>
+          `).join('');
+        } else {
+          includesList.innerHTML = '<li><i class="fas fa-check-circle" style="color: var(--green); margin-right: 6px;"></i> Dịch vụ tiêu chuẩn cao cấp</li>';
+        }
+
+        const isSel = this.selectedServices.includes(svc.id);
+        const btnModal = document.getElementById('btn-modal-select-svc');
+        btnModal.innerText = isSel ? 'Bỏ Chọn Dịch Vụ Này' : 'Chọn Dịch Vụ Này';
+        btnModal.onclick = () => {
+          this.toggleService(svc.id);
+          closeModal('modal-service-detail');
+        };
+
+        openModal('modal-service-detail');
+      },
+
+      proceedToStep2() {
+        if (this.selectedServices.length === 0) {
+          Toast.show('Vui lòng chọn ít nhất 1 dịch vụ để tiếp tục!', 'warning');
+          return;
+        }
+        this.goToStep(2);
+      },
+
+      // ─── STEP 2 LOGIC ────────────────────────────────
+      renderQuickDates() {
+        const container = document.getElementById('quick-date-chips');
+        const customDateInput = document.getElementById('custom-booking-date');
+        customDateInput.value = this.selectedDate;
+        customDateInput.min = getToday();
+
+        const dates = [
+          { date: '2026-11-11', label: 'Hôm nay', sub: 'Thứ Tư, 11/11' },
+          { date: '2026-11-12', label: 'Ngày mai', sub: 'Thứ Năm, 12/11' },
+          { date: '2026-11-13', label: 'Ngày kia', sub: 'Thứ Sáu, 13/11' },
+          { date: '2026-11-14', label: 'Cuối tuần', sub: 'Thứ Bảy, 14/11' }
+        ];
+
+        container.innerHTML = dates.map(d => `
+          <div class="date-chip ${this.selectedDate === d.date ? 'active' : ''}" onclick="wizard.selectDate('${d.date}')">
+            <div class="day-name">${d.label}</div>
+            <div class="day-date">${d.sub}</div>
+          </div>
+        `).join('');
+      },
+
+      selectDate(dateStr) {
+        this.selectedDate = dateStr;
+        document.getElementById('custom-booking-date').value = dateStr;
+        this.renderQuickDates();
+        this.renderStylists();
+        this.renderTimeSlots();
+      },
+
+      onCustomDateChange(val) {
+        if (!val) return;
+        this.selectedDate = val;
+        this.renderQuickDates();
+        this.renderStylists();
+        this.renderTimeSlots();
+      },
+
+      renderStylists() {
+        const stylists = MOCK.users.filter(u => u.role === 'stylist');
+        const totalDuration = this.getTotalDuration();
+        const container = document.getElementById('stylists-list-container');
+
+        // Stylist 0: Any stylist option
+        let html = `
+          <div class="stylist-card-luxury ${this.selectedStylistId === null ? 'selected' : ''}" onclick="wizard.selectStylist(null)">
+            <div class="stylist-avatar-wrap">
+              <div style="width: 100%; height: 100%; border-radius: 50%; background: var(--primary); display: flex; align-items: center; justify-content: center; color: var(--gold); font-size: 1.8rem; border: 3px solid var(--gold);">
+                <i class="fas fa-magic"></i>
+              </div>
+            </div>
+            <h4 class="stylist-name">Salon Tự Điều Phối</h4>
+            <div class="stylist-specialty">Xếp Stylist giỏi nhất đang rảnh</div>
+            <div class="stylist-badges-row">
+              <span class="stylist-mini-badge" style="background: var(--gold-dim); color: var(--primary); font-weight: 600;">Ưu tiên nhanh nhất</span>
+            </div>
+          </div>
+        `;
+
+        stylists.forEach(s => {
+          const isSelected = this.selectedStylistId === s.id;
+          // Check how many slots available for this stylist
+          const slots = MockDB.getAvailableSlots(s.id, this.selectedDate, totalDuration || 45);
+          const isAvailableToday = slots.length > 0;
+
+          html += `
+            <div class="stylist-card-luxury ${isSelected ? 'selected' : ''} ${!isAvailableToday ? 'unavailable' : ''}" onclick="wizard.selectStylist('${s.id}')">
+              <div class="stylist-avatar-wrap">
+                <img src="${s.avatar}" alt="${s.name}">
+                <div class="stylist-status-dot ${isAvailableToday ? '' : 'busy'}" title="${isAvailableToday ? 'Còn khung giờ trống' : 'Đã kín lịch ngày này'}"></div>
+              </div>
+              <h4 class="stylist-name">${s.name}</h4>
+              <div class="stylist-specialty">${s.specialty}</div>
+              <div class="stylist-badges-row">
+                <span class="stylist-mini-badge"><i class="fas fa-star" style="color: var(--gold);"></i> ${s.rating} (${s.totalReviews})</span>
+                <span class="stylist-mini-badge">${s.experience}</span>
+              </div>
+              <div class="btn-stylist-portfolio" onclick="event.stopPropagation(); wizard.showStylistPortfolio('${s.id}')">
+                <i class="fas fa-award"></i> Xem Bằng cấp & Tác phẩm
+              </div>
+            </div>
+          `;
+        });
+
+        container.innerHTML = html;
+        this.renderTimeSlots();
+      },
+
+      selectStylist(stylistId) {
+        this.selectedStylistId = stylistId;
+        this.selectedTimeSlot = null; // reset slot selection
+        this.renderStylists();
+      },
+
+      showStylistPortfolio(stylistId) {
+        const s = MockDB.getUser(stylistId);
+        if (!s) return;
+
+        document.getElementById('modal-stylist-title').innerText = `Hồ Sơ Master Stylist: ${s.name}`;
+        const body = document.getElementById('modal-stylist-body');
+        body.innerHTML = `
+          <div style="display: flex; gap: 18px; align-items: center; margin-bottom: 18px;">
+            <img src="${s.avatar}" style="width: 72px; height: 72px; border-radius: 50%; object-fit: cover; border: 3px solid var(--gold);">
+            <div>
+              <h3 style="color: var(--primary); font-size: 1.15rem; margin-bottom: 2px;">${s.name}</h3>
+              <div style="color: var(--gold); font-size: 0.85rem; font-weight: 600; margin-bottom: 4px;">${s.specialty} · ${s.experience} kinh nghiệm</div>
+              <div style="font-size: 0.82rem; color: var(--text-muted);">${renderStars(s.rating)} <strong>${s.rating}</strong>/5 (${s.totalReviews} lượt đánh giá)</div>
+            </div>
+          </div>
+          <p style="font-size: 0.88rem; color: var(--text-body); margin-bottom: 16px; line-height: 1.6;">${s.bio}</p>
+
+          <div style="margin-bottom: 18px;">
+            <h5 style="font-size: 0.88rem; color: var(--primary); margin-bottom: 8px;"><i class="fas fa-certificate" style="color: var(--gold);"></i> Bằng Cấp & Chứng Chỉ:</h5>
+            <ul style="font-size: 0.82rem; color: var(--text-body); display: flex; flex-direction: column; gap: 4px;">
+              ${(s.certificates || []).map(cert => `<li><i class="fas fa-check" style="color: var(--green); margin-right: 6px;"></i> ${cert}</li>`).join('')}
+            </ul>
+          </div>
+
+          <div>
+            <h5 style="font-size: 0.88rem; color: var(--primary); margin-bottom: 10px;"><i class="fas fa-camera" style="color: var(--gold);"></i> Tác Phẩm Nổi Bật:</h5>
+            <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px;">
+              ${(s.portfolio || []).map(imgUrl => `
+                <div style="height: 100px; border-radius: var(--radius-sm); overflow: hidden;">
+                  <img src="${imgUrl}" style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s ease;" onmouseover="this.style.transform='scale(1.08)'" onmouseout="this.style.transform='scale(1)'">
+                </div>
+              `).join('')}
+            </div>
+          </div>
+          <button class="btn btn-primary" style="width: 100%; margin-top: 20px;" onclick="wizard.selectStylist('${s.id}'); closeModal('modal-stylist-portfolio');">
+            Chọn Stylist ${s.name}
+          </button>
+        `;
+        openModal('modal-stylist-portfolio');
+      },
+
+      renderTimeSlots() {
+        const totalDuration = this.getTotalDuration() || 45;
+        const wrapper = document.getElementById('slots-groups-wrapper');
+
+        const groups = [
+          {
+            title: 'Buổi Sáng (08:30 – 11:30)',
+            icon: 'fa-sun',
+            slots: ['08:30', '09:00', '09:30', '10:00', '10:30', '11:00', '11:30']
+          },
+          {
+            title: 'Buổi Chiều (12:00 – 17:00)',
+            icon: 'fa-cloud-sun',
+            slots: ['12:00', '12:30', '13:00', '13:30', '14:00', '14:30', '15:00', '15:30', '16:00', '16:30', '17:00']
+          },
+          {
+            title: 'Buổi Tối (17:30 – 19:30)',
+            icon: 'fa-moon',
+            slots: ['17:30', '18:00', '18:30', '19:00', '19:30']
+          }
+        ];
+
+        let html = '';
+        groups.forEach(g => {
+          html += `
+            <div class="time-slot-group-title"><i class="fas ${g.icon}" style="color: var(--gold);"></i> ${g.title}</div>
+            <div class="time-slots-grid">
+              ${g.slots.map(t => {
+                let isAvailable = true;
+                if (this.selectedStylistId) {
+                  isAvailable = MockDB.isStylistAvailable(this.selectedStylistId, this.selectedDate, t, totalDuration);
+                } else {
+                  // Any stylist: check if at least 1 stylist is available
+                  const freeStylists = MockDB.getAvailableStylists(this.selectedDate, t, totalDuration);
+                  isAvailable = freeStylists.length > 0;
+                }
+
+                const isSelected = this.selectedTimeSlot === t;
+                return `
+                  <button class="slot-btn ${isSelected ? 'selected' : ''} ${!isAvailable ? 'disabled' : ''}" 
+                    ${!isAvailable ? 'disabled title="Đã có khách hẹn ở khung giờ này"' : ''}
+                    onclick="wizard.selectTimeSlot('${t}')">
+                    ${t}
+                  </button>
+                `;
+              }).join('')}
+            </div>
+          `;
+        });
+
+        wrapper.innerHTML = html;
+      },
+
+      selectTimeSlot(t) {
+        this.selectedTimeSlot = t;
+        this.renderTimeSlots();
+      },
+
+      validateStep2AndProceed() {
+        if (!this.selectedTimeSlot) {
+          Toast.show('Vui lòng chọn khung giờ hẹn mong muốn!', 'warning');
+          return;
+        }
+        this.goToStep(3);
+      },
+
+      // ─── STEP 3 LOGIC ────────────────────────────────
+      prefillCustomerInfo() {
+        const user = Auth.getCurrentUser();
+        if (user) {
+          document.getElementById('cust-fullname').value = user.name || '';
+          document.getElementById('cust-phone').value = user.phone || '';
+          document.getElementById('cust-email').value = user.email || '';
+        }
+      },
+
+      renderPromotions() {
+        const list = document.getElementById('promos-list-box');
+        const user = Auth.getCurrentUser();
+        const userTier = user?.memberTier || 'Vàng';
+
+        list.innerHTML = MOCK.promotions.map(p => {
+          const isEligible = !p.applicableTiers || p.applicableTiers.includes(userTier);
+          return `
+            <div class="promo-ticket" style="${!isEligible ? 'opacity: 0.55;' : ''}">
+              <div>
+                <div class="promo-ticket-code"><i class="fas fa-tag" style="color: var(--gold);"></i> ${p.code}</div>
+                <div class="promo-ticket-desc">${p.name} · ${p.description}</div>
+              </div>
+              <div>
+                <button class="btn-use-promo" onclick="wizard.setVoucherCode('${p.code}')" ${!isEligible ? 'disabled title="Chỉ dành cho ' + p.applicableTiers.join(', ') + '"' : ''}>
+                  ${this.appliedVoucher?.code === p.code ? 'Đang dùng' : 'Dùng ngay'}
+                </button>
+              </div>
+            </div>
+          `;
+        }).join('');
+      },
+
+      setVoucherCode(code) {
+        document.getElementById('voucher-code-input').value = code;
+        this.applyVoucher();
+      },
+
+      applyVoucher() {
+        const code = document.getElementById('voucher-code-input').value.trim().toUpperCase();
+        const msgEl = document.getElementById('voucher-message');
+        if (!code) {
+          this.appliedVoucher = null;
+          msgEl.innerHTML = '';
+          this.updatePriceBreakdown();
+          this.renderPromotions();
+          return;
+        }
+
+        const promo = MOCK.promotions.find(p => p.code === code && p.status === 'active');
+        if (!promo) {
+          msgEl.innerHTML = '<span style="color: var(--red);"><i class="fas fa-times-circle"></i> Mã voucher không tồn tại hoặc đã hết hạn!</span>';
+          this.appliedVoucher = null;
+          this.updatePriceBreakdown();
+          return;
+        }
+
+        const subtotal = this.getSubtotal();
+        if (promo.minSpend && subtotal < promo.minSpend) {
+          msgEl.innerHTML = `<span style="color: var(--orange);"><i class="fas fa-exclamation-triangle"></i> Đơn hàng tối thiểu ${MockDB.formatCurrency(promo.minSpend)} để dùng voucher này.</span>`;
+          this.appliedVoucher = null;
+          this.updatePriceBreakdown();
+          return;
+        }
+
+        const user = Auth.getCurrentUser();
+        if (promo.applicableTiers && user && !promo.applicableTiers.includes(user.memberTier)) {
+          msgEl.innerHTML = `<span style="color: var(--orange);"><i class="fas fa-lock"></i> Voucher này chỉ áp dụng cho hạng ${promo.applicableTiers.join(' & ')}.</span>`;
+          this.appliedVoucher = null;
+          this.updatePriceBreakdown();
+          return;
+        }
+
+        this.appliedVoucher = promo;
+        msgEl.innerHTML = `<span style="color: var(--green);"><i class="fas fa-check-circle"></i> Áp dụng thành công mã <strong>${promo.code}</strong>!</span>`;
+        this.updatePriceBreakdown();
+        this.renderPromotions();
+        Toast.show('Đã áp dụng mã giảm giá ' + promo.code, 'success');
+      },
+
+      updatePriceBreakdown() {
+        const subtotal = this.getSubtotal();
+        let discount = 0;
+
+        if (this.appliedVoucher) {
+          if (this.appliedVoucher.discountType === 'fixed') {
+            discount = this.appliedVoucher.discount;
+          } else if (this.appliedVoucher.discountType === 'percent') {
+            discount = Math.round(subtotal * (this.appliedVoucher.discount / 100));
+            if (this.appliedVoucher.maxDiscount && discount > this.appliedVoucher.maxDiscount) {
+              discount = this.appliedVoucher.maxDiscount;
+            }
+          }
+        }
+
+        const finalTotal = Math.max(0, subtotal - discount);
+
+        document.getElementById('summary-subtotal').innerText = MockDB.formatCurrency(subtotal);
+        const discountRow = document.getElementById('summary-discount-row');
+        if (discount > 0) {
+          discountRow.style.display = 'flex';
+          document.getElementById('summary-voucher-code').innerText = this.appliedVoucher.code;
+          document.getElementById('summary-discount-val').innerText = '-' + MockDB.formatCurrency(discount);
+        } else {
+          discountRow.style.display = 'none';
+        }
+
+        document.getElementById('summary-final-total').innerText = MockDB.formatCurrency(finalTotal);
+
+        // Update step 3 itemized services
+        const selectedSvcs = this.selectedServices.map(id => MockDB.getService(id)).filter(Boolean);
+        document.getElementById('step3-selected-services-list').innerHTML = selectedSvcs.map(s => `
+          <div style="display: flex; justify-content: space-between; margin-bottom: 6px;">
+            <span><i class="fas fa-check" style="color: var(--gold); font-size: 0.75rem;"></i> ${s.name} (${s.duration}p)</span>
+            <span style="font-weight: 600;">${MockDB.formatCurrency(s.price)}</span>
+          </div>
+        `).join('');
+
+        // Also update full deposit option on Step 4
+        document.getElementById('deposit-full-amount').innerText = MockDB.formatCurrency(finalTotal);
+      },
+
+      validateStep3AndProceed() {
+        const name = document.getElementById('cust-fullname').value.trim();
+        const phone = document.getElementById('cust-phone').value.trim();
+
+        if (!name) {
+          Toast.show('Vui lòng nhập họ và tên khách hàng!', 'warning');
+          document.getElementById('cust-fullname').focus();
+          return;
+        }
+
+        if (!phone || phone.length < 9) {
+          Toast.show('Vui lòng nhập số điện thoại hợp lệ để nhận mã QR check-in!', 'warning');
+          document.getElementById('cust-phone').focus();
+          return;
+        }
+
+        this.goToStep(4);
+      },
+
+      // ─── STEP 4 LOGIC ────────────────────────────────
+      selectDepositOption(type, amount) {
+        this.depositType = type;
+        const finalTotal = this.getFinalTotal();
+        if (type === 'full') {
+          this.depositAmount = finalTotal;
+        } else {
+          this.depositAmount = amount;
+        }
+
+        document.querySelectorAll('.deposit-card').forEach(c => c.classList.remove('selected'));
+        if (type === '50k') document.getElementById('deposit-opt-50k').classList.add('selected');
+        if (type === '100k') document.getElementById('deposit-opt-100k').classList.add('selected');
+        if (type === 'full') document.getElementById('deposit-opt-full').classList.add('selected');
+
+        this.updateQRPaymentInfo();
+      },
+
+      updateQRPaymentInfo() {
+        const amount = this.depositAmount;
+        document.getElementById('qr-transfer-amount').innerText = MockDB.formatCurrency(amount);
+
+        const phone = document.getElementById('cust-phone').value.trim() || '0900000000';
+        const memo = `${this.paymentMemo} ${phone.slice(-4)}`;
+        document.getElementById('qr-transfer-memo').innerText = memo;
+
+        // Render QR Code SVG with payload
+        const qrPayload = `VIETQR|MBBANK|0869990740|${amount}|${memo}|VO THUAN`;
+        const qrSvg = generateQRCodeSVG(qrPayload, 190, 'VIETQR');
+        document.getElementById('payment-qr-wrapper').innerHTML = `
+          ${qrSvg}
+          <div class="qr-scan-line"></div>
+        `;
+      },
+
+      copyTransferMemo() {
+        const memo = document.getElementById('qr-transfer-memo').innerText;
+        copyToClipboard(memo, 'Đã sao chép nội dung chuyển khoản!');
+      },
+
+      confirmPaymentAndComplete() {
+        const btn = document.getElementById('btn-confirm-transfer');
+        btn.disabled = true;
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Đang đối soát cổng thanh toán ngân hàng...';
+
+        setTimeout(() => {
+          btn.disabled = false;
+          btn.innerHTML = '<i class="fas fa-check-circle"></i> Tôi Đã Chuyển Khoản Xong – Xác Nhận Lịch';
+
+          this.createAndPersistAppointment();
+          this.goToStep(5);
+          Toast.show('Thanh toán cọc thành công! Lịch hẹn của bạn đã được xác nhận.', 'success');
+        }, 1200);
+      },
+
+      // ─── STEP 5 & PERSISTENCE ────────────────────────
+      createAndPersistAppointment() {
+        const user = Auth.getCurrentUser();
+        const custName = document.getElementById('cust-fullname').value.trim();
+        const custPhone = document.getElementById('cust-phone').value.trim();
+        const custEmail = document.getElementById('cust-email').value.trim();
+        const custNotes = document.getElementById('cust-notes').value.trim();
+
+        // Calculate end time
+        const duration = this.getTotalDuration();
+        const startMin = MockDB.timeToMinutes(this.selectedTimeSlot);
+        const endMin = startMin + duration;
+        const endTime = MockDB.minutesToTime(endMin);
+
+        // Auto assign stylist if 'any' was selected
+        let finalStylistId = this.selectedStylistId;
+        if (!finalStylistId) {
+          const avail = MockDB.getAvailableStylists(this.selectedDate, this.selectedTimeSlot, duration);
+          finalStylistId = avail.length > 0 ? avail[0].id : 'U101';
+        }
+
+        const bookingNum = Math.floor(1000 + Math.random() * 9000);
+        const dateClean = this.selectedDate.replace(/-/g, '');
+        const bookingId = `A${bookingNum}`;
+        const bookingCode = `VT-${dateClean}-${bookingNum}`;
+        this.currentBookingId = bookingId;
+
+        const subtotal = this.getSubtotal();
+        const finalTotal = this.getFinalTotal();
+        const depositPaid = this.depositAmount;
+
+        const newAppointment = {
+          id: bookingId,
+          code: bookingCode,
+          customerId: user ? user.id : 'U201',
+          customerName: custName,
+          customerPhone: custPhone,
+          customerEmail: custEmail,
+          stylistId: finalStylistId,
+          serviceIds: [...this.selectedServices],
+          date: this.selectedDate,
+          time: this.selectedTimeSlot,
+          endTime: endTime,
+          status: 'confirmed',
+          totalAmount: finalTotal,
+          depositAmount: depositPaid,
+          paymentStatus: depositPaid >= finalTotal ? 'paid' : 'deposit',
+          paymentMethod: 'transfer',
+          notes: custNotes,
+          voucher: this.appliedVoucher ? this.appliedVoucher.code : null,
+          createdAt: new Date().toISOString()
+        };
+
+        // Save to SalonStorage
+        SalonStorage.saveAppointment(newAppointment);
+
+        // Populate Success Step UI
+        document.getElementById('success-booking-code').innerText = `#${bookingCode}`;
+        document.getElementById('success-customer-name').innerText = custName;
+        document.getElementById('success-customer-phone').innerText = custPhone;
+
+        const stylistObj = MockDB.getUser(finalStylistId);
+        document.getElementById('success-stylist-name').innerText = `${stylistObj?.name} (${stylistObj?.specialty})`;
+
+        document.getElementById('success-appointment-time').innerText = `${this.selectedTimeSlot} - ${endTime} (Ngày ${MockDB.formatDate(this.selectedDate)})`;
+
+        const selectedSvcs = this.selectedServices.map(id => MockDB.getService(id)).filter(Boolean);
+        document.getElementById('success-services-list').innerText = selectedSvcs.map(s => s.name).join(', ');
+
+        document.getElementById('success-deposit-amount').innerText = MockDB.formatCurrency(depositPaid);
+        const remaining = Math.max(0, finalTotal - depositPaid);
+        document.getElementById('success-remaining-amount').innerText = MockDB.formatCurrency(remaining);
+
+        // Check-in QR
+        const checkinPayload = `SALON_CHECKIN|${bookingCode}|${custPhone}|${this.selectedDate}|${this.selectedTimeSlot}|${finalStylistId}`;
+        document.getElementById('success-checkin-qr').innerHTML = generateQRCodeSVG(checkinPayload, 110, 'CHECKIN');
+
+        // Setup Printable Ticket data
+        document.getElementById('print-booking-code').innerText = `#${bookingCode}`;
+        document.getElementById('print-cust-name').innerText = custName;
+        document.getElementById('print-cust-phone').innerText = custPhone;
+        document.getElementById('print-time').innerText = `${this.selectedTimeSlot} - ${endTime}, ${MockDB.formatDate(this.selectedDate)}`;
+        document.getElementById('print-stylist').innerText = stylistObj?.name;
+        document.getElementById('print-services').innerText = selectedSvcs.map(s => s.name).join(', ');
+        document.getElementById('print-duration').innerText = `${duration} phút`;
+        document.getElementById('print-total-price').innerText = MockDB.formatCurrency(subtotal);
+        const discountVal = subtotal - finalTotal;
+        document.getElementById('print-discount').innerText = discountVal > 0 ? '-' + MockDB.formatCurrency(discountVal) : '0 đ';
+        document.getElementById('print-deposit').innerText = MockDB.formatCurrency(depositPaid);
+        document.getElementById('print-remaining').innerText = MockDB.formatCurrency(remaining);
+      },
+
+      printAppointmentTicket() {
+        window.print();
+      },
+
+      resetBooking() {
+        this.selectedServices = [];
+        this.selectedStylistId = null;
+        this.selectedTimeSlot = null;
+        this.appliedVoucher = null;
+        this.updateServiceSelectionUI();
+        this.goToStep(1);
+      },
+
+      // ─── NAVIGATION & HELPERS ─────────────────────────
+      goToStep(step) {
+        if (step > this.currentStep) {
+          if (this.currentStep === 1 && this.selectedServices.length === 0) {
+            Toast.show('Vui lòng chọn ít nhất 1 dịch vụ!', 'warning');
+            return;
+          }
+          if (this.currentStep === 2 && !this.selectedTimeSlot) {
+            Toast.show('Vui lòng chọn khung giờ hẹn!', 'warning');
+            return;
+          }
+        }
+
+        this.currentStep = step;
+
+        // Toggle panels
+        for (let i = 1; i <= 5; i++) {
+          const panel = document.getElementById(`panel-step-${i}`);
+          const indicator = document.getElementById(`step-indicator-${i}`);
+          const conn = document.getElementById(`step-conn-${i}`);
+
+          if (panel) panel.classList.toggle('active', i === step);
+
+          if (indicator) {
+            indicator.classList.remove('active', 'completed');
+            if (i === step) indicator.classList.add('active');
+            if (i < step) indicator.classList.add('completed');
+          }
+
+          if (conn) {
+            conn.classList.toggle('completed', i < step);
+          }
+        }
+
+        // Summary bar visibility
+        const bar = document.getElementById('sticky-summary-bar');
+        if (step === 1 && this.selectedServices.length > 0) {
+          bar.classList.add('visible');
+        } else {
+          bar.classList.remove('visible');
+        }
+
+        // Setup step 3 & 4 data on enter
+        if (step === 3) {
+          this.updatePriceBreakdown();
+        }
+        if (step === 4) {
+          this.selectDepositOption(this.depositType, this.depositAmount);
+          this.startPaymentTimer();
+        } else if (this.timerInterval) {
+          clearInterval(this.timerInterval);
+        }
+
+        window.scrollTo({ top: 180, behavior: 'smooth' });
+      },
+
+      getTotalDuration() {
+        return this.selectedServices
+          .map(id => MockDB.getService(id))
+          .filter(Boolean)
+          .reduce((sum, s) => sum + s.duration, 0);
+      },
+
+      getSubtotal() {
+        return this.selectedServices
+          .map(id => MockDB.getService(id))
+          .filter(Boolean)
+          .reduce((sum, s) => sum + s.price, 0);
+      },
+
+      getFinalTotal() {
+        const subtotal = this.getSubtotal();
+        let discount = 0;
+        if (this.appliedVoucher) {
+          if (this.appliedVoucher.discountType === 'fixed') {
+            discount = this.appliedVoucher.discount;
+          } else if (this.appliedVoucher.discountType === 'percent') {
+            discount = Math.round(subtotal * (this.appliedVoucher.discount / 100));
+            if (this.appliedVoucher.maxDiscount && discount > this.appliedVoucher.maxDiscount) {
+              discount = this.appliedVoucher.maxDiscount;
+            }
+          }
+        }
+        return Math.max(0, subtotal - discount);
+      }
+    };
+
+    // Initialize wizard on page ready
+    document.addEventListener('DOMContentLoaded', () => {
+      wizard.init();
+    });
+  </script>
+</body>
+</html>

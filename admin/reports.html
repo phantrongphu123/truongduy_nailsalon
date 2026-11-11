@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Báo Cáo Doanh Thu & Bằng Chứng Kê Khai Thuế – Võ Thuận Hair Salon</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="../shared/shared.css">
+  <link rel="stylesheet" href="admin.css">
+</head>
+<body>
+  <div class="sidebar-overlay"></div>
+
+  <div class="dashboard-layout">
+    <!-- ─── SIDEBAR ─── -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <a href="dashboard.html" class="sidebar-logo">
+          VÕ THUẬN
+          <span>Hair Salon Management</span>
+        </a>
+      </div>
+
+      <nav class="sidebar-nav">
+        <div class="nav-section-title">Quản Trị Salon</div>
+        <a href="dashboard.html" data-nav="dashboard">
+          <i class="fas fa-chart-pie"></i>
+          <span>Tổng Quan</span>
+        </a>
+        <a href="scheduling.html" data-nav="scheduling">
+          <i class="fas fa-calendar-alt"></i>
+          <span>Điều Phối Lịch</span>
+          <span class="nav-badge">7 lịch</span>
+        </a>
+        <a href="crm.html" data-nav="crm">
+          <i class="fas fa-users"></i>
+          <span>Khách Hàng (CRM)</span>
+        </a>
+        <a href="attendance.html" data-nav="attendance">
+          <i class="fas fa-user-clock"></i>
+          <span>Chấm Công NV</span>
+        </a>
+        <a href="payroll.html" data-nav="payroll">
+          <i class="fas fa-file-invoice-dollar"></i>
+          <span>Lương & Hoa Hồng</span>
+        </a>
+
+        <div class="nav-section-title">Kho Vận & Tài Chính</div>
+        <a href="inventory.html" data-nav="inventory">
+          <i class="fas fa-boxes"></i>
+          <span>Kho & Dịch Vụ</span>
+        </a>
+        <a href="reports.html" class="active" data-nav="reports">
+          <i class="fas fa-file-contract"></i>
+          <span>Doanh Thu & Thuế</span>
+        </a>
+
+        <div class="nav-section-title">Hệ Thống</div>
+        <a href="../login.html" onclick="sessionStorage.clear()">
+          <i class="fas fa-sign-out-alt"></i>
+          <span>Đăng Xuất</span>
+        </a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="sidebar-user">
+          <img src="https://i.pravatar.cc/150?img=68" alt="Võ Thuận">
+          <div class="sidebar-user-info">
+            <h4>Võ Thuận</h4>
+            <p>Chủ Salon (Admin)</p>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- ─── MAIN CONTENT ─── -->
+    <main class="main-content">
+      <!-- TOP BAR -->
+      <header class="top-bar">
+        <div class="top-bar-left">
+          <button class="menu-toggle" aria-label="Mở menu"><i class="fas fa-bars"></i></button>
+          <div>
+            <h1>Báo Cáo Doanh Thu &amp; Kê Khai Thuế</h1>
+            <div class="breadcrumb">Bằng chứng thống kê thuế Hộ kinh doanh cá thể theo Thông tư 40/2021/TT-BTC</div>
+          </div>
+        </div>
+
+        <div class="top-bar-right">
+          <button class="btn btn-outline btn-sm" onclick="exportTaxCSV()">
+            <i class="fas fa-file-excel"></i> Xuất Excel Thuế
+          </button>
+          <button class="btn btn-primary btn-sm" onclick="printElement('taxDocSheet')">
+            <i class="fas fa-print"></i> In Tờ Khai Thuế
+          </button>
+        </div>
+      </header>
+
+      <!-- PAGE CONTENT -->
+      <div class="page-content">
+
+        <!-- STATS TAX SUMMARY CARDS -->
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-icon green">
+              <i class="fas fa-calculator"></i>
+            </div>
+            <div class="stat-info">
+              <h3>Doanh thu tính thuế</h3>
+              <div class="stat-value" id="taxRevenueDisplay">37.900.000 ₫</div>
+              <div class="stat-change up">
+                <i class="fas fa-calendar-check"></i> Kỳ thuế Tháng 11/2026
+              </div>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-icon blue">
+              <i class="fas fa-receipt"></i>
+            </div>
+            <div class="stat-info">
+              <h3>Thuế GTGT (5%)</h3>
+              <div class="stat-value" id="taxVatDisplay">1.895.000 ₫</div>
+              <div class="stat-change" style="color:var(--text-muted)">
+                5% &times; Doanh thu dịch vụ
+              </div>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-icon orange">
+              <i class="fas fa-user-shield"></i>
+            </div>
+            <div class="stat-info">
+              <h3>Thuế TNCN (2%)</h3>
+              <div class="stat-value" id="taxPitDisplay">758.000 ₫</div>
+              <div class="stat-change" style="color:var(--text-muted)">
+                2% &times; Doanh thu dịch vụ
+              </div>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-icon gold">
+              <i class="fas fa-landmark"></i>
+            </div>
+            <div class="stat-info">
+              <h3>Tổng thuế phải nộp (7%)</h3>
+              <div class="stat-value" id="taxTotalDisplay" style="color:#B45309;">2.653.000 ₫</div>
+              <div class="stat-change up">
+                <i class="fas fa-check-circle"></i> Sẵn sàng nộp kho bạc
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ─── THỐNG KÊ DOANH THU THEO PHƯƠNG THỨC THANH TOÁN ─── -->
+        <div class="card" style="margin-bottom: 28px;">
+          <div class="card-header">
+            <h2><i class="fas fa-wallet" style="color:var(--gold); margin-right:8px;"></i> Cơ Cấu Doanh Thu Theo Phương Thức Thanh Toán</h2>
+            <span style="font-size:0.82rem; color:var(--text-muted);">Tổng cộng: 130 giao dịch hoàn thành</span>
+          </div>
+
+          <div class="card-body">
+            <div class="grid-3" style="margin-bottom: 16px;">
+              <!-- Tiền mặt -->
+              <div style="background:var(--bg-cream); border:1px solid var(--border); border-radius:var(--radius-sm); padding:16px;">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                  <span style="font-weight:700; color:var(--primary); font-size:0.9rem;">
+                    <i class="fas fa-money-bill-wave" style="color:var(--green); margin-right:6px;"></i> Tiền Mặt (Cash)
+                  </span>
+                  <span class="badge badge-completed">44.3%</span>
+                </div>
+                <div style="font-size:1.4rem; font-weight:700; color:var(--primary);" id="pmCashDisplay">16.800.000 ₫</div>
+                <div style="font-size:0.75rem; color:var(--text-muted); margin-top:4px;">58 lượt thanh toán tại quầy POS</div>
+              </div>
+
+              <!-- Chuyển khoản VietQR -->
+              <div style="background:var(--bg-cream); border:1px solid var(--border); border-radius:var(--radius-sm); padding:16px;">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                  <span style="font-weight:700; color:var(--primary); font-size:0.9rem;">
+                    <i class="fas fa-qrcode" style="color:var(--blue); margin-right:6px;"></i> Chuyển Khoản VietQR
+                  </span>
+                  <span class="badge badge-confirmed">37.9%</span>
+                </div>
+                <div style="font-size:1.4rem; font-weight:700; color:var(--primary);" id="pmTransferDisplay">14.350.000 ₫</div>
+                <div style="font-size:0.75rem; color:var(--text-muted); margin-top:4px;">49 lượt quét mã VietQR tự động</div>
+              </div>
+
+              <!-- Ví điện tử MoMo -->
+              <div style="background:var(--bg-cream); border:1px solid var(--border); border-radius:var(--radius-sm); padding:16px;">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                  <span style="font-weight:700; color:var(--primary); font-size:0.9rem;">
+                    <i class="fas fa-mobile-alt" style="color:#A21CAF; margin-right:6px;"></i> Ví Điện Tử MoMo
+                  </span>
+                  <span class="badge" style="background:#F3E8FF; color:#7E22CE; font-weight:600;">17.8%</span>
+                </div>
+                <div style="font-size:1.4rem; font-weight:700; color:var(--primary);" id="pmMomoDisplay">6.750.000 ₫</div>
+                <div style="font-size:0.75rem; color:var(--text-muted); margin-top:4px;">23 lượt thanh toán qua MoMo</div>
+              </div>
+            </div>
+
+            <!-- Segmented Progress Bar -->
+            <div style="display:flex; height:14px; border-radius:7px; overflow:hidden; box-shadow:inset 0 1px 3px rgba(0,0,0,0.1);">
+              <div style="width:44.3%; background:var(--green);" title="Tiền mặt: 44.3%"></div>
+              <div style="width:37.9%; background:var(--blue);" title="Chuyển khoản VietQR: 37.9%"></div>
+              <div style="width:17.8%; background:#A21CAF;" title="Ví MoMo: 17.8%"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ─── BẢNG KÊ KHAI THUẾ HỘ KINH DOANH CHUẨN MẪU (PRINTABLE) ─── -->
+        <div class="card" style="margin-bottom: 28px;">
+          <div class="card-header no-print">
+            <h2><i class="fas fa-file-invoice" style="color:var(--gold); margin-right:8px;"></i> Bảng Kê Khai Thuế Hộ Kinh Doanh (Mẫu In Cơ Quan Thuế / Kiểm Toán)</h2>
+            <button class="btn btn-primary btn-sm" onclick="printElement('taxDocSheet')">
+              <i class="fas fa-print"></i> Xem &amp; In Tờ Khai Thuế
+            </button>
+          </div>
+
+          <div class="card-body" style="padding: 24px;">
+            <!-- PRINTABLE TAX DOCUMENT -->
+            <div class="tax-doc" id="taxDocSheet">
+              <div class="tax-header-doc">
+                <div class="tax-motto">CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM</div>
+                <div class="tax-submotto">Độc lập – Tự do – Hạnh phúc</div>
+                <div style="font-size:0.75rem; letter-spacing:3px; color:var(--text-muted); margin-bottom:8px;">—————— o0o ——————</div>
+                <div class="tax-doc-title">BẢNG KÊ DOANH THU &amp; NGHĨA VỤ THUẾ HỘ KINH DOANH</div>
+                <div class="tax-legal-ref">
+                  (Áp dụng theo phương pháp kê khai quy định tại Thông tư số 40/2021/TT-BTC ngày 01/06/2021 của Bộ Tài Chính)
+                </div>
+                <div style="font-size:0.85rem; font-weight:700; color:var(--primary); margin-top:8px;">
+                  KỲ TÍNH THUẾ: THÁNG 11/2026 (Từ ngày 01/11/2026 đến ngày 11/11/2026)
+                </div>
+              </div>
+
+              <!-- Taxpayer Info -->
+              <div class="tax-info-grid">
+                <div>
+                  <div><strong>Tên Hộ Kinh Doanh:</strong> HỘ KINH DOANH VÕ THUẬN HAIR SALON</div>
+                  <div><strong>Mã Số Thuế (MST):</strong> 0317892341-001</div>
+                  <div><strong>Chủ Hộ Kinh Doanh:</strong> VÕ THUẬN (CCCD số: 079088******)</div>
+                </div>
+                <div>
+                  <div><strong>Địa Chỉ Kinh Doanh:</strong> 2/139N Lê Thị Hà, Tân Xuân, Hóc Môn, TP.HCM</div>
+                  <div><strong>Ngành Nghề Đăng Ký:</strong> Dịch vụ cắt tóc, gội đầu, làm đẹp (Mã ngành: 9602)</div>
+                  <div><strong>Cơ Quan Thuế Quản Lý:</strong> Chi cục Thuế Huyện Hóc Môn – Cục Thuế TP.HCM</div>
+                </div>
+              </div>
+
+              <!-- Calculation Table -->
+              <table class="payslip-table" style="margin-bottom:16px;">
+                <thead>
+                  <tr>
+                    <th style="width:40px; text-align:center;">STT</th>
+                    <th>Chỉ Tiêu / Nhóm Ngành Hàng</th>
+                    <th style="text-align:right;">Doanh Thu Tính Thuế</th>
+                    <th style="text-align:center;">Tỷ Lệ Thuế GTGT</th>
+                    <th style="text-align:right;">Tiền Thuế GTGT</th>
+                    <th style="text-align:center;">Tỷ Lệ Thuế TNCN</th>
+                    <th style="text-align:right;">Tiền Thuế TNCN</th>
+                    <th style="text-align:right;">Tổng Thuế Phải Nộp</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td style="text-align:center;">1</td>
+                    <td>
+                      <strong>Dịch vụ cắt, uốn, nhuộm, duỗi, gội &amp; chăm sóc tóc</strong>
+                      <div style="font-size:0.75rem; color:var(--text-muted);">(Dịch vụ tiêu dùng cá nhân khác - Phụ lục I Thông tư 40)</div>
+                    </td>
+                    <td style="text-align:right;"><strong>37.900.000 ₫</strong></td>
+                    <td style="text-align:center;"><strong style="color:var(--blue);">5%</strong></td>
+                    <td style="text-align:right;">1.895.000 ₫</td>
+                    <td style="text-align:center;"><strong style="color:var(--orange);">2%</strong></td>
+                    <td style="text-align:right;">758.000 ₫</td>
+                    <td style="text-align:right;"><strong style="color:var(--red);">2.653.000 ₫</strong></td>
+                  </tr>
+                  <tr class="payslip-total-row">
+                    <td colspan="2" style="text-align:center;">TỔNG CỘNG NGHĨA VỤ THUẾ</td>
+                    <td style="text-align:right;">37.900.000 ₫</td>
+                    <td>—</td>
+                    <td style="text-align:right;">1.895.000 ₫</td>
+                    <td>—</td>
+                    <td style="text-align:right;">758.000 ₫</td>
+                    <td style="text-align:right; font-size:1.1rem; color:#B45309;">2.653.000 ₫</td>
+                  </tr>
+                </tbody>
+              </table>
+
+              <!-- Big Calc Highlight Box -->
+              <div class="tax-calc-box">
+                <div>
+                  <div class="total-label">TỔNG TIỀN THUẾ PHẢI NỘP VÀO NGÂN SÁCH NHÀ NƯỚC:</div>
+                  <div style="font-size:0.82rem; color:var(--text-muted); margin-top:2px;">
+                    Số tiền bằng chữ: <em>Hai triệu sáu trăm năm mươi ba nghìn đồng chẵn.</em>
+                  </div>
+                </div>
+                <div class="total-amount">2.653.000 ₫</div>
+              </div>
+
+              <!-- Legal commitment & signatures -->
+              <div style="margin-top:24px; font-size:0.82rem; color:var(--text-body); font-style:italic;">
+                Tôi cam đoan số liệu kê khai trên đây là hoàn toàn đúng sự thật và chịu trách nhiệm trước pháp luật về tính chính xác của bảng kê doanh thu và thuế này.
+              </div>
+
+              <div class="payslip-signatures" style="margin-top:28px;">
+                <div>
+                  <strong>Kế Toán / Người Lập Biểu</strong>
+                  <div class="signature-space"></div>
+                  <span>(Ký, ghi rõ họ tên)</span>
+                </div>
+                <div>
+                  <div><em>Hóc Môn, ngày 11 tháng 11 năm 2026</em></div>
+                  <strong style="margin-top:4px; display:inline-block;">ĐẠI DIỆN HỘ KINH DOANH</strong>
+                  <div class="signature-space"></div>
+                  <strong>VÕ THUẬN</strong>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ─── BẢNG KÊ CHI TIẾT DOANH THU 10 NGÀY QUA ─── -->
+        <div class="card">
+          <div class="card-header" style="display:flex; justify-content:space-between; align-items:center;">
+            <h2><i class="fas fa-list-alt" style="color:var(--gold); margin-right:8px;"></i> Sổ Chi Tiết Bán Hàng &amp; Doanh Thu Tháng 11/2026</h2>
+            <button class="btn btn-outline btn-sm" onclick="exportTableToCSV('So_Chi_Tiet_Doanh_Thu_Thang11.csv', '#dailyRevenueTable')">
+              <i class="fas fa-download"></i> Tải Bảng Kê
+            </button>
+          </div>
+
+          <div class="card-body" style="padding:0;">
+            <div class="table-wrapper">
+              <table class="data-table" id="dailyRevenueTable">
+                <thead>
+                  <tr>
+                    <th>Ngày</th>
+                    <th>Số lượt khách</th>
+                    <th>Tiền mặt</th>
+                    <th>Chuyển khoản</th>
+                    <th>Ví MoMo</th>
+                    <th>Tổng doanh thu</th>
+                    <th>Chi phí vật tư</th>
+                    <th>Lợi nhuận gộp</th>
+                    <th>Thuế GTGT (5%)</th>
+                    <th>Thuế TNCN (2%)</th>
+                  </tr>
+                </thead>
+                <tbody id="dailyRevenueTbody">
+                  <!-- Populated by JS -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </main>
+  </div>
+
+  <!-- SCRIPTS -->
+  <script src="../data/mock-data.js"></script>
+  <script src="../shared/shared.js"></script>
+  <script src="admin.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      renderTaxDailyTable();
+    });
+
+    function renderTaxDailyTable() {
+      const tbody = document.getElementById('dailyRevenueTbody');
+      const data = MOCK.dailyRevenue;
+
+      let totalBookings = 0;
+      let totalCash = 0;
+      let totalTransfer = 0;
+      let totalMomo = 0;
+      let totalRevenue = 0;
+      let totalExpenses = 0;
+      let totalVat = 0;
+      let totalPit = 0;
+
+      let html = '';
+      data.forEach(d => {
+        const profit = d.revenue - d.expenses;
+        const vat = Math.round(d.revenue * 0.05);
+        const pit = Math.round(d.revenue * 0.02);
+
+        totalBookings += d.bookingCount;
+        totalCash += d.cashAmount;
+        totalTransfer += d.transferAmount;
+        totalMomo += d.momoAmount;
+        totalRevenue += d.revenue;
+        totalExpenses += d.expenses;
+        totalVat += vat;
+        totalPit += pit;
+
+        const isToday = d.date === '2026-11-11';
+
+        html += `
+          <tr ${isToday ? 'style="background:rgba(34,197,94,0.04); font-weight:600;"' : ''}>
+            <td><strong>${d.date}${isToday ? ' (Hôm nay)' : ''}</strong></td>
+            <td>${d.bookingCount} khách</td>
+            <td>${MockDB.formatCurrency(d.cashAmount)}</td>
+            <td>${MockDB.formatCurrency(d.transferAmount)}</td>
+            <td>${MockDB.formatCurrency(d.momoAmount)}</td>
+            <td><strong style="color:var(--primary);">${MockDB.formatCurrency(d.revenue)}</strong></td>
+            <td style="color:var(--text-muted);">${MockDB.formatCurrency(d.expenses)}</td>
+            <td><strong style="color:var(--green);">${MockDB.formatCurrency(profit)}</strong></td>
+            <td>${MockDB.formatCurrency(vat)}</td>
+            <td>${MockDB.formatCurrency(pit)}</td>
+          </tr>
+        `;
+      });
+
+      // Total row
+      html += `
+        <tr class="payslip-total-row" style="background:var(--bg-cream); font-weight:700;">
+          <td>TỔNG CỘNG</td>
+          <td>${totalBookings} khách</td>
+          <td>${MockDB.formatCurrency(totalCash)}</td>
+          <td>${MockDB.formatCurrency(totalTransfer)}</td>
+          <td>${MockDB.formatCurrency(totalMomo)}</td>
+          <td style="color:var(--primary); font-size:1.05rem;">${MockDB.formatCurrency(totalRevenue)}</td>
+          <td style="color:var(--text-muted);">${MockDB.formatCurrency(totalExpenses)}</td>
+          <td style="color:var(--green); font-size:1.05rem;">${MockDB.formatCurrency(totalRevenue - totalExpenses)}</td>
+          <td style="color:var(--blue);">${MockDB.formatCurrency(totalVat)}</td>
+          <td style="color:var(--orange);">${MockDB.formatCurrency(totalPit)}</td>
+        </tr>
+      `;
+
+      tbody.innerHTML = html;
+
+      // Update stat cards and method displays
+      document.getElementById('taxRevenueDisplay').innerText = MockDB.formatCurrency(totalRevenue);
+      document.getElementById('taxVatDisplay').innerText = MockDB.formatCurrency(totalVat);
+      document.getElementById('taxPitDisplay').innerText = MockDB.formatCurrency(totalPit);
+      document.getElementById('taxTotalDisplay').innerText = MockDB.formatCurrency(totalVat + totalPit);
+
+      document.getElementById('pmCashDisplay').innerText = MockDB.formatCurrency(totalCash);
+      document.getElementById('pmTransferDisplay').innerText = MockDB.formatCurrency(totalTransfer);
+      document.getElementById('pmMomoDisplay').innerText = MockDB.formatCurrency(totalMomo);
+    }
+
+    function exportTaxCSV() {
+      exportTableToCSV('Bang_Ke_Khai_Thue_Thang11_VoThuan.csv', '#dailyRevenueTable');
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tác Phẩm & Tay Nghề – Võ Thuận Hair Salon</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="../shared/shared.css">
+  <link rel="stylesheet" href="staff.css">
+</head>
+<body>
+  <div class="dashboard-layout">
+    <!-- SIDEBAR -->
+    <aside class="sidebar"></aside>
+    <div class="sidebar-overlay"></div>
+
+    <!-- MAIN CONTENT -->
+    <main class="main-content">
+      <!-- TOPBAR -->
+      <header class="top-bar"></header>
+
+      <!-- PAGE CONTENT -->
+      <div class="page-content">
+
+        <!-- HEADER & ACTIONS -->
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; flex-wrap: wrap; gap: 16px;">
+          <div>
+            <h2 style="font-family: var(--font-title); font-size: 1.4rem; color: var(--primary);">
+              <i class="fas fa-camera-retro" style="color: var(--gold); margin-right: 8px;"></i> Hồ Sơ Tay Nghề & Bộ Sưu Tập Tác Phẩm
+            </h2>
+            <p style="font-size: 0.85rem; color: var(--text-muted);">
+              Minh chứng kỹ thuật thực tế với ảnh Trước/Sau, chứng chỉ quốc tế và đánh giá khách hàng
+            </p>
+          </div>
+
+          <button class="btn btn-primary" onclick="openModal('uploadPortfolioModal')">
+            <i class="fas fa-cloud-arrow-up"></i> Tải Lên Tác Phẩm Mới
+          </button>
+        </div>
+
+        <!-- STYLIST PROFILE HEADER CARD -->
+        <section class="card" style="margin-bottom: 28px; background: linear-gradient(135deg, #FFFDF9 0%, #F5EFE6 100%);">
+          <div class="card-body" style="padding: 24px 28px;">
+            <div style="display: flex; align-items: center; gap: 24px; flex-wrap: wrap;">
+              <img id="portfolioAvatar" src="" alt="" style="width: 88px; height: 88px; border-radius: 50%; border: 3px solid var(--gold); object-fit: cover; box-shadow: var(--shadow-sm);">
+              <div style="flex: 1;">
+                <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 4px; flex-wrap: wrap;">
+                  <h3 id="portfolioStylistName" style="font-family: var(--font-title); font-size: 1.4rem; color: var(--primary);">--</h3>
+                  <span class="badge badge-confirmed" id="portfolioSpecialtyBadge">Cắt & Tạo kiểu Nam</span>
+                  <span class="badge" style="background: var(--gold-dim); color: #9A7B10;" id="portfolioExpBadge">5 năm kinh nghiệm</span>
+                </div>
+                <p id="portfolioBio" style="font-size: 0.88rem; color: var(--text-body); max-width: 800px; line-height: 1.5; margin-bottom: 10px;">
+                  --
+                </p>
+                <div style="display: flex; gap: 20px; font-size: 0.82rem; color: var(--text-muted); flex-wrap: wrap;">
+                  <span><i class="fas fa-phone" style="color: var(--gold);"></i> <span id="portfolioPhone">--</span></span>
+                  <span><i class="fas fa-star" style="color: var(--gold);"></i> <strong id="portfolioRatingText" style="color: var(--text-dark);">4.9</strong> (từ <span id="portfolioReviewCount">234</span> đánh giá)</span>
+                  <span><i class="fas fa-images" style="color: var(--gold);"></i> <strong id="portfolioItemCount" style="color: var(--text-dark);">0</strong> tác phẩm trong bộ sưu tập</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- TABS: 1. TÁC PHẨM TRƯỚC/SAU, 2. BẰNG CẤP CHỨNG CHỈ, 3. ĐÁNH GIÁ KHÁCH HÀNG -->
+        <div class="tabs">
+          <button class="tab-btn active" data-tab="tabGallery">
+            <i class="fas fa-images"></i> Bộ Sưu Tập Before / After (<span id="tabCountGallery">0</span>)
+          </button>
+          <button class="tab-btn" data-tab="tabCerts">
+            <i class="fas fa-certificate"></i> Bằng Cấp & Chứng Chỉ Chuyên Môn
+          </button>
+          <button class="tab-btn" data-tab="tabReviews">
+            <i class="fas fa-comments"></i> Đánh Giá Từ Khách Hàng (<span id="tabCountReviews">0</span>)
+          </button>
+        </div>
+
+        <!-- TAB 1: GALLERY BEFORE/AFTER -->
+        <div id="tabGallery" class="tab-content active">
+          <div class="portfolio-grid" id="portfolioGrid">
+            <!-- Injected via JS -->
+          </div>
+        </div>
+
+        <!-- TAB 2: CERTIFICATES & CREDENTIALS -->
+        <div id="tabCerts" class="tab-content">
+          <div class="grid-2">
+            <div>
+              <h3 style="font-family: var(--font-title); font-size: 1.1rem; color: var(--primary); margin-bottom: 16px;">
+                <i class="fas fa-award" style="color: var(--gold); margin-right: 8px;"></i> Bằng Cấp & Giấy Chứng Nhận Đã Đạt
+              </h3>
+              <div id="certificatesContainer">
+                <!-- Rendered via JS -->
+              </div>
+            </div>
+
+            <!-- Verification & Quality Commitment -->
+            <div class="card" style="background: var(--bg-cream); border-left: 4px solid var(--gold);">
+              <div class="card-body">
+                <h3 style="font-family: var(--font-title); font-size: 1.1rem; color: var(--primary); margin-bottom: 12px;">
+                  <i class="fas fa-shield-halved" style="color: var(--gold); margin-right: 8px;"></i> Tiêu Chuẩn Kỹ Thuật Võ Thuận Salon
+                </h3>
+                <p style="font-size: 0.85rem; color: var(--text-muted); line-height: 1.6; margin-bottom: 16px;">
+                  Tất cả Kỹ thuật viên & Thợ chính tại Võ Thuận Hair Salon đều trải qua kỳ kiểm tra tay nghề nghiêm ngặt 6 tháng/lần, đạt chứng chỉ chuyên môn quốc tế và cam kết sử dụng 100% dòng sản phẩm chính hãng (L'Oréal, Wella, Kérastase, Olaplex).
+                </p>
+                <div style="display: flex; flex-direction: column; gap: 10px; font-size: 0.85rem;">
+                  <div><i class="fas fa-check-circle" style="color: var(--green); margin-right: 8px;"></i> Tư vấn dáng tóc theo tỷ lệ khuôn mặt nhân trắc học</div>
+                  <div><i class="fas fa-check-circle" style="color: var(--green); margin-right: 8px;"></i> Cam kết bảo hành uốn / nhuộm trong 30 ngày</div>
+                  <div><i class="fas fa-check-circle" style="color: var(--green); margin-right: 8px;"></i> 100% thuốc nhuộm nhập khẩu chính hãng bảo vệ da đầu</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- TAB 3: CUSTOMER REVIEWS -->
+        <div id="tabReviews" class="tab-content">
+          <div class="grid-1-2">
+            <!-- Review Summary Stats -->
+            <div class="card">
+              <div class="card-header">
+                <h2><i class="fas fa-star" style="color: var(--gold); margin-right: 8px;"></i> Tổng Điểm Đánh Giá</h2>
+              </div>
+              <div class="card-body" style="text-align: center;">
+                <div id="summaryRatingNum" style="font-size: 3rem; font-weight: 700; color: var(--primary); line-height: 1;">
+                  4.9
+                </div>
+                <div id="summaryStars" style="color: var(--gold); font-size: 1.2rem; margin: 8px 0;">
+                  <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                </div>
+                <div style="font-size: 0.82rem; color: var(--text-muted); margin-bottom: 20px;">
+                  Dựa trên <span id="summaryReviewCountText">234</span> nhận xét xác thực
+                </div>
+
+                <!-- Rating Bars -->
+                <div style="display: flex; flex-direction: column; gap: 8px; font-size: 0.8rem; text-align: left;">
+                  <div style="display: flex; align-items: center; gap: 8px;">
+                    <span style="width: 40px;">5 sao</span>
+                    <div class="progress-bar" style="flex: 1;"><div class="progress-fill gold" style="width: 92%;"></div></div>
+                    <span style="width: 32px; text-align: right; color: var(--text-muted);">92%</span>
+                  </div>
+                  <div style="display: flex; align-items: center; gap: 8px;">
+                    <span style="width: 40px;">4 sao</span>
+                    <div class="progress-bar" style="flex: 1;"><div class="progress-fill gold" style="width: 7%;"></div></div>
+                    <span style="width: 32px; text-align: right; color: var(--text-muted);">7%</span>
+                  </div>
+                  <div style="display: flex; align-items: center; gap: 8px;">
+                    <span style="width: 40px;">3 sao</span>
+                    <div class="progress-bar" style="flex: 1;"><div class="progress-fill gold" style="width: 1%;"></div></div>
+                    <span style="width: 32px; text-align: right; color: var(--text-muted);">1%</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Customer Reviews List -->
+            <div class="card">
+              <div class="card-header">
+                <h2><i class="fas fa-heart" style="color: var(--red); margin-right: 8px;"></i> Nhận Xét Từ Khách Hàng Thực Tế</h2>
+              </div>
+              <div class="card-body" id="reviewsListContainer">
+                <!-- Rendered via JS -->
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </main>
+  </div>
+
+  <!-- MODAL: UPLOAD NEW PORTFOLIO ITEM -->
+  <div class="modal-overlay" id="uploadPortfolioModal">
+    <div class="modal" style="max-width: 600px;">
+      <div class="modal-header">
+        <h2><i class="fas fa-camera" style="color: var(--gold); margin-right: 8px;"></i> Đăng Tải Tác Phẩm Mới</h2>
+        <button class="modal-close" onclick="closeModal('uploadPortfolioModal')">&times;</button>
+      </div>
+      <form id="portfolioUploadForm" onsubmit="handleFormSubmit(event)">
+        <div class="modal-body">
+          <div class="form-group">
+            <label class="form-label" for="inpTitle">Tên tác phẩm / Kiểu tóc (*)</label>
+            <input type="text" id="inpTitle" class="form-input" placeholder="Ví dụ: Cắt Layer Hàn Quốc + Uốn Sóng Lơi" required>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label" for="inpCategory">Phân loại dịch vụ</label>
+              <select id="inpCategory" class="form-select">
+                <option value="Cắt & Tạo kiểu Nam">Cắt & Tạo kiểu Nam</option>
+                <option value="Cắt & Tạo kiểu Nữ">Cắt & Tạo kiểu Nữ</option>
+                <option value="Nhuộm & Highlight">Nhuộm & Highlight</option>
+                <option value="Uốn & Duỗi">Uốn & Duỗi</option>
+                <option value="Phục hồi & Chăm sóc">Phục hồi & Chăm sóc</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="inpCustomerName">Tên khách hàng thực hiện</label>
+              <input type="text" id="inpCustomerName" class="form-input" placeholder="Ví dụ: Nguyễn Thảo Linh">
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label" for="inpBeforeImg">Link ảnh Trước (Before)</label>
+              <input type="url" id="inpBeforeImg" class="form-input" placeholder="https://..." value="https://images.unsplash.com/photo-1517841905240-472988babdf9?w=500">
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="inpAfterImg">Link ảnh Sau (After) (*)</label>
+              <input type="url" id="inpAfterImg" class="form-input" placeholder="https://..." value="https://images.unsplash.com/photo-1562322140-8baeececf3df?w=500" required>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="inpTechnique">Kỹ thuật & Công thức đã dùng</label>
+            <textarea id="inpTechnique" class="form-input" rows="2" placeholder="Ví dụ: Nâng tone oxy 20vol, phủ màu Majirel 7.1, uốn setting trục 25mm..."></textarea>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="inpProducts">Sản phẩm sử dụng</label>
+            <input type="text" id="inpProducts" class="form-input" placeholder="Ví dụ: L'Oréal Majirel, Kérastase Elixir, Reuzel Pomade">
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline" onclick="closeModal('uploadPortfolioModal')">Hủy bỏ</button>
+          <button type="submit" class="btn btn-primary"><i class="fas fa-check"></i> Đăng Tác Phẩm</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="../data/mock-data.js"></script>
+  <script src="../shared/shared.js"></script>
+  <script src="staff.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      StaffUI.setupLayout('portfolio', 'Tác Phẩm & Tay Nghề', 'Bộ Sưu Tập');
+      loadPortfolioPage();
+    });
+
+    function loadPortfolioPage() {
+      const stylist = StaffDB.getCurrentStylist();
+
+      // Stylist header info
+      document.getElementById('portfolioAvatar').src = stylist.avatar;
+      document.getElementById('portfolioStylistName').textContent = stylist.name;
+      document.getElementById('portfolioSpecialtyBadge').textContent = stylist.specialty;
+      document.getElementById('portfolioExpBadge').textContent = (stylist.experience || '4 năm') + ' kinh nghiệm';
+      document.getElementById('portfolioBio').textContent = stylist.bio || 'Chuyên viên tạo mẫu tóc chuyên nghiệp tại Võ Thuận Hair Salon.';
+      document.getElementById('portfolioPhone').textContent = stylist.phone;
+      document.getElementById('portfolioRatingText').textContent = stylist.rating || '4.9';
+      document.getElementById('portfolioReviewCount').textContent = stylist.totalReviews || '234';
+
+      // 1. Gallery
+      const items = StaffDB.getPortfoliosByStylist(stylist.id);
+      document.getElementById('portfolioItemCount').textContent = items.length;
+      document.getElementById('tabCountGallery').textContent = items.length;
+      renderPortfolioGallery(items);
+
+      // 2. Certificates
+      renderCertificates(stylist.certificates || []);
+
+      // 3. Reviews
+      const reviews = StaffDB.getStylistReviews(stylist.id);
+      document.getElementById('tabCountReviews').textContent = reviews.length;
+      document.getElementById('summaryRatingNum').textContent = stylist.rating || '4.9';
+      document.getElementById('summaryReviewCountText').textContent = stylist.totalReviews || '234';
+      document.getElementById('summaryStars').innerHTML = renderStars(stylist.rating || 4.9);
+      renderReviews(reviews);
+    }
+
+    function renderPortfolioGallery(items) {
+      const container = document.getElementById('portfolioGrid');
+      if (!items || items.length === 0) {
+        container.innerHTML = `
+          <div class="empty-state" style="grid-column: 1 / -1;">
+            <i class="fas fa-camera"></i>
+            <h3>Chưa có tác phẩm nào trong bộ sưu tập</h3>
+            <p>Bấm nút "Tải Lên Tác Phẩm Mới" để chia sẻ những tác phẩm ưng ý nhất của bạn!</p>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = items.map(p => `
+        <div class="portfolio-card">
+          <div class="ba-slider-container">
+            ${p.beforeImg ? `
+              <div class="ba-image-half">
+                <img src="${p.beforeImg}" alt="Trước khi làm">
+                <span class="ba-label before">Trước</span>
+              </div>
+            ` : ''}
+            <div class="ba-image-half">
+              <img src="${p.afterImg}" alt="Sau khi hoàn thành">
+              <span class="ba-label after">Sau khi làm</span>
+            </div>
+          </div>
+          <div class="portfolio-body">
+            <span class="portfolio-tag">${p.category || 'Tạo kiểu'}</span>
+            <h4 class="portfolio-title">${p.title}</h4>
+            <p class="portfolio-desc">
+              <strong>Kỹ thuật:</strong> ${p.technique || 'Tạo kiểu chuyên nghiệp'}<br>
+              ${p.productsUsed ? `<strong>Sản phẩm:</strong> ${p.productsUsed}` : ''}
+            </p>
+            <div class="portfolio-footer">
+              <span><i class="fas fa-user-tag"></i> Khách: <strong>${p.customerName || 'Khách salon'}</strong></span>
+              <span><i class="fas fa-heart" style="color: var(--red);"></i> ${p.likes || 1} yêu thích</span>
+            </div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function renderCertificates(certs) {
+      const container = document.getElementById('certificatesContainer');
+      const defaultCerts = certs.length > 0 ? certs : [
+        'Chứng chỉ Hair Styling quốc tế – Vidal Sassoon Academy',
+        'Top 10 Barber Vietnam 2025'
+      ];
+
+      container.innerHTML = defaultCerts.map((c, index) => `
+        <div class="cert-card">
+          <div class="cert-icon">
+            <i class="fas fa-medal"></i>
+          </div>
+          <div class="cert-info">
+            <h4>${c}</h4>
+            <p><i class="fas fa-calendar-check"></i> Đạt chuẩn kiểm định chất lượng chuyên môn • Cấp bậc Chuyên Gia</p>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function renderReviews(reviews) {
+      const container = document.getElementById('reviewsListContainer');
+      if (!reviews || reviews.length === 0) {
+        container.innerHTML = `
+          <div style="text-align: center; padding: 30px; color: var(--text-muted);">
+            Chưa có đánh giá nào.
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = reviews.map(r => `
+        <div class="review-item">
+          <div class="review-header">
+            <div class="review-user">
+              <img src="${r.customerAvatar}" alt="${r.customerName}">
+              <div>
+                <div class="review-user-name">${r.customerName}</div>
+                <div style="font-size: 0.75rem; color: var(--text-muted);"><i class="fas fa-calendar-alt"></i> ${r.date} • Dịch vụ: ${r.services}</div>
+              </div>
+            </div>
+            <div style="color: var(--gold); font-size: 0.85rem;">
+              ${renderStars(r.rating)}
+            </div>
+          </div>
+          <div class="review-comment">
+            "${r.review}"
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function handleFormSubmit(e) {
+      e.preventDefault();
+      const stylist = StaffDB.getCurrentStylist();
+
+      const title = document.getElementById('inpTitle').value.trim();
+      const category = document.getElementById('inpCategory').value;
+      const customerName = document.getElementById('inpCustomerName').value.trim() || 'Khách salon';
+      const beforeImg = document.getElementById('inpBeforeImg').value.trim();
+      const afterImg = document.getElementById('inpAfterImg').value.trim();
+      const technique = document.getElementById('inpTechnique').value.trim();
+      const productsUsed = document.getElementById('inpProducts').value.trim();
+
+      const newItem = {
+        title,
+        category,
+        customerName,
+        beforeImg,
+        afterImg,
+        technique,
+        productsUsed
+      };
+
+      StaffDB.addPortfolioItem(stylist.id, newItem);
+      closeModal('uploadPortfolioModal');
+      Toast.show('Đã đăng tải tác phẩm mới vào bộ sưu tập thành công!', 'success');
+      document.getElementById('portfolioUploadForm').reset();
+      loadPortfolioPage();
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,804 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quản Lý Khách Hàng (CRM) & Voucher – Võ Thuận Hair Salon</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="../shared/shared.css">
+  <link rel="stylesheet" href="admin.css">
+</head>
+<body>
+  <div class="sidebar-overlay"></div>
+
+  <div class="dashboard-layout">
+    <!-- ─── SIDEBAR ─── -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <a href="dashboard.html" class="sidebar-logo">
+          VÕ THUẬN
+          <span>Hair Salon Management</span>
+        </a>
+      </div>
+
+      <nav class="sidebar-nav">
+        <div class="nav-section-title">Quản Trị Salon</div>
+        <a href="dashboard.html" data-nav="dashboard">
+          <i class="fas fa-chart-pie"></i>
+          <span>Tổng Quan</span>
+        </a>
+        <a href="scheduling.html" data-nav="scheduling">
+          <i class="fas fa-calendar-alt"></i>
+          <span>Điều Phối Lịch</span>
+          <span class="nav-badge">7 lịch</span>
+        </a>
+        <a href="crm.html" class="active" data-nav="crm">
+          <i class="fas fa-users"></i>
+          <span>Khách Hàng (CRM)</span>
+        </a>
+        <a href="attendance.html" data-nav="attendance">
+          <i class="fas fa-user-clock"></i>
+          <span>Chấm Công NV</span>
+        </a>
+        <a href="payroll.html" data-nav="payroll">
+          <i class="fas fa-file-invoice-dollar"></i>
+          <span>Lương & Hoa Hồng</span>
+        </a>
+
+        <div class="nav-section-title">Kho Vận & Tài Chính</div>
+        <a href="inventory.html" data-nav="inventory">
+          <i class="fas fa-boxes"></i>
+          <span>Kho & Dịch Vụ</span>
+        </a>
+        <a href="reports.html" data-nav="reports">
+          <i class="fas fa-file-contract"></i>
+          <span>Doanh Thu & Thuế</span>
+        </a>
+
+        <div class="nav-section-title">Hệ Thống</div>
+        <a href="../login.html" onclick="sessionStorage.clear()">
+          <i class="fas fa-sign-out-alt"></i>
+          <span>Đăng Xuất</span>
+        </a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="sidebar-user">
+          <img src="https://i.pravatar.cc/150?img=68" alt="Võ Thuận">
+          <div class="sidebar-user-info">
+            <h4>Võ Thuận</h4>
+            <p>Chủ Salon (Admin)</p>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- ─── MAIN CONTENT ─── -->
+    <main class="main-content">
+      <!-- TOP BAR -->
+      <header class="top-bar">
+        <div class="top-bar-left">
+          <button class="menu-toggle" aria-label="Mở menu"><i class="fas fa-bars"></i></button>
+          <div>
+            <h1>Khách Hàng (CRM) &amp; Khuyến Mãi</h1>
+            <div class="breadcrumb">Chăm sóc khách hàng, phân hạng thẻ thành viên &amp; quản trị Voucher</div>
+          </div>
+        </div>
+
+        <div class="top-bar-right">
+          <button class="btn btn-primary btn-sm" onclick="openNewCustomerModal()">
+            <i class="fas fa-user-plus"></i> Thêm Khách Hàng
+          </button>
+          <button class="btn btn-secondary btn-sm" onclick="openNewVoucherModal()">
+            <i class="fas fa-ticket-alt"></i> Tạo Voucher Mới
+          </button>
+        </div>
+      </header>
+
+      <!-- PAGE CONTENT -->
+      <div class="page-content">
+
+        <!-- STATS CARDS CRM -->
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-icon gold">
+              <i class="fas fa-users"></i>
+            </div>
+            <div class="stat-info">
+              <h3>Tổng khách thành viên</h3>
+              <div class="stat-value" id="totalCustomerCount">6</div>
+              <div class="stat-change up">
+                <i class="fas fa-crown"></i> 1 VIP · 1 Vàng · 2 Bạc · 2 Đồng
+              </div>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-icon green">
+              <i class="fas fa-money-bill-wave"></i>
+            </div>
+            <div class="stat-info">
+              <h3>Tổng chi tiêu tích lũy</h3>
+              <div class="stat-value" id="totalSpentAll">55.750.000 ₫</div>
+              <div class="stat-change up">
+                <i class="fas fa-chart-line"></i> Trung bình: 9.29M / khách
+              </div>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-icon purple">
+              <i class="fas fa-gem"></i>
+            </div>
+            <div class="stat-info">
+              <h3>Tổng điểm tích lũy</h3>
+              <div class="stat-value">11.060 pts</div>
+              <div class="stat-change" style="color:var(--text-muted)">
+                Quy đổi tương đương ~1.1M ₫
+              </div>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-icon orange">
+              <i class="fas fa-tags"></i>
+            </div>
+            <div class="stat-info">
+              <h3>Voucher đang phát hành</h3>
+              <div class="stat-value" id="activePromoCount">5 mã</div>
+              <div class="stat-change up">
+                <i class="fas fa-check-double"></i> 122 lượt đã sử dụng
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- TABS CRM & VOUCHER -->
+        <div class="tabs">
+          <button class="tab-btn active" data-tab="tab-customers">
+            <i class="fas fa-user-friends"></i> Danh Sách Khách Hàng CRM
+          </button>
+          <button class="tab-btn" data-tab="tab-vouchers">
+            <i class="fas fa-tags"></i> Quản Lý Khuyến Mãi &amp; Voucher
+          </button>
+        </div>
+
+        <!-- ─── TAB 1: DANH SÁCH KHÁCH HÀNG CRM ─── -->
+        <div class="tab-content active" id="tab-customers">
+          <div class="card">
+            <div class="card-header" style="flex-wrap: wrap; gap: 14px;">
+              <div class="filter-bar" style="margin-bottom:0; width:100%;">
+                <!-- Search box -->
+                <div class="search-input-wrap">
+                  <i class="fas fa-search"></i>
+                  <input type="text" id="custSearchInput" class="form-input" placeholder="Tìm theo tên, SĐT khách..." oninput="handleCustomerFilter()">
+                </div>
+
+                <!-- Tier Filter -->
+                <div style="display:flex; align-items:center; gap:8px;">
+                  <span style="font-size:0.82rem; font-weight:600; color:var(--text-muted);">Hạng:</span>
+                  <select id="custTierFilter" class="form-select" style="width: auto; padding: 8px 12px;" onchange="handleCustomerFilter()">
+                    <option value="all">Tất cả hạng (6)</option>
+                    <option value="VIP">Hạng VIP</option>
+                    <option value="Vàng">Hạng Vàng</option>
+                    <option value="Bạc">Hạng Bạc</option>
+                    <option value="Đồng">Hạng Đồng</option>
+                  </select>
+                </div>
+
+                <!-- Sort Order -->
+                <div style="display:flex; align-items:center; gap:8px;">
+                  <span style="font-size:0.82rem; font-weight:600; color:var(--text-muted);">Sắp xếp:</span>
+                  <select id="custSortFilter" class="form-select" style="width: auto; padding: 8px 12px;" onchange="handleCustomerFilter()">
+                    <option value="spent-desc">Chi tiêu cao nhất</option>
+                    <option value="points-desc">Điểm tích lũy cao nhất</option>
+                    <option value="name-asc">Tên (A &rarr; Z)</option>
+                    <option value="date-desc">Khách mới nhất</option>
+                  </select>
+                </div>
+
+                <!-- Export CSV -->
+                <button class="btn btn-outline btn-sm" onclick="exportTableToCSV('Khach_Hang_CRM_VoThuan.csv', '#customerTable')">
+                  <i class="fas fa-file-excel"></i> Xuất Excel
+                </button>
+              </div>
+            </div>
+
+            <div class="card-body" style="padding:0;">
+              <div class="table-wrapper">
+                <table class="data-table" id="customerTable">
+                  <thead>
+                    <tr>
+                      <th>Khách hàng</th>
+                      <th>Số điện thoại</th>
+                      <th>Email</th>
+                      <th>Hạng thành viên</th>
+                      <th>Điểm tích lũy</th>
+                      <th>Tổng chi tiêu</th>
+                      <th>Ngày tham gia</th>
+                      <th style="text-align:center;">Thao tác</th>
+                    </tr>
+                  </thead>
+                  <tbody id="customerTableBody">
+                    <!-- Populated by JS -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ─── TAB 2: QUẢN LÝ VOUCHER & KHUYẾN MÃI ─── -->
+        <div class="tab-content" id="tab-vouchers">
+          <div class="card">
+            <div class="card-header">
+              <h2><i class="fas fa-ticket-alt" style="color:var(--gold); margin-right:8px;"></i> Danh Sách Mã Khuyến Mãi &amp; Voucher Salon</h2>
+              <button class="btn btn-primary btn-sm" onclick="openNewVoucherModal()">
+                <i class="fas fa-plus"></i> Tạo Voucher Mới
+              </button>
+            </div>
+
+            <div class="card-body" style="padding:0;">
+              <div class="table-wrapper">
+                <table class="data-table" id="voucherTable">
+                  <thead>
+                    <tr>
+                      <th>Mã Code</th>
+                      <th>Tên chương trình</th>
+                      <th>Mức giảm giá</th>
+                      <th>Điều kiện áp dụng</th>
+                      <th>Áp dụng cho hạng</th>
+                      <th>Hiệu lực</th>
+                      <th>Lượt dùng / Giới hạn</th>
+                      <th>Trạng thái</th>
+                      <th style="text-align:center;">Thao tác</th>
+                    </tr>
+                  </thead>
+                  <tbody id="voucherTableBody">
+                    <!-- Populated by JS -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </main>
+  </div>
+
+  <!-- ─── MODAL 1: CHI TIẾT KHÁCH HÀNG CRM & TIỀN SỬ DỊCH VỤ ─── -->
+  <div class="modal-overlay" id="customerDetailModal">
+    <div class="modal" style="max-width: 720px;">
+      <div class="modal-header">
+        <h2 id="crmModalTitle">Hồ Sơ Khách Hàng &amp; Tiền Sử Dịch Vụ</h2>
+        <button class="modal-close" onclick="closeModal('customerDetailModal')">&times;</button>
+      </div>
+
+      <div class="modal-body">
+        <!-- Customer Profile Summary Header -->
+        <div style="display:flex; gap:20px; align-items:center; background:var(--bg-cream); padding:18px; border-radius:var(--radius); margin-bottom:20px; border:1px solid var(--border-light);">
+          <img id="crmModalAvatar" src="" alt="" style="width:70px; height:70px; border-radius:50%; object-fit:cover; border:3px solid var(--gold);">
+          <div style="flex:1;">
+            <div style="display:flex; align-items:center; gap:10px; margin-bottom:4px;">
+              <h3 id="crmModalName" style="font-size:1.15rem; font-weight:700; color:var(--primary);">—</h3>
+              <span id="crmModalTierBadge" class="tier-badge tier-gold">Vàng</span>
+            </div>
+            <div style="font-size:0.85rem; color:var(--text-body); display:flex; flex-wrap:wrap; gap:14px;">
+              <span><i class="fas fa-phone" style="color:var(--gold); margin-right:4px;"></i> <span id="crmModalPhone">—</span></span>
+              <span><i class="fas fa-envelope" style="color:var(--gold); margin-right:4px;"></i> <span id="crmModalEmail">—</span></span>
+              <span><i class="fas fa-calendar" style="color:var(--gold); margin-right:4px;"></i> Tham gia: <span id="crmModalJoin">—</span></span>
+            </div>
+            <div style="margin-top:10px; display:flex; gap:20px; font-size:0.85rem;">
+              <div>Tổng chi tiêu: <strong id="crmModalSpent" style="color:var(--primary);">—</strong></div>
+              <div>Điểm tích lũy: <strong id="crmModalPoints" style="color:#B45309;">— pts</strong></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Điều chỉnh điểm thưởng nhanh -->
+        <div style="display:flex; align-items:center; justify-content:space-between; background:#F8FAFC; padding:12px 16px; border-radius:var(--radius-sm); margin-bottom:20px; border:1px solid var(--border);">
+          <div style="font-size:0.82rem; font-weight:600; color:var(--text-dark);">
+            <i class="fas fa-coins" style="color:var(--gold); margin-right:6px;"></i> Quản lý điểm thưởng:
+          </div>
+          <div style="display:flex; align-items:center; gap:8px;">
+            <input type="number" id="quickPointsInput" class="form-input" placeholder="+100 hoặc -100" style="width:140px; padding:6px 10px; font-size:0.82rem;">
+            <button class="btn btn-outline btn-sm" onclick="adjustCustomerPoints()"><i class="fas fa-check"></i> Cập nhật điểm</button>
+          </div>
+        </div>
+
+        <!-- Tiền sử tóc & Ghi chú kỹ thuật -->
+        <div style="margin-bottom:24px;">
+          <h4 style="font-size:0.95rem; font-weight:700; color:var(--primary); margin-bottom:10px; display:flex; align-items:center; gap:8px;">
+            <i class="fas fa-clipboard-list" style="color:var(--gold);"></i> Tiền Sử Tóc &amp; Ghi Chú Kỹ Thuật
+          </h4>
+          <div style="background:var(--bg-white); border:1px solid var(--border); border-radius:var(--radius-sm); padding:14px; font-size:0.85rem;" id="crmHairHistory">
+            <!-- Dynamic Hair Info -->
+          </div>
+        </div>
+
+        <!-- Lịch sử đặt lịch & dịch vụ đã làm -->
+        <div>
+          <h4 style="font-size:0.95rem; font-weight:700; color:var(--primary); margin-bottom:10px; display:flex; align-items:center; gap:8px;">
+            <i class="fas fa-history" style="color:var(--gold);"></i> Lịch Sử Đặt Lịch &amp; Trải Nghiệm Dịch Vụ
+          </h4>
+          <div class="table-wrapper">
+            <table class="data-table" style="font-size:0.82rem;">
+              <thead>
+                <tr>
+                  <th>Mã lịch</th>
+                  <th>Ngày làm</th>
+                  <th>Stylist</th>
+                  <th>Dịch vụ</th>
+                  <th>Chi phí</th>
+                  <th>Trạng thái</th>
+                  <th>Đánh giá</th>
+                </tr>
+              </thead>
+              <tbody id="crmHistoryTableBody">
+                <!-- Populated by JS -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn btn-outline" onclick="closeModal('customerDetailModal')">Đóng</button>
+        <button class="btn btn-primary" onclick="sendVoucherToCustomer()"><i class="fas fa-gift"></i> Tặng Voucher Riêng</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── MODAL 2: TẠO VOUCHER MỚI ─── -->
+  <div class="modal-overlay" id="newVoucherModal">
+    <div class="modal">
+      <div class="modal-header">
+        <h2>Tạo Mã Khuyến Mãi / Voucher Mới</h2>
+        <button class="modal-close" onclick="closeModal('newVoucherModal')">&times;</button>
+      </div>
+      <form id="voucherForm" onsubmit="handleCreateVoucher(event)">
+        <div class="modal-body">
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Mã Voucher (Code) *</label>
+              <input type="text" id="vCode" class="form-input" placeholder="VD: TRIAN2026, VIP50" required style="text-transform:uppercase;">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Tên Chương Trình *</label>
+              <input type="text" id="vName" class="form-input" placeholder="VD: Tri ân khách hàng tháng 11" required>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Mô Tả Ngắn</label>
+            <input type="text" id="vDesc" class="form-input" placeholder="VD: Giảm ngay 50K cho hóa đơn từ 300K...">
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Loại Giảm Giá *</label>
+              <select id="vDiscountType" class="form-select" onchange="toggleDiscountTypeInputs()">
+                <option value="percent">Giảm theo % (Phần trăm)</option>
+                <option value="fixed">Giảm số tiền cố định (VNĐ)</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label" id="vDiscountValueLabel">Mức Giảm (%) *</label>
+              <input type="number" id="vDiscount" class="form-input" placeholder="VD: 15" required min="1">
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group" id="maxDiscountGroup">
+              <label class="form-label">Giảm Tối Đa (VNĐ)</label>
+              <input type="number" id="vMaxDiscount" class="form-input" placeholder="VD: 200000" step="10000">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Đơn Hàng Tối Thiểu (VNĐ)</label>
+              <input type="number" id="vMinSpend" class="form-input" placeholder="VD: 300000" value="0" step="10000">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Áp Dụng Cho Hạng Thành Viên</label>
+            <div style="display:flex; gap:16px; flex-wrap:wrap; margin-top:6px;">
+              <label style="font-size:0.85rem; display:flex; align-items:center; gap:6px;">
+                <input type="checkbox" name="vTier" value="Đồng" checked> Đồng
+              </label>
+              <label style="font-size:0.85rem; display:flex; align-items:center; gap:6px;">
+                <input type="checkbox" name="vTier" value="Bạc" checked> Bạc
+              </label>
+              <label style="font-size:0.85rem; display:flex; align-items:center; gap:6px;">
+                <input type="checkbox" name="vTier" value="Vàng" checked> Vàng
+              </label>
+              <label style="font-size:0.85rem; display:flex; align-items:center; gap:6px;">
+                <input type="checkbox" name="vTier" value="VIP" checked> VIP
+              </label>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Ngày Bắt Đầu *</label>
+              <input type="date" id="vStartDate" class="form-input" value="2026-11-11" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Ngày Kết Thúc *</label>
+              <input type="date" id="vEndDate" class="form-input" value="2026-12-31" required>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Giới Hạn Lượt Dùng (Để trống nếu không giới hạn)</label>
+            <input type="number" id="vUsageLimit" class="form-input" placeholder="VD: 50">
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline" onclick="closeModal('newVoucherModal')">Hủy</button>
+          <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Kích Hoạt Voucher</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ─── MODAL 3: THÊM KHÁCH HÀNG MỚI ─── -->
+  <div class="modal-overlay" id="newCustomerModal">
+    <div class="modal">
+      <div class="modal-header">
+        <h2>Thêm Khách Hàng Mới</h2>
+        <button class="modal-close" onclick="closeModal('newCustomerModal')">&times;</button>
+      </div>
+      <form id="newCustForm" onsubmit="handleCreateCustomer(event)">
+        <div class="modal-body">
+          <div class="form-group">
+            <label class="form-label">Họ và Tên *</label>
+            <input type="text" id="ncName" class="form-input" placeholder="VD: Nguyễn Văn An" required>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Số Điện Thoại *</label>
+              <input type="tel" id="ncPhone" class="form-input" placeholder="VD: 0988776655" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Email</label>
+              <input type="email" id="ncEmail" class="form-input" placeholder="VD: an.nguyen@gmail.com">
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Hạng Thành Viên</label>
+              <select id="ncTier" class="form-select">
+                <option value="Đồng">Hạng Đồng (Mới)</option>
+                <option value="Bạc">Hạng Bạc</option>
+                <option value="Vàng">Hạng Vàng</option>
+                <option value="VIP">Hạng VIP</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Điểm Ban Đầu</label>
+              <input type="number" id="ncPoints" class="form-input" value="100">
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline" onclick="closeModal('newCustomerModal')">Hủy</button>
+          <button type="submit" class="btn btn-primary"><i class="fas fa-user-check"></i> Lưu Khách Hàng</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- SCRIPTS -->
+  <script src="../data/mock-data.js"></script>
+  <script src="../shared/shared.js"></script>
+  <script src="admin.js"></script>
+  <script>
+    let activeCustomerId = null;
+
+    document.addEventListener('DOMContentLoaded', () => {
+      renderCustomers();
+      renderVouchers();
+    });
+
+    // 1. RENDER CUSTOMER TABLE
+    function renderCustomers() {
+      const tbody = document.getElementById('customerTableBody');
+      const search = document.getElementById('custSearchInput').value.toLowerCase().trim();
+      const tier = document.getElementById('custTierFilter').value;
+      const sort = document.getElementById('custSortFilter').value;
+
+      let customers = MockDB.getUsersByRole('customer');
+
+      // Filter by Search
+      if (search) {
+        customers = customers.filter(c => 
+          c.name.toLowerCase().includes(search) || 
+          c.phone.includes(search) || 
+          (c.email && c.email.toLowerCase().includes(search))
+        );
+      }
+
+      // Filter by Tier
+      if (tier !== 'all') {
+        customers = customers.filter(c => c.memberTier === tier);
+      }
+
+      // Sort
+      customers.sort((a, b) => {
+        if (sort === 'spent-desc') return (b.totalSpent || 0) - (a.totalSpent || 0);
+        if (sort === 'points-desc') return (b.points || 0) - (a.points || 0);
+        if (sort === 'name-asc') return a.name.localeCompare(b.name);
+        if (sort === 'date-desc') return b.joinDate.localeCompare(a.joinDate);
+        return 0;
+      });
+
+      if (customers.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="8" class="empty-state"><i class="fas fa-user-slash"></i><h3>Không tìm thấy khách hàng phù hợp</h3></td></tr>`;
+        return;
+      }
+
+      let html = '';
+      customers.forEach(c => {
+        html += `
+          <tr>
+            <td>
+              <div class="user-cell">
+                <img src="${c.avatar}" alt="${c.name}">
+                <div>
+                  <div class="name">${c.name}</div>
+                  <div class="sub">Mã: ${c.id}</div>
+                </div>
+              </div>
+            </td>
+            <td><strong>${c.phone}</strong></td>
+            <td>${c.email || '—'}</td>
+            <td><span class="tier-badge ${MockDB.getMemberTierClass(c.memberTier)}">${c.memberTier}</span></td>
+            <td><strong style="color:#B45309;">${c.points ? c.points.toLocaleString('vi-VN') : 0} pts</strong></td>
+            <td><strong style="color:var(--primary);">${MockDB.formatCurrency(c.totalSpent)}</strong></td>
+            <td style="font-size:0.82rem; color:var(--text-muted);">${c.joinDate}</td>
+            <td style="text-align:center;">
+              <button class="btn btn-outline btn-sm" onclick="openCustomerDetail('${c.id}')" title="Xem tiền sử & hồ sơ">
+                <i class="fas fa-eye"></i> Hồ sơ
+              </button>
+            </td>
+          </tr>
+        `;
+      });
+
+      tbody.innerHTML = html;
+    }
+
+    function handleCustomerFilter() {
+      renderCustomers();
+    }
+
+    // 2. OPEN CUSTOMER DETAIL MODAL
+    function openCustomerDetail(userId) {
+      activeCustomerId = userId;
+      const user = MockDB.getUser(userId);
+      if (!user) return;
+
+      document.getElementById('crmModalAvatar').src = user.avatar;
+      document.getElementById('crmModalName').innerText = user.name;
+      document.getElementById('crmModalTierBadge').className = `tier-badge ${MockDB.getMemberTierClass(user.memberTier)}`;
+      document.getElementById('crmModalTierBadge').innerText = user.memberTier;
+      document.getElementById('crmModalPhone').innerText = user.phone;
+      document.getElementById('crmModalEmail').innerText = user.email || 'Chưa cập nhật';
+      document.getElementById('crmModalJoin').innerText = user.joinDate;
+      document.getElementById('crmModalSpent').innerText = MockDB.formatCurrency(user.totalSpent);
+      document.getElementById('crmModalPoints').innerText = `${user.points.toLocaleString('vi-VN')} pts`;
+
+      // Hair Technical Notes
+      const notesMap = {
+        'U201': 'Tóc đã nhuộm Balayage nâu tây (11/2026), chất tóc sợi mảnh, da đầu hơi dầu. Thích kiểu Two Block / Layer tự nhiên. Khuyến nghị dầu xả Kérastase phục hồi.',
+        'U202': 'Tóc uốn sóng lơi nhẹ, ngọn tóc có dấu hiệu khô xơ do dùng nhiệt nhiều. Không kích ứng thuốc nhuộm Wella. Thường xuyên đặt lịch kèm Gội dưỡng sinh.',
+        'U203': 'Tóc nam cứng, dày, form đầu hợp side-part 7/3. Đã uốn nhẹ chân tóc giữ nếp. Chu kỳ cắt đều đặn 3 tuần/lần.',
+        'U204': 'Khách VIP thân thiết. Tóc tẩy cấp độ 9, nhuộm xám khói Balayage. Bắt buộc dùng dưỡng Olaplex số 7 và mặt nạ Chronologiste khi làm hóa chất. Da đầu nhạy cảm nhẹ.',
+        'U205': 'Cắt tóc nam cơ bản + nhuộm đen phủ bạc tự nhiên. Không dùng sản phẩm có mùi nồng.',
+        'U206': 'Tóc uốn & nhuộm nâu hạt dẻ. Chăm sóc phục hồi định kỳ 2 tuần/lần.'
+      };
+      document.getElementById('crmHairHistory').innerHTML = notesMap[user.id] || 'Chưa có tiền sử kỹ thuật đặc biệt ghi nhận.';
+
+      // Booking & Service History
+      const appts = MockDB.getCustomerAppointments(user.id);
+      const historyTbody = document.getElementById('crmHistoryTableBody');
+
+      if (appts.length === 0) {
+        historyTbody.innerHTML = `<tr><td colspan="7" style="text-align:center; padding:16px; color:var(--text-muted);">Khách hàng chưa có lịch sử làm tóc</td></tr>`;
+      } else {
+        let historyHtml = '';
+        appts.forEach(a => {
+          const stylist = MockDB.getUser(a.stylistId) || { name: 'Stylist' };
+          const services = a.serviceIds.map(id => MockDB.getService(id)?.name).filter(Boolean).join(', ');
+          const starsHtml = a.rating ? renderStars(a.rating) : '<span style="color:var(--text-muted); font-size:0.75rem;">Chưa đánh giá</span>';
+
+          historyHtml += `
+            <tr>
+              <td><strong>${a.id}</strong></td>
+              <td>${a.date} (${a.time})</td>
+              <td>${stylist.name}</td>
+              <td>
+                <div style="font-weight:600;">${services}</div>
+                ${a.review ? `<div style="font-size:0.72rem; color:var(--text-muted); font-style:italic;">"${a.review}"</div>` : ''}
+              </td>
+              <td><strong>${MockDB.formatCurrency(a.totalAmount)}</strong></td>
+              <td><span class="badge ${MockDB.getStatusClass(a.status)}">${MockDB.getStatusLabel(a.status)}</span></td>
+              <td>${starsHtml}</td>
+            </tr>
+          `;
+        });
+        historyTbody.innerHTML = historyHtml;
+      }
+
+      openModal('customerDetailModal');
+    }
+
+    // 3. ADJUST CUSTOMER POINTS
+    function adjustCustomerPoints() {
+      const input = document.getElementById('quickPointsInput');
+      const val = parseInt(input.value);
+      if (isNaN(val) || val === 0) {
+        Toast.show('Vui lòng nhập số điểm hợp lệ (+ hoặc -)', 'warning');
+        return;
+      }
+
+      const user = MockDB.getUser(activeCustomerId);
+      if (!user) return;
+
+      user.points = Math.max(0, (user.points || 0) + val);
+      document.getElementById('crmModalPoints').innerText = `${user.points.toLocaleString('vi-VN')} pts`;
+      input.value = '';
+      renderCustomers();
+      Toast.show(`Đã cập nhật ${val > 0 ? '+' : ''}${val} điểm cho khách ${user.name}!`, 'success');
+    }
+
+    function sendVoucherToCustomer() {
+      const user = MockDB.getUser(activeCustomerId);
+      if (!user) return;
+      closeModal('customerDetailModal');
+      Toast.show(`Đã gửi mã voucher [VIP20 - Giảm 20%] vào SMS/Zalo của khách ${user.name} (${user.phone})!`, 'success');
+    }
+
+    // 4. RENDER VOUCHERS TABLE
+    function renderVouchers() {
+      const tbody = document.getElementById('voucherTableBody');
+      const promos = MOCK.promotions;
+
+      let html = '';
+      promos.forEach(p => {
+        const discountText = p.discountType === 'percent' 
+          ? `Giảm ${p.discount}% ${p.maxDiscount ? `(Tối đa ${MockDB.formatCurrency(p.maxDiscount)})` : ''}`
+          : `Giảm ${MockDB.formatCurrency(p.discount)}`;
+
+        const minSpendText = p.minSpend > 0 ? `Đơn từ ${MockDB.formatCurrency(p.minSpend)}` : 'Không giới hạn';
+        const tiersText = p.applicableTiers ? p.applicableTiers.join(', ') : 'Tất cả hạng';
+        const usageText = `${p.usedCount} / ${p.usageLimit ? p.usageLimit : '∞'}`;
+
+        html += `
+          <tr>
+            <td><strong style="color:var(--gold); font-family:var(--font-title); font-size:0.95rem; letter-spacing:1px;">${p.code}</strong></td>
+            <td>
+              <div style="font-weight:600;">${p.name}</div>
+              <div style="font-size:0.75rem; color:var(--text-muted);">${p.description}</div>
+            </td>
+            <td><strong style="color:var(--green);">${discountText}</strong></td>
+            <td>${minSpendText}</td>
+            <td><span class="badge" style="background:var(--bg-cream); color:var(--primary); border:1px solid var(--border);">${tiersText}</span></td>
+            <td style="font-size:0.8rem;">${p.startDate} &rarr; ${p.endDate}</td>
+            <td><strong>${usageText}</strong></td>
+            <td><span class="badge badge-completed">Đang chạy</span></td>
+            <td style="text-align:center;">
+              <button class="btn btn-outline btn-sm" onclick="copyVoucherCode('${p.code}')" title="Sao chép mã">
+                <i class="far fa-copy"></i>
+              </button>
+            </td>
+          </tr>
+        `;
+      });
+
+      tbody.innerHTML = html;
+      document.getElementById('activePromoCount').innerText = `${promos.length} mã`;
+    }
+
+    function copyVoucherCode(code) {
+      navigator.clipboard?.writeText(code);
+      Toast.show(`Đã sao chép mã voucher ${code}`, 'info');
+    }
+
+    // 5. CREATE VOUCHER MODAL & SUBMIT
+    function openNewVoucherModal() {
+      openModal('newVoucherModal');
+    }
+
+    function toggleDiscountTypeInputs() {
+      const type = document.getElementById('vDiscountType').value;
+      const label = document.getElementById('vDiscountValueLabel');
+      const maxDiscountGroup = document.getElementById('maxDiscountGroup');
+
+      if (type === 'percent') {
+        label.innerText = 'Mức Giảm (%) *';
+        maxDiscountGroup.style.display = 'block';
+      } else {
+        label.innerText = 'Số Tiền Giảm (VNĐ) *';
+        maxDiscountGroup.style.display = 'none';
+      }
+    }
+
+    function handleCreateVoucher(e) {
+      e.preventDefault();
+      const code = document.getElementById('vCode').value.toUpperCase().trim();
+      const name = document.getElementById('vName').value.trim();
+      const desc = document.getElementById('vDesc').value.trim();
+      const discountType = document.getElementById('vDiscountType').value;
+      const discount = parseFloat(document.getElementById('vDiscount').value);
+      const maxDiscount = parseFloat(document.getElementById('vMaxDiscount').value) || null;
+      const minSpend = parseFloat(document.getElementById('vMinSpend').value) || 0;
+      const startDate = document.getElementById('vStartDate').value;
+      const endDate = document.getElementById('vEndDate').value;
+      const usageLimit = parseInt(document.getElementById('vUsageLimit').value) || null;
+
+      const tierCheckboxes = document.querySelectorAll('input[name="vTier"]:checked');
+      const applicableTiers = Array.from(tierCheckboxes).map(cb => cb.value);
+
+      const newPromo = {
+        id: `P${String(MOCK.promotions.length + 1).padStart(2, '0')}`,
+        code,
+        name,
+        description: desc,
+        discount,
+        discountType,
+        minSpend,
+        maxDiscount,
+        startDate,
+        endDate,
+        usageLimit,
+        usedCount: 0,
+        status: 'active',
+        applicableTiers: applicableTiers.length === 4 ? null : applicableTiers
+      };
+
+      MOCK.promotions.push(newPromo);
+      renderVouchers();
+      closeModal('newVoucherModal');
+      document.getElementById('voucherForm').reset();
+      Toast.show(`Voucher ${code} đã được kích hoạt thành công!`, 'success');
+    }
+
+    // 6. CREATE CUSTOMER
+    function openNewCustomerModal() {
+      openModal('newCustomerModal');
+    }
+
+    function handleCreateCustomer(e) {
+      e.preventDefault();
+      const name = document.getElementById('ncName').value.trim();
+      const phone = document.getElementById('ncPhone').value.trim();
+      const email = document.getElementById('ncEmail').value.trim();
+      const memberTier = document.getElementById('ncTier').value;
+      const points = parseInt(document.getElementById('ncPoints').value) || 0;
+
+      const newCust = {
+        id: `U${200 + MOCK.users.filter(u => u.role === 'customer').length + 1}`,
+        name,
+        phone,
+        email,
+        role: 'customer',
+        avatar: `https://i.pravatar.cc/150?img=${Math.floor(Math.random() * 50) + 10}`,
+        joinDate: '2026-11-11',
+        memberTier,
+        points,
+        totalSpent: 0
+      };
+
+      MOCK.users.push(newCust);
+      renderCustomers();
+      closeModal('newCustomerModal');
+      document.getElementById('newCustForm').reset();
+      Toast.show(`Đã thêm thành công khách hàng ${name}!`, 'success');
+    }
+  </script>
+</body>
+</html>

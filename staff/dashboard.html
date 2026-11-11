@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bảng Điều Khiển Thợ – Võ Thuận Hair Salon</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="../shared/shared.css">
+  <link rel="stylesheet" href="staff.css">
+</head>
+<body>
+  <div class="dashboard-layout">
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+      <!-- Will be injected by StaffUI.setupLayout -->
+    </aside>
+    <div class="sidebar-overlay"></div>
+
+    <!-- MAIN CONTENT -->
+    <main class="main-content">
+      <!-- TOPBAR -->
+      <header class="top-bar">
+        <!-- Will be injected by StaffUI.setupLayout -->
+      </header>
+
+      <!-- PAGE CONTENT -->
+      <div class="page-content">
+
+        <!-- ATTENDANCE QUICK WIDGET -->
+        <section class="attendance-widget" id="attendanceWidget">
+          <!-- Injected via JavaScript -->
+        </section>
+
+        <!-- STATS OVERVIEW TODAY -->
+        <section class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-icon blue">
+              <i class="fas fa-calendar-check"></i>
+            </div>
+            <div class="stat-info">
+              <h3>Lịch Hẹn Hôm Nay</h3>
+              <div class="stat-value" id="statTodayCount">0</div>
+              <div class="stat-change up" id="statTodayPending">
+                <i class="fas fa-clock"></i> <span id="statPendingText">Đang chuẩn bị</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-icon green">
+              <i class="fas fa-coins"></i>
+            </div>
+            <div class="stat-info">
+              <h3>Doanh Thu Tạm Tính</h3>
+              <div class="stat-value" id="statTodayRevenue">0 đ</div>
+              <div class="stat-change up">
+                <i class="fas fa-arrow-up"></i> Hôm nay 11/11
+              </div>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-icon gold">
+              <i class="fas fa-sack-dollar"></i>
+            </div>
+            <div class="stat-info">
+              <h3>Hoa Hồng Hôm Nay (15%)</h3>
+              <div class="stat-value" id="statTodayCommission">0 đ</div>
+              <div class="stat-change up">
+                <i class="fas fa-wallet"></i> Thực nhận về ví
+              </div>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-icon purple">
+              <i class="fas fa-star"></i>
+            </div>
+            <div class="stat-info">
+              <h3>Đánh Giá Trung Bình</h3>
+              <div class="stat-value" id="statRating">4.9 ⭐</div>
+              <div class="stat-change" style="color: var(--gold);" id="statReviewCount">
+                Từ 234 lượt khách
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- MAIN GRID: TIMELINE & QUICK INSIGHTS -->
+        <div class="grid-2-1">
+          <!-- TIMELINE TODAY -->
+          <div class="card">
+            <div class="card-header">
+              <h2><i class="fas fa-timeline" style="color: var(--gold); margin-right: 8px;"></i> Tiến Trình Lịch Hẹn Hôm Nay</h2>
+              <div class="btn-group">
+                <a href="schedule.html" class="btn btn-outline btn-sm">
+                  <i class="fas fa-calendar-alt"></i> Xem Toàn Lịch
+                </a>
+              </div>
+            </div>
+            <div class="card-body">
+              <div class="timeline" id="todayTimeline">
+                <!-- Timeline items rendered dynamically -->
+              </div>
+            </div>
+          </div>
+
+          <!-- SIDE PANELS: NEXT CUSTOMER & STYLIST PROFILE -->
+          <div>
+            <!-- Next Customer Highlight -->
+            <div class="card" style="margin-bottom: 24px;">
+              <div class="card-header">
+                <h2><i class="fas fa-bell-concierge" style="color: var(--gold); margin-right: 8px;"></i> Khách Hàng Kế Tiếp</h2>
+              </div>
+              <div class="card-body" id="nextCustomerBox">
+                <!-- Injected via JS -->
+              </div>
+            </div>
+
+            <!-- Stylist Skills & Level -->
+            <div class="card">
+              <div class="card-header">
+                <h2><i class="fas fa-award" style="color: var(--gold); margin-right: 8px;"></i> Hồ Sơ Chuyên Môn</h2>
+              </div>
+              <div class="card-body" id="stylistSkillsBox">
+                <!-- Injected via JS -->
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </main>
+  </div>
+
+  <script src="../data/mock-data.js"></script>
+  <script src="../shared/shared.js"></script>
+  <script src="staff.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      StaffUI.setupLayout('dashboard', 'Bảng Điều Khiển', 'Tổng Quan Hôm Nay');
+      loadDashboardData();
+    });
+
+    function loadDashboardData() {
+      const stylist = StaffDB.getCurrentStylist();
+      const currentId = stylist.id;
+      const today = STAFF_DATE;
+
+      // 1. Attendance widget
+      renderAttendanceWidget(stylist);
+
+      // 2. Today's appointments for this stylist
+      const todayAppts = StaffDB.getStylistAppointments(currentId, today);
+      const allStylistAppts = StaffDB.getStylistAppointments(currentId);
+
+      // Stats
+      const totalCount = todayAppts.length;
+      let totalRevenue = 0;
+      let completedCount = 0;
+      let inProgressCount = 0;
+
+      todayAppts.forEach(a => {
+        totalRevenue += (a.totalAmount || 0);
+        if (a.status === 'completed') completedCount++;
+        if (a.status === 'in-progress') inProgressCount++;
+      });
+
+      const commRate = currentId === 'U103' || currentId === 'U104' ? 0.12 : 0.15;
+      const commission = Math.round(totalRevenue * commRate);
+
+      document.getElementById('statTodayCount').textContent = totalCount;
+      document.getElementById('statPendingText').textContent = `${completedCount} hoàn tất, ${inProgressCount} đang làm`;
+      document.getElementById('statTodayRevenue').textContent = MockDB.formatCurrency(totalRevenue);
+      document.getElementById('statTodayCommission').textContent = MockDB.formatCurrency(commission);
+      document.getElementById('statRating').textContent = `${stylist.rating || 4.9} ⭐`;
+      document.getElementById('statReviewCount').textContent = `Từ ${stylist.totalReviews || 180} lượt khách`;
+
+      // 3. Render Timeline
+      renderTimeline(todayAppts);
+
+      // 4. Render Next Customer
+      renderNextCustomer(todayAppts);
+
+      // 5. Stylist Skills Box
+      renderStylistSkills(stylist);
+    }
+
+    function renderAttendanceWidget(stylist) {
+      const att = StaffDB.getTodayAttendance(stylist.id);
+      const isWorking = att.status === 'working';
+      const container = document.getElementById('attendanceWidget');
+
+      container.innerHTML = `
+        <div class="attendance-info">
+          <div class="attendance-avatar">
+            <img src="${stylist.avatar}" alt="${stylist.name}">
+            <div class="attendance-status-dot ${isWorking ? '' : 'off'}"></div>
+          </div>
+          <div class="attendance-meta">
+            <h3>Chào mừng, ${stylist.name}!</h3>
+            <p><i class="fas fa-calendar-day"></i> Hôm nay: <strong>Thứ Tư, 11/11/2026</strong> | Ca chính: <strong>08:30 – 20:00</strong></p>
+            <div class="time-badges">
+              <span class="attendance-tag">
+                <i class="fas fa-clock"></i> Giờ vào ca: <strong>${att.checkIn || 'Chưa check-in'}</strong>
+              </span>
+              <span class="attendance-tag">
+                <i class="fas fa-business-time"></i> Giờ ra ca: <strong>${att.checkOut || (isWorking ? 'Đang trong ca' : 'Chưa kết thúc')}</strong>
+              </span>
+              <span class="attendance-tag" style="background: ${isWorking ? 'rgba(34, 197, 94, 0.25)' : 'rgba(239, 68, 68, 0.25)'}">
+                <i class="fas fa-signal"></i> Trạng thái: <strong>${isWorking ? 'Đang làm việc' : 'Đã check-out'}</strong>
+              </span>
+            </div>
+          </div>
+        </div>
+        <div class="attendance-actions">
+          ${isWorking ? `
+            <button class="btn btn-outline" style="border-color: rgba(255,255,255,0.4); color: white;" onclick="handleCheckOut('${stylist.id}')">
+              <i class="fas fa-door-open"></i> Check-out Ra Ca
+            </button>
+          ` : `
+            <button class="btn btn-primary" onclick="handleCheckIn('${stylist.id}')">
+              <i class="fas fa-fingerprint"></i> Check-in Vào Ca
+            </button>
+          `}
+        </div>
+      `;
+    }
+
+    function handleCheckIn(stylistId) {
+      StaffDB.checkInToday(stylistId);
+      Toast.show('Điểm danh vào ca thành công! Chúc bạn một ngày làm việc tràn đầy năng lượng.', 'success');
+      loadDashboardData();
+    }
+
+    function handleCheckOut(stylistId) {
+      StaffDB.checkOutToday(stylistId);
+      Toast.show('Check-out hoàn tất ca làm việc! Đã lưu tổng số giờ làm.', 'info');
+      loadDashboardData();
+    }
+
+    function renderTimeline(appts) {
+      const container = document.getElementById('todayTimeline');
+      if (!appts || appts.length === 0) {
+        container.innerHTML = `
+          <div class="empty-state">
+            <i class="fas fa-calendar-times"></i>
+            <h3>Hôm nay bạn không có lịch hẹn nào</h3>
+            <p>Tận hưởng thời gian nghỉ ngơi hoặc hỗ trợ kỹ thuật các ca khác.</p>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = appts.map(a => {
+        const customer = MockDB.getUser(a.customerId) || { name: 'Khách vãng lai', memberTier: 'Đồng', phone: '' };
+        const tierClass = MockDB.getMemberTierClass(customer.memberTier);
+        const services = (a.serviceIds || []).map(sid => MockDB.getService(sid)?.name).filter(Boolean).join(' + ');
+
+        let statusClass = 'upcoming';
+        let statusBadge = '<span class="badge badge-confirmed"><i class="fas fa-check"></i> Đã xác nhận</span>';
+
+        if (a.status === 'in-progress') {
+          statusClass = 'in-progress';
+          statusBadge = '<span class="badge badge-progress"><i class="fas fa-spinner fa-spin"></i> Đang thực hiện</span>';
+        } else if (a.status === 'completed') {
+          statusClass = 'completed';
+          statusBadge = '<span class="badge badge-completed"><i class="fas fa-check-double"></i> Đã hoàn tất</span>';
+        }
+
+        return `
+          <div class="timeline-item ${statusClass}">
+            <div class="timeline-time"><i class="fas fa-clock"></i> ${a.time} - ${a.endTime || 'Hoàn tất'}</div>
+            <div class="timeline-card">
+              <div class="timeline-card-inner">
+                <div class="timeline-card-left">
+                  <div class="timeline-customer">
+                    <span class="timeline-customer-name" onclick="openCustomerHairModal('${a.customerId}')" title="Bấm để xem hồ sơ kỹ thuật tóc">
+                      <i class="fas fa-user"></i> ${customer.name}
+                    </span>
+                    <span class="tier-badge ${tierClass}">${customer.memberTier}</span>
+                    ${statusBadge}
+                  </div>
+                  <div class="timeline-service-name">
+                    <i class="fas fa-scissors" style="color: var(--gold); margin-right: 6px;"></i> ${services}
+                  </div>
+                  ${a.notes ? `<div class="timeline-notes"><i class="fas fa-note-sticky"></i> Yêu cầu: ${a.notes}</div>` : ''}
+                </div>
+                <div>
+                  <div class="timeline-price">${MockDB.formatCurrency(a.totalAmount)}</div>
+                  <div class="timeline-card-actions">
+                    <button class="btn btn-outline btn-sm" onclick="openCustomerHairModal('${a.customerId}')" title="Xem hồ sơ tóc">
+                      <i class="fas fa-eye"></i> Hồ sơ tóc
+                    </button>
+                    ${a.status === 'confirmed' ? `
+                      <button class="btn btn-primary btn-sm" onclick="changeStatus('${a.id}', 'in-progress')">
+                        <i class="fas fa-play"></i> Bắt đầu
+                      </button>
+                    ` : a.status === 'in-progress' ? `
+                      <button class="btn btn-primary btn-sm" style="background: var(--green); color: white;" onclick="changeStatus('${a.id}', 'completed')">
+                        <i class="fas fa-check"></i> Xong
+                      </button>
+                    ` : `
+                      <span style="font-size: 0.75rem; color: var(--green); font-weight: 600;">
+                        <i class="fas fa-check-circle"></i> Đã tính hoa hồng
+                      </span>
+                    `}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function changeStatus(apptId, newStatus) {
+      StaffDB.updateAppointmentStatus(apptId, newStatus);
+      const statusText = newStatus === 'in-progress' ? 'Bắt đầu phục vụ khách' : 'Đã hoàn tất dịch vụ';
+      Toast.show(`Đã cập nhật trạng thái: ${statusText}!`, 'success');
+      loadDashboardData();
+    }
+
+    function renderNextCustomer(appts) {
+      const container = document.getElementById('nextCustomerBox');
+      const upcoming = appts.find(a => a.status === 'in-progress') || appts.find(a => a.status === 'confirmed');
+
+      if (!upcoming) {
+        container.innerHTML = `
+          <div style="text-align: center; padding: 20px 0; color: var(--text-muted);">
+            <i class="fas fa-mug-hot" style="font-size: 2rem; color: var(--border); margin-bottom: 8px; display: block;"></i>
+            <p>Không còn khách chờ trong ca hôm nay.</p>
+          </div>
+        `;
+        return;
+      }
+
+      const customer = MockDB.getUser(upcoming.customerId) || { name: 'Khách hàng', memberTier: 'Đồng', avatar: 'https://i.pravatar.cc/150' };
+      const services = (upcoming.serviceIds || []).map(sid => MockDB.getService(sid)?.name).filter(Boolean).join(', ');
+      const tierClass = MockDB.getMemberTierClass(customer.memberTier);
+
+      container.innerHTML = `
+        <div style="display: flex; align-items: center; gap: 14px; margin-bottom: 16px;">
+          <img src="${customer.avatar}" style="width: 50px; height: 50px; border-radius: 50%; border: 2px solid var(--gold); object-fit: cover;">
+          <div>
+            <h4 style="font-size: 0.95rem; font-weight: 700; color: var(--primary);">${customer.name}</h4>
+            <div style="display: flex; gap: 8px; align-items: center; margin-top: 4px;">
+              <span class="tier-badge ${tierClass}">${customer.memberTier}</span>
+              <span style="font-size: 0.8rem; color: var(--text-muted);"><i class="fas fa-phone"></i> ${customer.phone}</span>
+            </div>
+          </div>
+        </div>
+
+        <div style="background: var(--bg-cream); padding: 12px 14px; border-radius: var(--radius-sm); font-size: 0.85rem; margin-bottom: 16px;">
+          <div style="margin-bottom: 6px;"><strong>Khung giờ:</strong> ${upcoming.time} - ${upcoming.endTime || 'Hoàn tất'}</div>
+          <div style="margin-bottom: 6px;"><strong>Dịch vụ:</strong> ${services}</div>
+          <div><strong>Trạng thái:</strong> ${upcoming.status === 'in-progress' ? '🔥 Đang làm' : '⏳ Sắp đến'}</div>
+        </div>
+
+        <button class="btn btn-primary btn-block btn-sm" onclick="openCustomerHairModal('${upcoming.customerId}')">
+          <i class="fas fa-book-open-reader"></i> Xem Hồ Sơ & Công Thức Tóc
+        </button>
+      `;
+    }
+
+    function renderStylistSkills(stylist) {
+      const container = document.getElementById('stylistSkillsBox');
+      container.innerHTML = `
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; font-size: 0.88rem;">
+          <span style="color: var(--text-muted);">Chuyên môn chính:</span>
+          <strong>${stylist.specialty}</strong>
+        </div>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; font-size: 0.88rem;">
+          <span style="color: var(--text-muted);">Kinh nghiệm:</span>
+          <strong>${stylist.experience || '4 năm'}</strong>
+        </div>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; font-size: 0.88rem;">
+          <span style="color: var(--text-muted);">Tỷ lệ hoa hồng:</span>
+          <strong style="color: var(--gold);">${(stylist.id === 'U103' || stylist.id === 'U104' ? 12 : 15)}% Doanh số</strong>
+        </div>
+
+        <div style="border-top: 1px solid var(--border-light); padding-top: 14px;">
+          <div style="font-size: 0.78rem; text-transform: uppercase; color: var(--text-muted); font-weight: 700; margin-bottom: 8px;">
+            Bằng cấp & Chứng nhận:
+          </div>
+          ${(stylist.certificates || ['Chứng chỉ Vidal Sassoon', 'Top Barber Vietnam']).map(c => `
+            <div style="font-size: 0.8rem; color: var(--text-dark); margin-bottom: 6px; display: flex; align-items: center; gap: 8px;">
+              <i class="fas fa-certificate" style="color: var(--gold);"></i> ${c}
+            </div>
+          `).join('')}
+        </div>
+      `;
+    }
+  </script>
+</body>
+</html>

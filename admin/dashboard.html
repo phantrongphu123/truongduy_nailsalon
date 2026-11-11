@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard Tổng Quan – Võ Thuận Hair Salon</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="../shared/shared.css">
+  <link rel="stylesheet" href="admin.css">
+</head>
+<body>
+  <div class="sidebar-overlay"></div>
+
+  <div class="dashboard-layout">
+    <!-- ─── SIDEBAR ─── -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <a href="dashboard.html" class="sidebar-logo">
+          VÕ THUẬN
+          <span>Hair Salon Management</span>
+        </a>
+      </div>
+
+      <nav class="sidebar-nav">
+        <div class="nav-section-title">Quản Trị Salon</div>
+        <a href="dashboard.html" class="active" data-nav="dashboard">
+          <i class="fas fa-chart-pie"></i>
+          <span>Tổng Quan</span>
+        </a>
+        <a href="scheduling.html" data-nav="scheduling">
+          <i class="fas fa-calendar-alt"></i>
+          <span>Điều Phối Lịch</span>
+          <span class="nav-badge">7 lịch</span>
+        </a>
+        <a href="crm.html" data-nav="crm">
+          <i class="fas fa-users"></i>
+          <span>Khách Hàng (CRM)</span>
+        </a>
+        <a href="attendance.html" data-nav="attendance">
+          <i class="fas fa-user-clock"></i>
+          <span>Chấm Công NV</span>
+        </a>
+        <a href="payroll.html" data-nav="payroll">
+          <i class="fas fa-file-invoice-dollar"></i>
+          <span>Lương & Hoa Hồng</span>
+        </a>
+
+        <div class="nav-section-title">Kho Vận & Tài Chính</div>
+        <a href="inventory.html" data-nav="inventory">
+          <i class="fas fa-boxes"></i>
+          <span>Kho & Dịch Vụ</span>
+          <span class="nav-badge" style="background:var(--red); color:#fff;">2 thiếu</span>
+        </a>
+        <a href="reports.html" data-nav="reports">
+          <i class="fas fa-file-contract"></i>
+          <span>Doanh Thu & Thuế</span>
+        </a>
+
+        <div class="nav-section-title">Hệ Thống</div>
+        <a href="../login.html" onclick="sessionStorage.clear()">
+          <i class="fas fa-sign-out-alt"></i>
+          <span>Đăng Xuất</span>
+        </a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="sidebar-user">
+          <img src="https://i.pravatar.cc/150?img=68" alt="Võ Thuận">
+          <div class="sidebar-user-info">
+            <h4>Võ Thuận</h4>
+            <p>Chủ Salon (Admin)</p>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- ─── MAIN CONTENT ─── -->
+    <main class="main-content">
+      <!-- TOP BAR -->
+      <header class="top-bar">
+        <div class="top-bar-left">
+          <button class="menu-toggle" aria-label="Mở menu"><i class="fas fa-bars"></i></button>
+          <div>
+            <h1>Tổng Quan Kinh Doanh</h1>
+            <div class="breadcrumb">Bảng điều khiển trung tâm &amp; Báo cáo thời gian thực</div>
+          </div>
+        </div>
+
+        <div class="top-bar-right">
+          <div class="date-badge">
+            <span class="live-indicator"></span>
+            <i class="far fa-calendar-check"></i>
+            <span id="currentDateDisplay">Thứ Tư, 11/11/2026</span>
+          </div>
+
+          <a href="../staff/dashboard.html" class="btn btn-outline btn-sm" title="Xem giao diện Thợ / Stylist">
+            <i class="fas fa-scissors"></i> Giao diện Thợ
+          </a>
+          <a href="../customer/booking.html" class="btn btn-outline btn-sm" title="Xem trang Đặt lịch Khách">
+            <i class="fas fa-mobile-alt"></i> Giao diện Khách
+          </a>
+          <a href="../login.html" class="top-bar-btn" title="Đổi tài khoản / Đăng xuất">
+            <i class="fas fa-sign-out-alt"></i>
+          </a>
+        </div>
+      </header>
+
+      <!-- PAGE CONTENT -->
+      <div class="page-content">
+
+        <!-- CẢNH BÁO LỊCH GẤP HÔM NAY -->
+        <div class="alert-banner">
+          <div class="alert-content">
+            <div class="alert-icon">
+              <i class="fas fa-bell"></i>
+            </div>
+            <div class="alert-text">
+              <h4>Cảnh Báo Lịch Hẹn Gấp: Khách Đến Trong 30 Phút</h4>
+              <p>Khách <strong>Trần Bảo Châu</strong> (VIP Bạc - 0912345002) hẹn lúc <strong>14:00</strong> với Stylist <strong>Phạm Thanh Hương</strong> (Dịch vụ: Gội dưỡng sinh + Phục hồi, 500.000 ₫). Ghế số 4 đã được khử khuẩn sẵn sàng.</p>
+            </div>
+          </div>
+          <div class="header-actions">
+            <a href="scheduling.html" class="btn btn-primary btn-sm">Xem Matrix Lịch</a>
+          </div>
+        </div>
+
+        <!-- ─── THỐNG KÊ TỔNG QUAN (5 STAT CARDS) ─── -->
+        <div class="stats-grid">
+          <!-- Stat 1: Doanh thu hôm nay -->
+          <div class="stat-card">
+            <div class="stat-icon green">
+              <i class="fas fa-coins"></i>
+            </div>
+            <div class="stat-info">
+              <h3>Doanh thu hôm nay</h3>
+              <div class="stat-value" id="statTodayRev">2.500.000 ₫</div>
+              <div class="stat-change up">
+                <i class="fas fa-arrow-up"></i> +12.5% so với hôm qua
+              </div>
+            </div>
+          </div>
+
+          <!-- Stat 2: Doanh thu tháng 11 -->
+          <div class="stat-card">
+            <div class="stat-icon gold">
+              <i class="fas fa-wallet"></i>
+            </div>
+            <div class="stat-info">
+              <h3>Doanh thu tháng 11</h3>
+              <div class="stat-value" id="statMonthRev">37.900.000 ₫</div>
+              <div class="stat-change up">
+                <i class="fas fa-chart-line"></i> Đạt 84% KPI tháng (45M)
+              </div>
+            </div>
+          </div>
+
+          <!-- Stat 3: Số khách hôm nay -->
+          <div class="stat-card">
+            <div class="stat-icon blue">
+              <i class="fas fa-user-check"></i>
+            </div>
+            <div class="stat-info">
+              <h3>Số khách hôm nay</h3>
+              <div class="stat-value" id="statTodayClients">7 lượt</div>
+              <div class="stat-change" style="color:var(--text-muted)">
+                2 hoàn tất · 1 đang làm · 4 sắp đến
+              </div>
+            </div>
+          </div>
+
+          <!-- Stat 4: Tỷ lệ lấp đầy ghế -->
+          <div class="stat-card">
+            <div class="stat-icon purple">
+              <i class="fas fa-chair"></i>
+            </div>
+            <div class="stat-info">
+              <h3>Tỷ lệ lấp đầy ghế</h3>
+              <div class="stat-value">78%</div>
+              <div class="stat-change up">
+                <i class="fas fa-arrow-up"></i> Cao điểm: 14:00 - 18:00
+              </div>
+            </div>
+          </div>
+
+          <!-- Stat 5: Thợ đang làm việc -->
+          <div class="stat-card">
+            <div class="stat-icon orange">
+              <i class="fas fa-user-friends"></i>
+            </div>
+            <div class="stat-info">
+              <h3>Thợ đang trực</h3>
+              <div class="stat-value">4 / 4 thợ</div>
+              <div class="stat-change up">
+                <i class="fas fa-check-circle"></i> 100% đúng giờ sáng nay
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ─── BIỂU ĐỒ DOANH THU 10 NGÀY GẦN NHẤT ─── -->
+        <div class="chart-card">
+          <div class="chart-header">
+            <div>
+              <h2 style="font-family: var(--font-title); font-size: 1.1rem; color: var(--primary);">
+                <i class="fas fa-chart-bar" style="color:var(--gold); margin-right: 8px;"></i>
+                Biểu Đồ Doanh Thu 10 Ngày Gần Nhất (01/11 - 11/11/2026)
+              </h2>
+              <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 4px;">
+                Dữ liệu đồng bộ từ POS và các kênh thanh toán (Tiền mặt, Chuyển khoản, MoMo)
+              </p>
+            </div>
+            <div class="chart-legend">
+              <div class="legend-item">
+                <span class="legend-color" style="background: var(--gold);"></span>
+                <span>Doanh thu ngày qua</span>
+              </div>
+              <div class="legend-item">
+                <span class="legend-color" style="background: var(--green);"></span>
+                <span>Hôm nay (11/11)</span>
+              </div>
+              <button class="btn btn-outline btn-sm" onclick="exportRevenueData()">
+                <i class="fas fa-download"></i> Xuất Dữ Liệu
+              </button>
+            </div>
+          </div>
+
+          <!-- CSS / SVG Bar Chart -->
+          <div class="bar-chart-container" id="barChartContainer">
+            <!-- Dynamically populated via JS -->
+          </div>
+
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-top:16px; font-size:0.82rem; color:var(--text-muted);">
+            <div><strong>Trung bình:</strong> 3.445.000 ₫ / ngày</div>
+            <div><strong>Kỷ lục:</strong> Ngày 09/11 (5.200.000 ₫ - 18 khách)</div>
+            <div><strong>Tổng chi phí:</strong> 4.880.000 ₫</div>
+            <div><strong>Lợi nhuận gộp:</strong> 33.020.000 ₫ (87.1%)</div>
+          </div>
+        </div>
+
+        <!-- ─── GRID: LỊCH HẸN HÔM NAY & ĐỘI NGŨ THỢ ─── -->
+        <div class="grid-2-1">
+          <!-- Cột Trái: Bảng Lịch Hẹn Hôm Nay -->
+          <div class="card">
+            <div class="card-header">
+              <h2><i class="far fa-calendar-alt" style="color:var(--gold); margin-right:8px;"></i> Lịch Hẹn Hôm Nay (11/11/2026)</h2>
+              <div class="btn-group">
+                <button class="btn btn-outline btn-sm filter-appt-btn active" data-filter="all" onclick="filterAppointments('all', this)">Tất cả (7)</button>
+                <button class="btn btn-outline btn-sm filter-appt-btn" data-filter="in-progress" onclick="filterAppointments('in-progress', this)">Đang làm (1)</button>
+                <button class="btn btn-outline btn-sm filter-appt-btn" data-filter="confirmed" onclick="filterAppointments('confirmed', this)">Sắp tới (4)</button>
+                <button class="btn btn-outline btn-sm filter-appt-btn" data-filter="completed" onclick="filterAppointments('completed', this)">Xong (2)</button>
+              </div>
+            </div>
+
+            <div class="card-body" style="padding:0;">
+              <div class="table-wrapper">
+                <table class="data-table" id="todayApptTable">
+                  <thead>
+                    <tr>
+                      <th>Giờ hẹn</th>
+                      <th>Khách hàng</th>
+                      <th>Thợ phục vụ</th>
+                      <th>Dịch vụ</th>
+                      <th>Chi phí</th>
+                      <th>Trạng thái</th>
+                      <th>Thanh toán</th>
+                      <th>Hành động</th>
+                    </tr>
+                  </thead>
+                  <tbody id="todayApptTbody">
+                    <!-- Populated by JS -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <div class="card-footer" style="display:flex; justify-content:space-between; align-items:center;">
+              <span style="font-size:0.82rem; color:var(--text-muted);">Tổng giá trị lịch hôm nay: <strong>3.450.000 ₫</strong> (Đã thu 1.300.000 ₫)</span>
+              <a href="scheduling.html" class="btn btn-primary btn-sm"><i class="fas fa-plus"></i> Điều Phối &amp; Xếp Lịch</a>
+            </div>
+          </div>
+
+          <!-- Cột Phải: Trạng Thái 4 Stylist Hôm Nay -->
+          <div class="card">
+            <div class="card-header">
+              <h2><i class="fas fa-user-tie" style="color:var(--gold); margin-right:8px;"></i> Stylist Đang Trực (4)</h2>
+              <a href="attendance.html" class="btn btn-outline btn-sm" style="padding:4px 8px; font-size:0.75rem;">Chấm công</a>
+            </div>
+            <div class="card-body" id="stylistLiveStatus">
+              <!-- Populated by JS -->
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </main>
+  </div>
+
+  <!-- MODAL ĐỔI TRẠNG THÁI LỊCH HẸN -->
+  <div class="modal-overlay" id="apptStatusModal">
+    <div class="modal">
+      <div class="modal-header">
+        <h2 id="modalApptTitle">Cập Nhật Trạng Thái Lịch Hẹn</h2>
+        <button class="modal-close" onclick="closeModal('apptStatusModal')">&times;</button>
+      </div>
+      <div class="modal-body">
+        <input type="hidden" id="modalApptId">
+        <div class="form-group">
+          <label class="form-label">Chọn Trạng Thái Mới</label>
+          <select id="modalStatusSelect" class="form-select">
+            <option value="confirmed">Đã xác nhận</option>
+            <option value="in-progress">Đang thực hiện (Vào ghế)</option>
+            <option value="completed">Đã hoàn thành</option>
+            <option value="cancelled">Hủy lịch</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Trạng Thái Thanh Toán</label>
+          <select id="modalPaymentSelect" class="form-select">
+            <option value="paid">Đã thanh toán đủ</option>
+            <option value="deposit">Đã cọc</option>
+            <option value="pending">Chưa thanh toán</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Phương Thức Thanh Toán</label>
+          <select id="modalMethodSelect" class="form-select">
+            <option value="cash">Tiền mặt</option>
+            <option value="transfer">Chuyển khoản (VietQR)</option>
+            <option value="momo">Ví MoMo</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Ghi Chú Kỹ Thuật / Phục Vụ</label>
+          <textarea id="modalApptNotes" class="form-input" rows="2" placeholder="Ghi chú về kiểu tóc hoặc phản hồi của khách..."></textarea>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-outline" onclick="closeModal('apptStatusModal')">Đóng</button>
+        <button class="btn btn-primary" onclick="saveApptStatus()"><i class="fas fa-check"></i> Lưu Cập Nhật</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- SCRIPTS -->
+  <script src="../data/mock-data.js"></script>
+  <script src="../shared/shared.js"></script>
+  <script src="admin.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      renderRevenueChart();
+      renderTodayAppointments();
+      renderStylistLiveList();
+    });
+
+    // 1. RENDER 10-DAY REVENUE BAR CHART
+    function renderRevenueChart() {
+      const container = document.getElementById('barChartContainer');
+      const data = MOCK.dailyRevenue;
+      if (!data || data.length === 0) return;
+
+      const maxRev = Math.max(...data.map(d => d.revenue));
+      let html = '';
+
+      data.forEach(item => {
+        const heightPercent = Math.round((item.revenue / maxRev) * 85);
+        const isCurrent = item.date === '2026-11-11';
+        const formattedRev = MockDB.formatCurrency(item.revenue);
+        const shortDate = MockDB.formatDateShort(item.date);
+
+        html += `
+          <div class="chart-bar-group">
+            <div class="chart-tooltip">
+              <strong>${shortDate}</strong>: ${formattedRev}<br>
+              Khách: ${item.bookingCount} lượt<br>
+              Tiền mặt: ${MockDB.formatCurrency(item.cashAmount)}<br>
+              CK: ${MockDB.formatCurrency(item.transferAmount)}<br>
+              MoMo: ${MockDB.formatCurrency(item.momoAmount)}
+            </div>
+            <div class="chart-value-tag">${(item.revenue / 1000000).toFixed(1)}M</div>
+            <div class="chart-bar-wrapper">
+              <div class="chart-bar ${isCurrent ? 'current' : ''}" style="height: ${heightPercent}%;"></div>
+            </div>
+            <div class="chart-label">${shortDate}${isCurrent ? '<br><span style="color:var(--green);font-weight:700;">Hôm nay</span>' : ''}</div>
+          </div>
+        `;
+      });
+
+      container.innerHTML = html;
+    }
+
+    // 2. RENDER TODAY'S APPOINTMENTS TABLE
+    let currentFilter = 'all';
+
+    function renderTodayAppointments() {
+      const tbody = document.getElementById('todayApptTbody');
+      const today = '2026-11-11';
+      let appts = MOCK.appointments.filter(a => a.date === today);
+
+      if (currentFilter !== 'all') {
+        appts = appts.filter(a => a.status === currentFilter);
+      }
+
+      if (appts.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="8" class="empty-state"><i class="fas fa-calendar-times"></i><h3>Không có lịch hẹn</h3></td></tr>`;
+        return;
+      }
+
+      let html = '';
+      appts.forEach(a => {
+        const customer = MockDB.getUser(a.customerId) || { name: 'Khách vãng lai', phone: '—', memberTier: 'Đồng', avatar: 'https://i.pravatar.cc/150?img=1' };
+        const stylist = MockDB.getUser(a.stylistId) || { name: 'Thợ', avatar: 'https://i.pravatar.cc/150?img=12' };
+        const services = a.serviceIds.map(id => MockDB.getService(id)?.name).filter(Boolean).join(', ');
+
+        const statusBadges = {
+          'confirmed': '<span class="badge badge-confirmed"><i class="far fa-clock"></i> Sắp tới</span>',
+          'in-progress': '<span class="badge badge-progress"><i class="fas fa-spinner fa-spin"></i> Đang làm</span>',
+          'completed': '<span class="badge badge-completed"><i class="fas fa-check"></i> Hoàn thành</span>',
+          'cancelled': '<span class="badge badge-cancelled"><i class="fas fa-times"></i> Đã hủy</span>'
+        };
+
+        const paymentBadges = {
+          'paid': '<span class="badge badge-paid">Đã thanh toán</span>',
+          'deposit': `<span class="badge badge-deposit">Đã cọc ${MockDB.formatCurrency(a.depositAmount)}</span>`,
+          'pending': '<span class="badge badge-unpaid">Chờ thu tiền</span>'
+        };
+
+        html += `
+          <tr>
+            <td>
+              <div style="font-weight:700; color:var(--primary); font-size:0.95rem;">${a.time} - ${a.endTime}</div>
+              <span style="font-size:0.75rem; color:var(--text-muted);">${a.id}</span>
+            </td>
+            <td>
+              <div class="user-cell">
+                <img src="${customer.avatar}" alt="${customer.name}">
+                <div>
+                  <div class="name">${customer.name}</div>
+                  <div class="sub">${customer.phone} · <span class="tier-badge ${MockDB.getMemberTierClass(customer.memberTier)}">${customer.memberTier}</span></div>
+                </div>
+              </div>
+            </td>
+            <td>
+              <div class="user-cell">
+                <img src="${stylist.avatar}" alt="${stylist.name}" style="width:28px;height:28px;">
+                <div class="name" style="font-size:0.82rem;">${stylist.name}</div>
+              </div>
+            </td>
+            <td>
+              <div style="font-size:0.85rem; font-weight:500;">${services}</div>
+              ${a.notes ? `<div style="font-size:0.72rem; color:var(--text-muted); font-style:italic;"><i class="far fa-comment-dots"></i> ${a.notes}</div>` : ''}
+            </td>
+            <td>
+              <strong style="color:var(--primary); font-size:0.9rem;">${MockDB.formatCurrency(a.totalAmount)}</strong>
+            </td>
+            <td>${statusBadges[a.status] || a.status}</td>
+            <td>${paymentBadges[a.paymentStatus] || a.paymentStatus}</td>
+            <td>
+              <button class="btn btn-outline btn-sm" onclick="openApptStatusModal('${a.id}')" title="Chỉnh sửa trạng thái">
+                <i class="fas fa-edit"></i>
+              </button>
+            </td>
+          </tr>
+        `;
+      });
+
+      tbody.innerHTML = html;
+    }
+
+    function filterAppointments(status, btn) {
+      currentFilter = status;
+      document.querySelectorAll('.filter-appt-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      renderTodayAppointments();
+    }
+
+    // 3. RENDER STYLIST LIVE LIST
+    function renderStylistLiveList() {
+      const container = document.getElementById('stylistLiveStatus');
+      const stylists = MockDB.getUsersByRole('stylist');
+
+      // Check current in-progress appointment for each stylist
+      const today = '2026-11-11';
+      let html = '';
+
+      stylists.forEach(s => {
+        const todayAppts = MOCK.appointments.filter(a => a.stylistId === s.id && a.date === today && a.status !== 'cancelled');
+        const inProgress = todayAppts.find(a => a.status === 'in-progress');
+        const completedCount = todayAppts.filter(a => a.status === 'completed').length;
+        const upcomingCount = todayAppts.filter(a => a.status === 'confirmed').length;
+
+        let statusText = inProgress
+          ? `<span style="color:var(--orange); font-weight:600;"><i class="fas fa-spinner fa-spin"></i> Đang phục vụ khách</span>`
+          : `<span style="color:var(--green); font-weight:600;"><i class="fas fa-check-circle"></i> Sẵn sàng / Đang rảnh</span>`;
+
+        html += `
+          <div style="display:flex; align-items:center; justify-content:space-between; padding:12px 0; border-bottom:1px solid var(--border-light);">
+            <div style="display:flex; align-items:center; gap:12px;">
+              <img src="${s.avatar}" alt="${s.name}" style="width:40px; height:40px; border-radius:50%; object-fit:cover; border:2px solid var(--gold);">
+              <div>
+                <div style="font-weight:600; font-size:0.9rem; color:var(--text-dark);">${s.name}</div>
+                <div style="font-size:0.75rem; color:var(--text-muted);">${s.specialty} · ★ ${s.rating}</div>
+              </div>
+            </div>
+            <div style="text-align:right;">
+              <div style="font-size:0.78rem;">${statusText}</div>
+              <div style="font-size:0.72rem; color:var(--text-muted); margin-top:2px;">
+                ${completedCount} xong · ${upcomingCount} lịch tới
+              </div>
+            </div>
+          </div>
+        `;
+      });
+
+      container.innerHTML = html;
+    }
+
+    // 4. MODAL STATUS
+    function openApptStatusModal(apptId) {
+      const appt = MOCK.appointments.find(a => a.id === apptId);
+      if (!appt) return;
+
+      document.getElementById('modalApptId').value = appt.id;
+      document.getElementById('modalApptTitle').innerText = `Cập Nhật Lịch Hẹn #${appt.id}`;
+      document.getElementById('modalStatusSelect').value = appt.status;
+      document.getElementById('modalPaymentSelect').value = appt.paymentStatus;
+      document.getElementById('modalMethodSelect').value = appt.paymentMethod || 'cash';
+      document.getElementById('modalApptNotes').value = appt.notes || '';
+
+      openModal('apptStatusModal');
+    }
+
+    function saveApptStatus() {
+      const apptId = document.getElementById('modalApptId').value;
+      const appt = MOCK.appointments.find(a => a.id === apptId);
+      if (!appt) return;
+
+      appt.status = document.getElementById('modalStatusSelect').value;
+      appt.paymentStatus = document.getElementById('modalPaymentSelect').value;
+      appt.paymentMethod = document.getElementById('modalMethodSelect').value;
+      appt.notes = document.getElementById('modalApptNotes').value;
+
+      closeModal('apptStatusModal');
+      renderTodayAppointments();
+      renderStylistLiveList();
+      Toast.show(`Đã cập nhật thành công lịch hẹn #${apptId}`, 'success');
+    }
+
+    function exportRevenueData() {
+      exportTableToCSV('Doanh_Thu_10_Ngay_Salon_Vo_Thuan.csv', '#todayApptTable');
+    }
+  </script>
+</body>
+</html>
