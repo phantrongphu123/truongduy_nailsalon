@@ -3,7 +3,7 @@
    Kế thừa design system từ salon landing page
    ==================================================== */
 
-@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Inter:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700;800&display=swap');
 
 /* ─── CSS VARIABLES ────────────────────────────── */
 :root {
@@ -35,8 +35,8 @@
   --purple: #8B5CF6;
   --purple-bg: #F3E8FF;
 
-  --font-title: 'Cinzel', serif;
-  --font-body: 'Inter', sans-serif;
+  --font-title: 'Playfair Display', Georgia, serif;
+  --font-body: 'Be Vietnam Pro', Arial, sans-serif;
   --radius: 12px;
   --radius-sm: 8px;
   --radius-lg: 16px;
