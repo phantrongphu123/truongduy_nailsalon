@@ -629,7 +629,8 @@ textarea:focus-visible {
 
 .modal-overlay.active { display: flex; }
 
-.modal {
+.modal,
+.modal-box {
   background: var(--bg-white);
   border-radius: var(--radius-lg);
   width: 100%;
@@ -1121,10 +1122,13 @@ textarea:focus-visible {
     height: auto;
     padding: 10px 14px;
     gap: 12px;
+    align-items: flex-start;
+    flex-wrap: wrap;
   }
   .top-bar-left {
     min-width: 0;
     gap: 10px;
+    flex: 1 1 180px;
   }
   .top-bar-left h1 {
     font-size: 1rem;
@@ -1139,6 +1143,10 @@ textarea:focus-visible {
   .top-bar-right {
     gap: 8px;
     flex-shrink: 0;
+    min-width: 0;
+    flex: 1 1 100%;
+    justify-content: flex-end;
+    flex-wrap: wrap;
   }
   .top-bar-right .btn {
     padding: 8px 12px;
@@ -1164,6 +1172,13 @@ textarea:focus-visible {
     align-items: flex-start;
     gap: 12px;
     flex-wrap: wrap;
+  }
+  .grid-2 > *,
+  .grid-3 > *,
+  .grid-2-1 > *,
+  .grid-1-2 > *,
+  .form-row > * {
+    min-width: 0;
   }
   .btn-group {
     flex-wrap: wrap;
@@ -1206,6 +1221,32 @@ textarea:focus-visible {
   }
   .toast {
     min-width: 0;
+    width: 100%;
+  }
+  .login-page {
+    align-items: flex-start;
+    padding: 12px;
+  }
+  .login-card {
+    margin: auto 0;
+  }
+  .login-header {
+    padding: 24px 18px 20px;
+  }
+  .login-body {
+    padding: 20px 16px;
+  }
+  .login-role-btn {
+    gap: 12px;
+    padding: 13px 12px;
+  }
+  .login-role-btn .role-desc {
+    line-height: 1.45;
+  }
+  .modal-footer {
+    flex-direction: column-reverse;
+  }
+  .modal-footer .btn {
     width: 100%;
   }
 }

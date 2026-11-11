@@ -312,6 +312,8 @@ header.scrolled .nav-container {
     width: 80%;
     max-width: 400px;
     height: 100vh;
+    overflow-y: auto;
+    padding: 88px 24px 32px;
     background-color: var(--primary-color);
     flex-direction: column;
     justify-content: center;
@@ -471,6 +473,68 @@ header.scrolled .nav-container {
 
   .hero-badge-num {
     font-size: 1.6rem;
+  }
+
+  .hero-badge-text {
+    font-size: 0.62rem;
+    letter-spacing: 1px;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero-section {
+    min-height: 680px;
+  }
+
+  .hero-content {
+    padding: 0 12px;
+  }
+
+  .hero-subtitle {
+    max-width: 260px;
+    margin-left: auto;
+    margin-right: auto;
+    line-height: 1.45;
+  }
+
+  .hero-title {
+    font-size: 2rem;
+  }
+
+  .hero-description {
+    font-size: 0.92rem;
+  }
+
+  .hero-badge-container {
+    gap: 12px;
+  }
+
+  .hero-badge {
+    min-width: 27%;
+  }
+
+  .hero-badge-num {
+    font-size: 1.35rem;
+  }
+
+  .section-padding {
+    padding: 48px 14px;
+  }
+}
+
+/* Keep the compact hero rules after the base badge declarations. */
+@media (max-width: 480px) {
+  .hero-badge-container {
+    gap: 12px;
+    margin-top: 42px;
+  }
+
+  .hero-badge {
+    min-width: 27%;
+  }
+
+  .hero-badge-num {
+    font-size: 1.35rem;
   }
 
   .hero-badge-text {

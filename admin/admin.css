@@ -566,6 +566,43 @@
   padding-left: 38px;
 }
 
+@media (max-width: 768px) {
+  .header-actions {
+    width: 100%;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+  }
+  .date-badge {
+    max-width: 100%;
+  }
+  .chart-card {
+    padding: 16px;
+  }
+  .bar-chart-container {
+    gap: 8px;
+    height: 220px;
+  }
+  .chart-label {
+    font-size: 0.65rem;
+  }
+  .matrix-container {
+    margin-left: -2px;
+    margin-right: -2px;
+  }
+  .filter-bar {
+    align-items: stretch;
+  }
+  .search-input-wrap {
+    min-width: 0;
+    max-width: none;
+    width: 100%;
+  }
+  .filter-bar > select,
+  .filter-bar > .form-select {
+    width: 100% !important;
+  }
+}
+
 /* ─── PRINT RULES ────────────────────────────────── */
 @media print {
   .sidebar, .top-bar, .no-print, .btn, .modal-close {

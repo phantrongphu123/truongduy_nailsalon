@@ -1048,6 +1048,8 @@
   display: flex;
   align-items: center;
   gap: 8px;
+  min-width: 0;
+  overflow-wrap: anywhere;
 }
 
 .btn-copy-info {
@@ -1709,5 +1711,108 @@
   }
   .summary-price-box {
     gap: 10px;
+  }
+  .date-picker-section,
+  .time-slots-container,
+  .qr-payment-container {
+    padding: 18px 14px;
+  }
+  .date-chips {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .date-chip {
+    min-width: 0;
+    padding: 10px 8px;
+  }
+  .time-slots-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 8px;
+  }
+  .slot-btn {
+    min-height: 42px;
+    padding: 8px 4px;
+  }
+  .voucher-input-box {
+    flex-direction: column;
+  }
+  .voucher-input-box .btn {
+    width: 100%;
+  }
+  .promo-ticket {
+    align-items: flex-start;
+    gap: 10px;
+  }
+  .promo-ticket > div:first-child {
+    min-width: 0;
+  }
+  .promo-ticket-desc {
+    line-height: 1.45;
+  }
+  .transfer-row {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .checkin-qr-section {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 16px;
+  }
+  .checkin-qr-text {
+    min-width: 0;
+  }
+  .appointment-meta-list .meta-row {
+    align-items: flex-start;
+    gap: 12px;
+  }
+  .appointment-meta-list .meta-row .value {
+    text-align: right;
+    overflow-wrap: anywhere;
+  }
+  .confirmation-body {
+    padding: 20px 16px;
+  }
+  .confirmation-title {
+    font-size: 1.45rem;
+  }
+  .confirmation-actions .btn {
+    width: 100%;
+  }
+  .qr-image-wrapper {
+    width: min(200px, 100%);
+    height: auto;
+    aspect-ratio: 1;
+  }
+  .modal-box .modal-body {
+    overflow-wrap: anywhere;
+  }
+}
+
+@media (max-width: 480px) {
+  .steps-wrapper {
+    padding: 10px 8px;
+  }
+  .step-icon {
+    width: 30px;
+    height: 30px;
+    font-size: 0.76rem;
+  }
+  .time-slots-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .deposit-options-grid {
+    gap: 10px;
+  }
+  .deposit-card {
+    padding: 14px 8px;
+  }
+  .deposit-amount {
+    font-size: 1.05rem;
+  }
+  .deposit-title,
+  .deposit-desc {
+    line-height: 1.35;
   }
 }

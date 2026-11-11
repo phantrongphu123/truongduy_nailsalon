@@ -632,3 +632,46 @@
     grid-template-columns: 1fr;
   }
 }
+
+@media (max-width: 768px) {
+  .top-bar-right {
+    width: 100%;
+  }
+  .stylist-switcher {
+    min-width: 0;
+    max-width: 100%;
+    padding: 5px 10px;
+  }
+  .stylist-switcher label {
+    display: none;
+  }
+  .stylist-switcher select {
+    max-width: 100%;
+    min-width: 0;
+  }
+  .attendance-widget {
+    padding: 18px 16px;
+  }
+  .attendance-info {
+    width: 100%;
+    align-items: flex-start;
+  }
+  .attendance-meta {
+    min-width: 0;
+  }
+  .attendance-meta h3 {
+    font-size: 1.05rem;
+  }
+  .attendance-actions .btn {
+    flex: 1 1 140px;
+  }
+  .portfolio-grid {
+    grid-template-columns: 1fr;
+  }
+  .hair-profile-card {
+    padding: 18px 16px;
+  }
+  .hair-profile-header {
+    align-items: flex-start;
+  }
+}
