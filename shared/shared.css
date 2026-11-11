@@ -493,6 +493,16 @@ ul { list-style: none; }
   white-space: nowrap;
 }
 
+.btn:focus-visible,
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: 3px solid rgba(212,175,55,0.55);
+  outline-offset: 2px;
+}
+
 .btn-primary {
   background: var(--gold);
   color: var(--primary);
@@ -1101,8 +1111,39 @@ ul { list-style: none; }
   .main-content { margin-left: 0; }
   .menu-toggle { display: block; }
 
-  .page-content { padding: 20px 16px; }
-  .top-bar { padding: 0 16px; }
+  .page-content { padding: 20px 14px; }
+  .container {
+    padding-left: 14px;
+    padding-right: 14px;
+  }
+  .top-bar {
+    min-height: var(--header-height);
+    height: auto;
+    padding: 10px 14px;
+    gap: 12px;
+  }
+  .top-bar-left {
+    min-width: 0;
+    gap: 10px;
+  }
+  .top-bar-left h1 {
+    font-size: 1rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .top-bar-left .breadcrumb,
+  .top-bar-right > .top-bar-btn {
+    display: none;
+  }
+  .top-bar-right {
+    gap: 8px;
+    flex-shrink: 0;
+  }
+  .top-bar-right .btn {
+    padding: 8px 12px;
+    font-size: 0.78rem;
+  }
 
   .stats-grid { grid-template-columns: 1fr; }
   .service-catalog { grid-template-columns: 1fr; }
@@ -1111,14 +1152,62 @@ ul { list-style: none; }
   .step-line { width: 30px; }
   .form-row { grid-template-columns: 1fr; }
 
-  .data-table { font-size: 0.82rem; }
+  .data-table { min-width: 640px; font-size: 0.82rem; }
   .data-table th, .data-table td { padding: 10px 12px; }
+  .card-header,
+  .card-body,
+  .card-footer {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+  .card-header {
+    align-items: flex-start;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .btn-group {
+    flex-wrap: wrap;
+  }
+  .page-content [style*="display:flex"],
+  .page-content [style*="display: flex"] {
+    flex-wrap: wrap;
+  }
+  .page-content select[style*="width:auto"],
+  .page-content select[style*="width: auto"] {
+    width: 100% !important;
+  }
+  .modal-overlay {
+    padding: 12px;
+  }
+  .modal-header,
+  .modal-body,
+  .modal-footer {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
 }
 
 @media (max-width: 480px) {
   .stylist-picker { grid-template-columns: 1fr; }
   .time-slots { gap: 6px; }
   .time-slot { padding: 6px 12px; font-size: 0.8rem; }
+  .btn {
+    min-height: 42px;
+    white-space: normal;
+    text-align: center;
+  }
+  .form-input, .form-select {
+    min-height: 44px;
+  }
+  .toast-container {
+    top: 12px;
+    left: 12px;
+    right: 12px;
+  }
+  .toast {
+    min-width: 0;
+    width: 100%;
+  }
 }
 
 /* ─── SIDEBAR OVERLAY (MOBILE) ───────────────── */
@@ -1239,4 +1328,3 @@ ul { list-style: none; }
 }
 
 .login-back:hover { color: var(--gold); }
-

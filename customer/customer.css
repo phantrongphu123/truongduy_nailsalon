@@ -81,6 +81,11 @@
   gap: 6px;
 }
 
+.customer-nav-links a i,
+.customer-mobile-links a i {
+  display: none;
+}
+
 .customer-nav-links a:hover,
 .customer-nav-links a.active {
   color: var(--gold);
@@ -1559,13 +1564,100 @@
 }
 
 @media (max-width: 768px) {
+  .container {
+    padding-left: 14px;
+    padding-right: 14px;
+  }
+  .catalog-toolbar {
+    align-items: stretch;
+  }
+  .category-pills {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    padding-bottom: 4px;
+    scrollbar-width: none;
+  }
+  .category-pills::-webkit-scrollbar {
+    display: none;
+  }
+  .category-pill {
+    flex: 0 0 auto;
+  }
+  .catalog-search {
+    min-width: 0;
+    width: 100%;
+  }
+  .booking-step-panel [style*="justify-content: space-between"],
+  .booking-step-panel [style*="justify-content:space-between"] {
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  .booking-step-panel [style*="grid-template-columns: repeat(4"],
+  .booking-step-panel [style*="grid-template-columns:repeat(4"] {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+  .customer-nav {
+    padding: 12px 14px;
+  }
+  .brand-group {
+    min-width: 0;
+    gap: 8px;
+  }
+  .brand-logo {
+    font-size: 1.15rem;
+  }
+  .brand-logo span {
+    font-size: 0.58rem;
+    letter-spacing: 2px;
+  }
+  .brand-badge {
+    display: none;
+  }
+  .customer-user-menu {
+    gap: 8px;
+  }
+  .customer-user-menu .customer-user-pill,
+  .customer-user-menu > a {
+    display: none;
+  }
   .customer-nav-links {
     display: none;
   }
+  .customer-hamburger {
+    display: block;
+    font-size: 1.2rem;
+    padding: 8px;
+  }
+  .customer-mobile-drawer {
+    top: 60px;
+  }
+  .booking-hero {
+    padding: 30px 16px 26px;
+  }
+  .booking-hero-title {
+    font-size: clamp(1.55rem, 8vw, 2.2rem);
+    line-height: 1.25;
+  }
+  .booking-hero-desc {
+    font-size: 0.88rem;
+  }
   .steps-wrapper {
-    flex-direction: column;
-    gap: 12px;
-    align-items: flex-start;
+    padding: 12px 14px;
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 6px;
+    align-items: start;
+  }
+  .step-item {
+    justify-content: center;
+  }
+  .step-icon {
+    width: 34px;
+    height: 34px;
+    font-size: 0.82rem;
+  }
+  .step-text {
+    display: none;
   }
   .step-connector {
     display: none;
@@ -1590,5 +1682,32 @@
   }
   .customer-stats-row {
     justify-content: center;
+    gap: 18px;
+    flex-wrap: wrap;
+  }
+  .customer-profile-banner {
+    padding: 20px 16px;
+  }
+  .customer-profile-meta h2 {
+    font-size: 1.15rem;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  .booking-summary-bar {
+    padding: 10px 14px;
+  }
+  .summary-selection-info {
+    gap: 10px;
+    width: 100%;
+  }
+  .summary-services-names {
+    max-width: calc(100vw - 120px);
+  }
+  .summary-meta-line {
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .summary-price-box {
+    gap: 10px;
   }
 }
